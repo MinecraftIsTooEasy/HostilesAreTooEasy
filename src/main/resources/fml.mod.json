@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "hostiles_are_too_easy",
+  "version": "${version}",
+  "name": "HaTE mod",
+  "description": "This mod makes basic mobs harder and adds dynamic world difficulty!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://minecraftistooeasy.github.io/",
+    "sources": "https://github.com/MinecraftIsTooEasy/hostiles-are-too-easy"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/hostiles_are_too_easy/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "vbonedra.hostiles_are_too_easy.HostilesAreTooEasyMod"
+    ],
+    "registry": [
+      "vbonedra.hostiles_are_too_easy.register.HostilesAreTooEasyRegistryInit"
+    ]
+  },
+  "mixins": [
+    "hostiles_are_too_easy.mixins.json"
+  ],
+  "depends": {
+    "fishmodloader": ">=3.4.0",
+    "minecraft": "1.6.4-mite",
+    "java": ">=17",
+    "rusted_iron_core": ">=1.3.5"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "accessWidener": "hostiles_are_too_easy.accesswidener"
+}

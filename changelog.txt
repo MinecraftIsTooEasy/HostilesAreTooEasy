@@ -1,0 +1,106 @@
+# ModSpirit:
+- it must be removable, no world corruption must happen when mod deleted
+    - no new items, only recipes
+    - no new world generation, only loot tables
+    - no new mobs, only enhancements
+
+
+
+
+# ChangeLog:
+- infernal mobs spawn in nether (BiomeGenHell)
+    - EntityInfernalCreeper
+    - EntityDemonSpider
+    - EntityHellhound
+- unless Wither killed, End Portal Frame couldn't be filled with Eye of Ender
+- world progression (difficulty_mode): each new difficulty
+    - normal-mode (0): on world creation
+    - hard-mode (1): on entering Underworld
+    - extreme-mode (2): on entering Nether
+    - legendary-mode (3): on killing Wither
+    - endgame-mode (4): on killing Dragon
+
+
+
+
+# Planned:
+- monster cap increases with world progression (EnumCreatureType): 50 * (1 + (1/4 * difficulty_mode))
+- monster spawns shift with world progression: TODO: list all mobs instead of general groups
+    - normal-mode (base values):
+        - overworld night: basic mobs with misc variants
+        - overworld cave: +basic variants for zombie and slime
+        - overworld deep cave: +dangerous variants
+        - underworld: +ancient variants -most basic mobs
+        - nether: hell variants
+    - hard-mode:
+        - overworld night -> overworld cave
+        - overworld cave -> overworld deep cave
+        - overworld deep cave -> overworld blood moon
+    - extreme-mode:
+        - overworld night -> overworld deep cave
+        - overworld cave -> overworld blood moon
+        - overworld deep cave -> underworld
+        - underworld -> +nether-low
+    - legendary-mode:
+        - overworld night -> overworld blood moon
+        - overworld cave -> underworld
+        - overworld deep cave -> underworld +nether-low
+        - underworld -> +nether
+        - nether -> nether+
+    - endgame-mode:
+        - overworld night
+        - overworld cave
+        - overworld deep cave
+        - underworld
+        - nether
+
+
+
+
+
+???
+- Mob
+    - Villager:
+        - [loot] (normal-mode)
+    - Skeleton-type:
+        - all [stats] (progressive) 6 * (1 + (1/2 * difficulty_mode))
+        - normal [equipment] (hard-mode) pumpkin randomly if has no armor
+        - all [ability] (normal-mode) shoot fire arrow if on fire
+        - all [ability] (extreme-mode) shoot fire arrow randomly
+        - all [ability] (extreme-mode) don't get fire damage
+        - all [ability] (legendary-mode) don't get lava damage
+        - all [ability] (hard-mode) swap melee/ranged weapon if has additional weapon
+        - longdead [spawn] (hard-mode) in overworld on blood moon
+        - longdead [spawn] (extreme-mode) in overworld
+        - ancient-bone-lord [spawn] (hard-mode) in overworld replace bone lord on blood moon
+        - ancient-bone-lord [spawn] (extreme-mode) in overworld replace bone lord
+    - Zombie-type:
+        - [equipment] (hard-mode) pumpkin randomly if has no armor
+        - [ability] (normal-mode) eat meat and get buffs
+        - [ability] (normal-mode) might deflect arrow if has weapon
+        - [ability] (hard-mode) lunge at target once in a life unless has weapon, lunge up high if target too high or behind a wall with no roof
+        - [ability] (hard-mode) mine at 1 strVsBlock
+        - [ability] (extreme-mode) mine at 2 strVsBlock
+    - Shadow:
+        - [ability] (normal-mode) teleport to player in 0 light
+        - [ability] (hard-mode) teleport to player
+        - [ability] (hard-mode) delete torches instead of breaking
+        - [spawn] (hard-mode) new moon night
+        - [spawn] (extreme-mode) night
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

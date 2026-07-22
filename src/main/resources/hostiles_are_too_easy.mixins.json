@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "package": "vbonedra.hostiles_are_too_easy.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "target": "DEFAULT",
+  "mixins": [
+    "AchievementParentMixin",
+    "BiomeGenHellMixin",
+    "BlockSkullMixin",
+    "EntityCreeperMixin",
+    "EntityLivingBaseMixin",
+    "EntitySkeletonMixin",
+    "ItemEnderEyeMixin",
+    "RenderCreeperMixin",
+    "RendererLivingEntityMixin",
+    "RenderItemMixin",
+    "RenderSkeletonMixin",
+    "ServerConfigurationManagerMixin",
+    "WorldServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}

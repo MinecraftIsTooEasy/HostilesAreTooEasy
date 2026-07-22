@@ -1,0 +1,21 @@
+achievement.normalMode=Normal Mode
+achievement.normalMode.desc=Start a new world...
+achievement.hardMode=Hard Mode
+achievement.hardMode.desc=to enter deepest depths...
+achievement.extremeMode=Extreme Mode
+achievement.extremeMode.desc=and hottest places...
+achievement.legendaryMode=Legendary Mode
+achievement.legendaryMode.desc=to challenge the Demigod...
+achievement.endgameMode=Endgame Mode
+achievement.endgameMode.desc=and shatter last interdimensional seal.
+
+achievement.spawnWither=The Beginning...
+achievement.spawnWither.desc=Challenge the Demigod...
+achievement.killWither=of Withering Heights
+achievement.killWither.desc=and don't hold back.
+
+
+
+notification.end_frame_block=§4The Wither is yet to be slayed.
+
+
