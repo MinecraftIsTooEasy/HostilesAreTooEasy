@@ -5,6 +5,7 @@ import net.xiaoyu233.fml.reload.utils.IdUtil;
 import java.lang.reflect.Field;
 
 public class AchievementExtend {
+    // TODO: add achievements for new content, e.g. encounterWitheredSkeleton - when player attacks withered skeleton. issue is, idk where to put those, since vanilla map is already bloated
     public static Achievement spawnWither;
     public static Achievement killWither;
     public static Achievement normalMode;

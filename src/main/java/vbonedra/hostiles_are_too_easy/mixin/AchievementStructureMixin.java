@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Mixin(GuiAchievements.class)
-public class AchievementStructureMixin {
+public class AchievementStructureMixin { // TODO: doesn't fit mod idea, must be enhanced and used in some AchievementEnhanced mod
 
 
     @Redirect(method = "drawScreen(IIF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/GuiAchievements;guiMapTop:I"))

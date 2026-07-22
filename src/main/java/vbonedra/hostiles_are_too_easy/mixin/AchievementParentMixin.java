@@ -16,20 +16,20 @@ public class AchievementParentMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onGuiInit(CallbackInfo ci) {
         try {
-            Field pF = Achievement.class.getDeclaredField("parentAchievement");
-            Field cF = Achievement.class.getDeclaredField("displayColumn");
-            Field rF = Achievement.class.getDeclaredField("displayRow");
-            pF.setAccessible(true);
-            cF.setAccessible(true);
-            rF.setAccessible(true);
+            Field parent = Achievement.class.getDeclaredField("parentAchievement");
+            Field column = Achievement.class.getDeclaredField("displayColumn");
+            Field row = Achievement.class.getDeclaredField("displayRow");
+            parent.setAccessible(true);
+            column.setAccessible(true);
+            row.setAccessible(true);
             if (AchievementList.theEnd != null && killWither != null) {
-                pF.set(AchievementList.theEnd, killWither);
-                cF.setInt(AchievementList.theEnd, 5);
-                rF.setInt(AchievementList.theEnd, 16);
+                parent.set(AchievementList.theEnd, killWither);
+                column.setInt(AchievementList.theEnd, 5);
+                row.setInt(AchievementList.theEnd, 16);
             }
             if (AchievementList.theEnd2 != null) {
-                cF.setInt(AchievementList.theEnd2, 7);
-                rF.setInt(AchievementList.theEnd2, 16);
+                column.setInt(AchievementList.theEnd2, 7);
+                row.setInt(AchievementList.theEnd2, 16);
             }
 
         } catch (Exception e) {
