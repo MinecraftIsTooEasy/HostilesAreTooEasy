@@ -25,7 +25,6 @@ public abstract class RenderCreeperMixin {
     private String getBlockTexturePath(Block block, int metadata) {
         if (block == null) return "textures/blocks/dirt.png";
         try {
-            // Передаем сторону 1 (верхняя грань) и метадату (подтип блока)
             net.minecraft.Icon blockIcon = block.getIcon(1, metadata);
             if (blockIcon != null && blockIcon.getIconName() != null) {
                 return "textures/blocks/" + blockIcon.getIconName() + ".png";
