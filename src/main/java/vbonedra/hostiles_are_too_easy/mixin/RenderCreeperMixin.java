@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import moddedmite.rustedironcore.network.Network;
-import vbonedra.hostiles_are_too_easy.network.C2SRequestCreeperType;
-import vbonedra.hostiles_are_too_easy.util.CreeperTypeCache;
+import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
+import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 
 import java.util.HashMap;
@@ -17,9 +17,9 @@ import java.util.Map;
 @Mixin(RenderCreeper.class)
 public abstract class RenderCreeperMixin {
 
-    @Unique private static final Map<String, ResourceLocation> blendedCache = new HashMap<>();
-    @Unique private static final Map<Integer, Integer> lastStoodBlockMap = new HashMap<>();
-    @Unique private static final Map<Integer, Integer> lastStoodMetadataMap = new HashMap<>();
+    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
+    @Unique private final Map<Integer, Integer> lastStoodBlockMap = new HashMap<>();
+    @Unique private final Map<Integer, Integer> lastStoodMetadataMap = new HashMap<>();
 
     @Unique
     private String getBlockTexturePath(Block block, int metadata) {
@@ -37,34 +37,34 @@ public abstract class RenderCreeperMixin {
 
 
     @Inject(method = "getCreeperTextures(Lnet/minecraft/EntityCreeper;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void applyCustomCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) {
+    private void getCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) {
         if (par1EntityCreeper.worldObj == null) return;
 
         int entityId = par1EntityCreeper.entityId;
 
-        if (!CreeperTypeCache.clientCreeperTypeMap.containsKey(entityId)) {
-            if (!CreeperTypeCache.requestedEntities.contains(entityId) && par1EntityCreeper.worldObj.isRemote) {
-                Network.sendToServer(new C2SRequestCreeperType(entityId));
-                CreeperTypeCache.requestedEntities.add(entityId);
+        if (!CelestialTypeCache.clientCelestialTypeMap.containsKey(entityId)) {
+            if (!CelestialTypeCache.requestedEntities.contains(entityId) && par1EntityCreeper.worldObj.isRemote) {
+                Network.sendToServer(new C2SRequestCelestialType(entityId));
+                CelestialTypeCache.requestedEntities.add(entityId);
             }
             return;
         }
 
-        Integer typeObject = CreeperTypeCache.clientCreeperTypeMap.get(entityId);
+        Integer typeObject = CelestialTypeCache.clientCelestialTypeMap.get(entityId);
         if (typeObject == null) {
             return;
         }
 
-        int creeperType = typeObject;
+        int celestialType = typeObject;
 
         if (par1EntityCreeper.isDead) {
-            CreeperTypeCache.clientCreeperTypeMap.remove(entityId);
-            CreeperTypeCache.requestedEntities.remove(entityId);
+            CelestialTypeCache.clientCelestialTypeMap.remove(entityId);
+            CelestialTypeCache.requestedEntities.remove(entityId);
             lastStoodBlockMap.remove(entityId);
             lastStoodMetadataMap.remove(entityId);
         }
 
-        if (creeperType == 1) {
+        if (celestialType == 1) {
             int blockX = MathHelper.floor_double(par1EntityCreeper.posX);
             int blockY = MathHelper.floor_double(par1EntityCreeper.posY);
             int blockZ = MathHelper.floor_double(par1EntityCreeper.posZ);

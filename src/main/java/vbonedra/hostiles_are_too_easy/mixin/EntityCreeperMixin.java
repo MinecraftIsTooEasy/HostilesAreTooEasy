@@ -19,7 +19,7 @@ public abstract class EntityCreeperMixin extends Entity {
     @Shadow protected float explosionRadius;
 
     @Unique private boolean difficultyRadiusApplied = false;
-    @Unique private int customCreeperType = 0;
+    @Unique private int celestialType = 0;
 
     @Unique
     private void applyServerDifficultyBuff() {
@@ -28,7 +28,7 @@ public abstract class EntityCreeperMixin extends Entity {
             this.explosionRadius = (1.0F + difficulty * 0.15F) * ((Object) this instanceof EntityInfernalCreeper ? 2f : 1f);
 
             if (this.rand.nextFloat() < difficulty * 0.2F) {
-                this.customCreeperType = 1;
+                this.celestialType = 1;
             }
             if (this.rand.nextFloat() < difficulty * 0.1F) {
                 this.onStruckByLightning(null);
@@ -39,21 +39,21 @@ public abstract class EntityCreeperMixin extends Entity {
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
-    private void onCreeperUpdateServerCheck(CallbackInfo ci) {
+    private void onUpdate(CallbackInfo ci) {
         if (!this.difficultyRadiusApplied) {
             this.applyServerDifficultyBuff();
         }
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onCreeperConstructed(World world, CallbackInfo ci) {
+    private void init(World world, CallbackInfo ci) {
         this.applyServerDifficultyBuff();
     }
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
     private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
         par1NBTTagCompound.setBoolean("hate_DifficultyBuffApplied", this.difficultyRadiusApplied);
-        par1NBTTagCompound.setInteger("hate_CreeperCustomType", this.customCreeperType);
+        par1NBTTagCompound.setInteger("hate_celestialType", this.celestialType);
     }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
@@ -61,8 +61,8 @@ public abstract class EntityCreeperMixin extends Entity {
         if (par1NBTTagCompound.hasKey("hate_DifficultyBuffApplied")) {
             this.difficultyRadiusApplied = par1NBTTagCompound.getBoolean("hate_DifficultyBuffApplied");
         }
-        if (par1NBTTagCompound.hasKey("hate_CreeperCustomType")) {
-            this.customCreeperType = par1NBTTagCompound.getInteger("hate_CreeperCustomType");
+        if (par1NBTTagCompound.hasKey("hate_celestialType")) {
+            this.celestialType = par1NBTTagCompound.getInteger("hate_celestialType");
         }
         if (!this.difficultyRadiusApplied) {
             this.applyServerDifficultyBuff();
