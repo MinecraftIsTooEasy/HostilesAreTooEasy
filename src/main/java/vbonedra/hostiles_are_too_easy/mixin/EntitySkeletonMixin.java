@@ -8,12 +8,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 
 import static vbonedra.hostiles_are_too_easy.difficulty_mode.DifficultyMode.get_difficulty_level;
 import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob {
+public abstract class EntitySkeletonMixin extends EntityMob implements ICelestialType {
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
@@ -26,17 +27,11 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             this.celestialType = 1;
         }
     }
-
-    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
-    private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        par1NBTTagCompound.setInteger("HATECelestialType", this.celestialType);
+    @Override public int HATE$getCelestialType() {
+        return this.celestialType;
     }
-
-    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
-    private void readEntityFromNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        if (par1NBTTagCompound.hasKey("HATECelestialType")) {
-            this.celestialType = par1NBTTagCompound.getInteger("HATECelestialType");
-        }
+    @Override public void HATE$setCelestialType(int type) {
+        this.celestialType = type;
     }
 
     // logic

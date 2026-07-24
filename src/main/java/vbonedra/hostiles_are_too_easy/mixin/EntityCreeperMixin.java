@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 
 import static vbonedra.hostiles_are_too_easy.difficulty_mode.DifficultyMode.get_difficulty_level;
 
 @Mixin(EntityCreeper.class)
-public abstract class EntityCreeperMixin extends Entity {
+public abstract class EntityCreeperMixin extends Entity implements ICelestialType {
     public EntityCreeperMixin(World par1World) {
         super(par1World);
     }
@@ -34,16 +35,11 @@ public abstract class EntityCreeperMixin extends Entity {
         }
     }
 
-    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
-    private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        par1NBTTagCompound.setInteger("HATECelestialType", this.celestialType);
+    @Override public int HATE$getCelestialType() {
+        return this.celestialType;
     }
-
-    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
-    private void readEntityFromNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        if (par1NBTTagCompound.hasKey("HATECelestialType")) {
-            this.celestialType = par1NBTTagCompound.getInteger("HATECelestialType");
-        }
+    @Override public void HATE$setCelestialType(int type) {
+        this.celestialType = type;
     }
 
 

@@ -16,8 +16,8 @@ public class BiomeGenHellMixin extends BiomeGenBase {
     @Inject(method = "<init>", at = @At("RETURN"))
     public void injectCtor(CallbackInfo callbackInfo) {
         // TODO: add check if those are already added
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityHellhound.class, 20, 1, 2));
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityDemonSpider.class, 20, 1, 4));
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernalCreeper.class, 20, 1, 1));
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityHellhound.class, 10, 1, 2));
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityDemonSpider.class, 10, 1, 4));
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernalCreeper.class, 10, 1, 1));
     }
 }

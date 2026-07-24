@@ -15,8 +15,7 @@ import java.util.List;
 @Mixin(BlockSkull.class)
 public class BlockSkullMixin {
 
-    @Inject(method = "makeWither(Lnet/minecraft/World;IIILnet/minecraft/TileEntitySkull;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/World;spawnEntityInWorld(Lnet/minecraft/Entity;)Z"))
+    @Inject(method = "makeWither(Lnet/minecraft/World;IIILnet/minecraft/TileEntitySkull;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/World;spawnEntityInWorld(Lnet/minecraft/Entity;)Z"))
     private void giveWitherConstructAchievement(World world, int x, int y, int z, TileEntitySkull skull, CallbackInfo ci) {
         if (!world.isRemote) {
             double sqRadius = 16384D;
@@ -24,8 +23,7 @@ public class BlockSkullMixin {
             List<?> playersNearby = world.playerEntities;
 
             for (Object obj : playersNearby) {
-                if (obj instanceof EntityPlayer) {
-                    EntityPlayer player = (EntityPlayer) obj;
+                if (obj instanceof EntityPlayer player) {
 
                     double dX = player.posX - x;
                     double dY = player.posY - y;

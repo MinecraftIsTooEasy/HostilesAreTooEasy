@@ -4,9 +4,6 @@
     - no new world generation, only loot tables
     - no new mobs, only enhancements
 
-
-
-
 # ChangeLog:
 - infernal mobs spawn in nether (BiomeGenHell)
     - EntityInfernalCreeper
@@ -20,40 +17,5 @@
     - legendary-mode (3): on killing Wither
     - endgame-mode (4): on killing Dragon
 
-
-
-
-# Planned:
-- monster cap increases with world progression (EnumCreatureType): 50 * (1 + (1/4 * difficulty_mode))
-- monster spawns shift with world progression: TODO: list all mobs instead of general groups
-    - normal-mode (base values):
-        - overworld night: basic mobs with misc variants
-        - overworld cave: +basic variants for zombie and slime
-        - overworld deep cave: +dangerous variants
-        - underworld: +ancient variants -most basic mobs
-        - nether: hell variants
-    - hard-mode:
-        - overworld night -> overworld cave
-        - overworld cave -> overworld deep cave
-        - overworld deep cave -> overworld blood moon
-    - extreme-mode:
-        - overworld night -> overworld deep cave
-        - overworld cave -> overworld blood moon
-        - overworld deep cave -> underworld
-        - underworld -> +nether-low
-    - legendary-mode:
-        - overworld night -> overworld blood moon
-        - overworld cave -> underworld
-        - overworld deep cave -> underworld +nether-low
-        - underworld -> +nether
-        - nether -> nether+
-    - endgame-mode:
-        - overworld night
-        - overworld cave
-        - overworld deep cave
-        - underworld
-        - nether
-
-
-
-
+# Planned
+- when mining clay blocks silverfish could spawn
