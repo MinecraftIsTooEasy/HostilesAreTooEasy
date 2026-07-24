@@ -23,10 +23,9 @@ public record C2SRequestCelestialType(int entityId) implements Packet {
 
             NBTTagCompound entityNbt = new NBTTagCompound();
             int celestialType = 0;
-            if (entity instanceof EntityCreeper) ((EntityCreeper) entity).writeEntityToNBT(entityNbt);
-            if (entity instanceof EntitySkeleton) ((EntitySkeleton) entity).writeEntityToNBT(entityNbt);
-            if (entityNbt.hasKey("hate_celestialType")) {
-                celestialType = entityNbt.getInteger("hate_celestialType");
+            if (entity != null) entity.writeEntityToNBT(entityNbt);
+            if (entityNbt.hasKey("HATECelestialType")) {
+                celestialType = entityNbt.getInteger("HATECelestialType");
             }
 
             Network.sendToClient((ServerPlayer) player, new S2CResponseCelestialType(this.entityId, celestialType));

@@ -29,13 +29,13 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
     private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        par1NBTTagCompound.setInteger("hate_celestialType", this.celestialType);
+        par1NBTTagCompound.setInteger("HATECelestialType", this.celestialType);
     }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
     private void readEntityFromNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        if (par1NBTTagCompound.hasKey("hate_celestialType")) {
-            this.celestialType = par1NBTTagCompound.getInteger("hate_celestialType");
+        if (par1NBTTagCompound.hasKey("HATECelestialType")) {
+            this.celestialType = par1NBTTagCompound.getInteger("HATECelestialType");
         }
     }
 

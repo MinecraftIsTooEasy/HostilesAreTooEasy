@@ -6,6 +6,7 @@ import net.minecraft.ResourceLocation;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.util.List;
 
 public class TexturePacker {
 
@@ -162,15 +163,7 @@ public class TexturePacker {
                     int fgB = templatePixel & 0xFF;
                     double currentTemplateBrightness = 0.2126 * fgR + 0.7152 * fgG + 0.0722 * fgB;
 
-                    int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
-                    if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
-
-                    double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
-
-                    int targetBlockIdx = (int) (relativeBrightnessPct * (blockPalette.size() - 1));
-                    targetBlockIdx = Math.min(blockPalette.size() - 1, Math.max(0, targetBlockIdx));
-
-                    int blockPixel = blockPalette.get(targetBlockIdx).rgb;
+                    int blockPixel = getBlockPixel(templateBrightnesses, currentTemplateBrightness, blockPalette);
                     int bgR = (blockPixel >> 16) & 0xFF;
                     int bgG = (blockPixel >> 8) & 0xFF;
                     int bgB = blockPixel & 0xFF;
@@ -197,15 +190,20 @@ public class TexturePacker {
         }
     }
 
+    private static int getBlockPixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<BlockPixelData> blockPalette) {
+        int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
+        if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
 
-    private static class BlockPixelData {
-        final int rgb;
-        final double brightness;
+        double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
 
-        BlockPixelData(int rgb, double brightness) {
-            this.rgb = rgb;
-            this.brightness = brightness;
-        }
+        int targetBlockIdx = (int) (relativeBrightnessPct * (blockPalette.size() - 1));
+        targetBlockIdx = Math.min(blockPalette.size() - 1, Math.max(0, targetBlockIdx));
+
+        return blockPalette.get(targetBlockIdx).rgb;
+    }
+
+
+    private record BlockPixelData(int rgb, double brightness) {
     }
 
 }

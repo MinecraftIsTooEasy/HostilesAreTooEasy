@@ -6,8 +6,8 @@ import moddedmite.rustedironcore.network.PacketByteBuf;
 import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
 
 public class S2CResponseCelestialType implements Packet {
-    private int entityId;
-    private int celestialType;
+    private final int entityId;
+    private final int celestialType;
 
     public S2CResponseCelestialType(int entityId, int celestialType) {
         this.entityId = entityId;
