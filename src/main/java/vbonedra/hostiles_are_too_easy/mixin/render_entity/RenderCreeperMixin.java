@@ -113,7 +113,7 @@ public abstract class RenderCreeperMixin {
             String cacheKey = blockId + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
 
             if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithBlockByBrightness(
+                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
                         getBlockTexturePath(block, metadata),
                         templateTexture,
                         3.0F,

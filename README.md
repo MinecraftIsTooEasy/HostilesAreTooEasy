@@ -44,7 +44,7 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
 
 
 
-// TODO:
+// `TODO`:
 - write better desc, this was written by ai and some sentences are straight maid up lies. i like how it formatted it though
 - add Phase Zombie - dodges some attacks, spawns rarely
 - add Mimic EarthElemental - mimics block it stands in or on, couldn't be damaged by wrong tool for block
@@ -57,67 +57,67 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
         - Dragon: just add something beside player-perches T~T
         - Player: ??? maybe BTW-like nerfs based on health and hunger, though in MiTE they are dynamic.
         - Living
-            - Creature: TODO BTW-like possession, dimensional portals possess in <32 distance or 2 chunks at any Y level, rune portals possess in <16 distance or 1 chunk away chunk
+            - Creature: `TODO` BTW-like possession, dimensional portals possess in <32 distance or 2 chunks at any Y level, rune portals possess in <16 distance or 1 chunk away chunk
                 - WaterMob
-                    - Squid: TODO BTW-like attacks; Ghast possession-celestialType - changes texture and becomes constantly aggressive, then jumps out of the water anr turns into ghast
-                - Ageable: TODO Flesh possession-celestialType - uses pixels of rotten flesh, drop rotten flesh instead of any items, cant be bred, sheep loses wool, villagers stop trading and turn into zombie villager randomly, cows cant produce liquids, pigs turn into zombie pigmen randomly, chickens turn into small monster randomly, is base for some possession-celestialType
-                    - Villager: TODO Witch possession-celestialType - uses witch blended texture, turn into witch randomly, could be cured by regeneration effect
+                    - Squid: `TODO` BTW-like attacks; Ghast possession-celestialType - changes texture and becomes constantly aggressive, then jumps out of the water anr turns into ghast
+                - Ageable: `TODO` Flesh possession-celestialType - uses pixels of rotten flesh, drop rotten flesh instead of any items, cant be bred, sheep loses wool, villagers stop trading and turn into zombie villager randomly, cows cant produce liquids, pigs turn into zombie pigmen randomly, chickens turn into small monster randomly, is base for some possession-celestialType
+                    - Villager: `TODO` Witch possession-celestialType - uses witch blended texture, turn into witch randomly, could be cured by regeneration effect
                     - Animal
-                        - Horse: TODO 4 apocalypse riders - possession-celestialType for each one
+                        - Horse: `TODO` 4 apocalypse riders - possession-celestialType for each one
                             - White-Conquest possession-celestialType: gets wight rider that wears golden helmet and white colored leather armor and shoots arrows that apply harmful effects
                             - Red-War possession-celestialType: gets rider that wears metal plate armor and has sword, turns tameable against owners
                             - Black-Famine possession-celestialType: gets rider that makes it move to crops and trees, blights and removes those, makes nearby animals hungry and targeted players unable to eat or drink
                             - Yellow-Death possession-celestialType: gets wither skeleton rider that wears black colored leather armor and has scythe, rider summons Hades zombie nearby that gets respawned right after gets killed, those kill anything besides undead creatures and get healed and buffed
                         - Tameable
-                            - Wolf: TODO Roots possession-celestialType - if sitting stands up, gets bloodier look, spreads possession in same chunk
-                                - DireWolf: TODO Beast possession-celestialType - larger and always angry, cant be tamed
+                            - Wolf: `TODO` Roots possession-celestialType - if sitting stands up, gets bloodier look, spreads possession in same chunk
+                                - DireWolf: `TODO` Beast possession-celestialType - larger and always angry, cant be tamed
                                 - Hellhound
                             - Ocelot
-                        - Livestock: TODO Statue possession-celestialType - uses stone texture, cant move on its own, feed, drops less meat, could be damaged only by pickaxe, cant be bred, cant produce anything, still attracts other mobs
+                        - Livestock: `TODO` Statue possession-celestialType - uses stone texture, cant move on its own, feed, drops less meat, could be damaged only by pickaxe, cant be bred, cant produce anything, still attracts other mobs
                             - Pig
-                            - Sheep: TODO Bloat possession-celestialType - when unsheared gravity is reverted and looks top-bottom inverted, looks a bit saturated
-                            - Cow: TODO Hellspawn possession-celestialType - when breed spawns small monster mod, looks corrupted
-                                - Mooshroom: TODO Node possession-celestialType - looks more mushroom-ish, after some time grows into a large mushroom
-                            - Chicken: TODO Gravel possession-celestialType - could lay gravel non-gravel drop instead of egg, uses gravel texture, has nether gravel variant; Netherrack possession-celestialType - has chance of exploding on laying egg, has nether ore variants that lay corresponding chips or nuggets
-                - Mob: TODO no magic ability - cant be damaged with magic
-                    - Wither: TODO cant be damaged by explosion; when spawned under sea level starts rapidly exploding and flying up, summons wither skeletons when loses 25% health, corrupts world nearby by turning blocks into their worse variant (e.g. grass -> dirt, stone/ore -> cobblestone -> gravel, breaks leaves and flower-like plants, blights crops, resets farmlands manure and wet states, etc.), Sinful celestialType could be summoned by building with beacon at center in nether, Sinful celestialType must be killed to enter legendary mode; Sinful celestialType has more health, shoots faster, applies harder effects, when looses 50% health becomes immune to damage and starts charging for a few seconds and then explodes, after exploded cant health past 50% health
+                            - Sheep: `TODO` Bloat possession-celestialType - when unsheared gravity is reverted and looks top-bottom inverted, looks a bit saturated
+                            - Cow: `TODO` Hellspawn possession-celestialType - when breed spawns small monster mod, looks corrupted
+                                - Mooshroom: `TODO` Node possession-celestialType - looks more mushroom-ish, after some time grows into a large mushroom
+                            - Chicken: `TODO` Gravel possession-celestialType - could lay gravel non-gravel drop instead of egg, uses gravel texture, has nether gravel variant; Netherrack possession-celestialType - has chance of exploding on laying egg, has nether ore variants that lay corresponding chips or nuggets
+                - Mob: `TODO` no magic ability - cant be damaged with magic
+                    - Wither: `TODO` cant be damaged by explosion; when spawned under sea level starts rapidly exploding and flying up, summons wither skeletons when loses 25% health, corrupts world nearby by turning blocks into their worse variant (e.g. grass -> dirt, stone/ore -> cobblestone -> gravel, breaks leaves and flower-like plants, blights crops, resets farmlands manure and wet states, etc.), Sinful celestialType could be summoned by building with beacon at center in nether, Sinful celestialType must be killed to enter legendary mode; Sinful celestialType has more health, shoots faster, applies harder effects, when looses 50% health becomes immune to damage and starts charging for a few seconds and then explodes, after exploded cant health past 50% health
                     - GiantZombie
-                    - Wight: TODO Lieutenant celestialType - wears rusted iron armor, attacks have 100% to drain xp, when drains xp increases basic protection
-                    - Shadow: TODO Gloom celestialType - moves faster in darkness, when attacks from darkness gives slowness, removes nearby light sources, has larger follow range
+                    - Wight: `TODO` Lieutenant celestialType - wears rusted iron armor, attacks have 100% to drain xp, when drains xp increases basic protection, frenzies nearby undead mobs just like bone lord
+                    - Shadow: `TODO` Gloom celestialType - moves faster in darkness, when attacks from darkness gives slowness, removes nearby light sources, has larger follow range
                     - Witch
-                    - Blaze: TODO Fire celestialType - heals when in fire state, shoots more fireballs at once
-                    - Enderman: Rook celestialType - on teleportation switches places with player unless it makes them too far from each other, when hit with arrow teleports player to itself and teleports randomly
-                    - InvisibleStalker: TODO Light celestialType - doesn't remove light, invisibility and damaged based on brightness, armor increases with how invisible it is, making it almost invincible in darkness; Thief celestialType - moves faster, when attacks player it steals random item from inventory and runs away, when attacked in melee while running away it tries to attack and if succeed runs away again
-                    - FireElemental: TODO Water celestialType - spawns in dark water if in underworld or during blood moon, reverse of fire elemental, moves fast in water, takes away air when attacks, could throw snowballs that take away air, when air drained deals more damage and each attack prevents air regeneration for next few seconds
+                    - Blaze: `TODO` Fire celestialType - heals when in fire state, shoots more fireballs at once
+                    - Enderman: `TODO` Rook celestialType - on teleportation switches places with player unless it makes them too far from each other, when hit with arrow teleports player to itself and teleports randomly
+                    - InvisibleStalker: `TODO` Light celestialType - doesn't remove light, invisibility and damaged based on brightness, armor increases with how invisible it is, making it almost invincible in darkness; Thief celestialType - moves faster, when attacks player it steals random item from inventory and runs away, when attacked in melee while running away it tries to attack and if succeed runs away again
+                    - FireElemental: `TODO` Water celestialType - spawns in dark water if in underworld or during blood moon, reverse of fire elemental, moves fast in water, takes away air when attacks, could throw snowballs that take away air, when air drained deals more damage and each attack prevents air regeneration for next few seconds
                     - AnimalWatcher
-                        - EarthElemental: TODO Mimic celestialType - mimics blocks it stands on, drops its actual block on death, cant be damaged unless tool correct for block
-                            - ClayGolem: TODO cant have celestialType?
-                        - Ghoul: TODO Vampire celestialType - heal on attacks to non-undead.
-                        - Zombie: TODO Phase celestialType - dodges attacks; Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
-                            - Revenant: TODO Temerarious celestialType - cant be physically damaged while has armor, each physical attack removes 1 random armor piece, when all armor broken it gets increased speed
-                    - Creeper: ADDED Mimic celestialType - mimics blocks it stands on with flaws
-                        - InfernalCreeper: ADDED: Mimic celestialType - perfectly mimics
-                    - Skeleton: ADDED Withered celestialType - wither skeleton
+                        - EarthElemental: `TODO` Mimic celestialType - mimics blocks it stands on, drops its actual block on death, cant be damaged unless tool correct for block
+                            - ClayGolem: `TODO` cant have celestialType?
+                        - Ghoul: `TODO` Vampire celestialType - heal on attacks to non-undead.
+                        - Zombie: `TODO` Phase celestialType - dodges attacks; Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
+                            - Revenant: `TODO` Temerarious celestialType - cant be physically damaged while has armor, each physical attack removes 1 random armor piece, when all armor broken it gets increased speed
+                    - Creeper: `ADDED` Mimic celestialType - mimics blocks it stands on with flaws
+                        - InfernalCreeper: `ADDED`: Mimic celestialType - perfectly mimics
+                    - Skeleton: `ADDED` Withered celestialType - wither skeleton
                         - Longdead
                             - LongdeadGuardian
-                        - BoneLord: TODO: summon corresponding celestialType
+                        - BoneLord: `TODO`: summon corresponding celestialType
                             - AncientBoneLord
-                    - Arachnid: TODO come up with celestialType, idk what to add
-                        - Spider: TODO Demonic celestialType - same as demon spider, needed to remove demon spider replacing spiders, any non demon spider could become Demonic; TODO Broodmother celestialType - big spider that spawns spiders on death, spawned spiders are forced to be smaller than they usually are and have less health
+                    - Arachnid: `TODO` come up with celestialType, idk what to add
+                        - Spider: `TODO` Demonic celestialType - same as demon spider, needed to remove demon spider replacing spiders, any non demon spider could become Demonic; `TODO` Broodmother celestialType - big spider that spawns spiders on death, spawned spiders are forced to be smaller than they usually are and have less health
                             - DemonSpider
                         - CaveSpider 
-                        - WoodSpider: TODO Widow celestialType - black widow but a bit weaker, needed to remove replacing spiders with black widows on spawn
+                        - WoodSpider: `TODO` Widow celestialType - black widow but a bit weaker, needed to remove replacing spiders with black widows on spawn
                             - BlackWidowSpider
-                            - PhaseSpider: TODO Warp celestialType - when path-phases it also teleports nearest to itself mob that targets same entity if it would make it closer to target
-                    - Silverfish: ADDED Blockfish celestialType - spawns from some blocks
-                        - HoarySilverfish: ADDED extend Blockfish celestialType in high grade ores
-                        - Netherspawn: ADDED extend Blockfish celestialType in nether blocks
-                        - Copperspine: ADDED extend Blockfish celestialType in ores
+                            - PhaseSpider: `TODO` Warp celestialType - when path-phases it also teleports nearest to itself mob that targets same entity if it would make it closer to target
+                    - Silverfish: `ADDED` Blockfish celestialType - spawns from some blocks
+                        - HoarySilverfish: `ADDED` extend Blockfish celestialType in high grade ores
+                        - Netherspawn: `ADDED` extend Blockfish celestialType in nether blocks
+                        - Copperspine: `ADDED` extend Blockfish celestialType in ores
                 - Golem
-                    - Snowman: TODO Cloth/HardenedClay/Brick celestialType - built with wool blocks, doesnt die in non-cold biomes, corresponding throwable and armor; who even spawned one in MiTE? snow is hard to keep in non snowy biomes...
-                    - IronGolem: TODO add other block golems, though ill hate texture modifications; TODO make mobs it would attack hate it and attack 1st; TODO add custom health percent based textures like in modern minecraft
+                    - Snowman: `TODO` Cloth/HardenedClay/Brick celestialType - built with wool blocks, doesnt die in non-cold biomes, corresponding throwable and armor; who even spawned one in MiTE? snow is hard to keep in non snowy biomes...
+                    - IronGolem: `TODO` add other block golems, though ill hate texture modifications; `TODO` make mobs it would attack hate it and attack 1st; `TODO` add custom health percent based textures like in modern minecraft
             - Cubic
-                - MagmaCube: TODO Obsidian celestialType - spawns with obsidian-blended texture, must be near lava or fire to change texture to normal one; Mantle celestialType - has mantle-blended texture, sets blocks under it on fire, when dies spawns lava based on size
+                - MagmaCube: `TODO` Obsidian celestialType - spawns with obsidian-blended texture, must be near lava or fire to change texture to normal one; Mantle celestialType - has mantle-blended texture, sets blocks under it on fire, when dies spawns lava based on size
                 - GelatinousCube
                     - Slime
                     - Jelly
@@ -125,9 +125,9 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
                     - Ooze
                     - Pudding
             - AmbientCreature
-                - Bat: TODO Gnat celestialType - darker texture, smaller, flies faster, after attack flies away for a few seconds
+                - Bat: `TODO` Gnat celestialType - darker texture, smaller, flies faster, after attack flies away for a few seconds
                     - VampireBat
                         - GiantVampireBat
                 - Nightwing
             - Flying
-                - Ghast: TODO Soul celestialType - does something soulsand related, idk, sounds cool; TODO Mantle celestialType - shoots rows of small fireballs with almost no explosion
+                - Ghast: `TODO` Soul celestialType - does something soulsand related, idk, sounds cool; `TODO` Mantle celestialType - shoots rows of small fireballs with almost no explosion

@@ -80,7 +80,7 @@ public abstract class RenderSilverfishMixin {
             String cacheKey = block.blockID + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
 
             if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithBlock(
+                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSource(
                         getBlockTexturePath(block, metadata),
                         templateTexture,
                         3.0F,

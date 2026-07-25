@@ -14,6 +14,9 @@ public abstract class RendererLivingEntityMixin {
             if (skeleton.isBoneLord()) return new ResourceLocation("textures/entity/skeleton/bone_lord_glow.png");
             if (skeleton.isLongdeadGuardian()) return new ResourceLocation("textures/entity/skeleton/longdead_guardian_glow.png");
         }
+        if (par1EntityLivingBase instanceof EntityZombie zombie) {
+            if (zombie.isRevenant()) return new ResourceLocation("textures/entity/zombie/revenant_glow.png");
+        }
 //        if (par1EntityLivingBase instanceof EntityArachnid spider) {
 //            if (spider.getClass() == EntityBlackWidowSpider.class) return new ResourceLocation("textures/entity/spider/black_widow_glow.png");
 //            if (spider.getClass() == EntityCaveSpider.class) return new ResourceLocation("textures/entity/spider/cave_spider_glow.png");

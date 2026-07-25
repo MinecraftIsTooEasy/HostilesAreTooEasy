@@ -120,7 +120,7 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
 
     @Override
     protected void dropFewItems(boolean recently_hit_by_player, DamageSource damage_source) {
-        if (celestialType > 0) {
+        if (this.celestialType > 0) {
             Block associatedBlock = Block.getBlock(celestialType);
 
             if (associatedBlock != null) {

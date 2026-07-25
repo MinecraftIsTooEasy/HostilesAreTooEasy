@@ -10,19 +10,19 @@ import java.util.List;
 
 public class TexturePacker {
 
-    private static int getBlockPixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<BlockPixelData> blockPalette) {
+    private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette) {
         int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
         if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
 
         double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
 
-        int targetBlockIdx = (int) (relativeBrightnessPct * (blockPalette.size() - 1));
-        targetBlockIdx = Math.min(blockPalette.size() - 1, Math.max(0, targetBlockIdx));
+        int targetPixelSourceIdx = (int) (relativeBrightnessPct * (pixelSourcePalette.size() - 1));
+        targetPixelSourceIdx = Math.min(pixelSourcePalette.size() - 1, Math.max(0, targetPixelSourceIdx));
 
-        return blockPalette.get(targetBlockIdx).rgb;
+        return pixelSourcePalette.get(targetPixelSourceIdx).rgb;
     }
 
-    private record BlockPixelData(int rgb, double brightness) {}
+    private record PixelSourcePixelData(int rgb, double brightness) {}
 
     public static ResourceLocation blendTextures(String bgPath, String fgPath, float bgFactor, float fgFactor) {
 
@@ -89,26 +89,32 @@ public class TexturePacker {
         }
     }
 
-    public static ResourceLocation maskTemplateWithBlockByBrightness(String blockPath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
-        ResourceLocation blockLocation = new ResourceLocation(blockPath);
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath) {
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, 1F, 0F, -1);
+    }
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor) {
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, bgFactor, fgFactor, -1);
+    }
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
+        ResourceLocation pixelSourceLocation = new ResourceLocation(pixelSourcePath);
         ResourceLocation templateLocation = new ResourceLocation(templatePath);
 
         try {
             Minecraft mc = Minecraft.getMinecraft();
 
-            InputStream blockStream = TexturePacker.class.getClassLoader().getResourceAsStream(blockPath);
-            if (blockStream == null) {
-                blockStream = mc.getResourceManager().getResource(blockLocation).getInputStream();
+            InputStream pixelSourceStream = TexturePacker.class.getClassLoader().getResourceAsStream(pixelSourcePath);
+            if (pixelSourceStream == null) {
+                pixelSourceStream = mc.getResourceManager().getResource(pixelSourceLocation).getInputStream();
             }
-            BufferedImage blockImage = ImageIO.read(blockStream);
-            blockStream.close();
+            BufferedImage pixelSourceImage = ImageIO.read(pixelSourceStream);
+            pixelSourceStream.close();
 
             InputStream templateStream = mc.getResourceManager().getResource(templateLocation).getInputStream();
             BufferedImage templateImage = ImageIO.read(templateStream);
             templateStream.close();
 
-            int blockW = blockImage.getWidth();
-            int blockH = blockImage.getHeight();
+            int pixelSourceW = pixelSourceImage.getWidth();
+            int pixelSourceH = pixelSourceImage.getHeight();
             int tempW = templateImage.getWidth();
             int tempH = templateImage.getHeight();
 
@@ -116,10 +122,10 @@ public class TexturePacker {
             float tintG = ((biomeTint >> 8) & 0xFF) / 255.0F;
             float tintB = (biomeTint & 0xFF) / 255.0F;
 
-            java.util.List<BlockPixelData> blockPalette = new java.util.ArrayList<>();
-            for (int bY = 0; bY < blockH; bY++) {
-                for (int bX = 0; bX < blockW; bX++) {
-                    int rgb = blockImage.getRGB(bX, bY);
+            java.util.List<PixelSourcePixelData> pixelSourcePalette = new java.util.ArrayList<>();
+            for (int bY = 0; bY < pixelSourceH; bY++) {
+                for (int bX = 0; bX < pixelSourceW; bX++) {
+                    int rgb = pixelSourceImage.getRGB(bX, bY);
                     if (((rgb >> 24) & 0xFF) == 0) continue;
 
                     int r = (rgb >> 16) & 0xFF;
@@ -134,15 +140,15 @@ public class TexturePacker {
                     }
 
                     double brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                    blockPalette.add(new BlockPixelData(rgb, brightness));
+                    pixelSourcePalette.add(new PixelSourcePixelData(rgb, brightness));
                 }
             }
 
-            if (blockPalette.isEmpty()) {
-                blockPalette.add(new BlockPixelData(0xFFFFFFFF, 255.0));
+            if (pixelSourcePalette.isEmpty()) {
+                pixelSourcePalette.add(new PixelSourcePixelData(0xFFFFFFFF, 255.0));
             }
 
-            blockPalette.sort(java.util.Comparator.comparingDouble(p -> p.brightness));
+            pixelSourcePalette.sort(java.util.Comparator.comparingDouble(p -> p.brightness));
 
             java.util.List<Double> templateBrightnesses = new java.util.ArrayList<>();
             for (int tY = 0; tY < tempH; tY++) {
@@ -177,10 +183,10 @@ public class TexturePacker {
                     int fgB = templatePixel & 0xFF;
                     double currentTemplateBrightness = 0.2126 * fgR + 0.7152 * fgG + 0.0722 * fgB;
 
-                    int blockPixel = getBlockPixel(templateBrightnesses, currentTemplateBrightness, blockPalette);
-                    int bgR = (blockPixel >> 16) & 0xFF;
-                    int bgG = (blockPixel >> 8) & 0xFF;
-                    int bgB = blockPixel & 0xFF;
+                    int pixelSourcePixel = getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette);
+                    int bgR = (pixelSourcePixel >> 16) & 0xFF;
+                    int bgG = (pixelSourcePixel >> 8) & 0xFF;
+                    int bgB = pixelSourcePixel & 0xFF;
 
                     int finalR = Math.min(255, Math.max(0, (int) ((bgR * bgFactor + fgR * fgFactor) / totalFactor)));
                     int finalG = Math.min(255, Math.max(0, (int) ((bgG * bgFactor + fgG * fgFactor) / totalFactor)));
@@ -191,39 +197,39 @@ public class TexturePacker {
                 }
             }
 
-            String cleanBlock = blockPath.replace("/", "_").replace(".", "_");
+            String pixelSourceClean = pixelSourcePath.replace("/", "_").replace(".", "_");
             String cleanTemplate = templatePath.replace("/", "_").replace(".", "_");
-            String dynamicName = "mask_brightness_tint_" + cleanBlock + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
+            String dynamicName = "mask_brightness_tint_" + pixelSourceClean + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
 
             DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
             return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
 
         } catch (Exception e) {
-            System.err.println("maskTemplateWithBlockByBrightness failed masking: " + e);
+            System.err.println("maskTemplateWithPixelSourceByBrightness failed masking: " + e);
             return templateLocation;
         }
     }
 
-    public static ResourceLocation maskTemplateWithBlock(String blockPath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
-        ResourceLocation blockLocation = new ResourceLocation(blockPath);
+    public static ResourceLocation maskTemplateWithPixelSource(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
+        ResourceLocation pixelSourceLocation = new ResourceLocation(pixelSourcePath);
         ResourceLocation templateLocation = new ResourceLocation(templatePath);
 
         try {
             Minecraft mc = Minecraft.getMinecraft();
 
-            InputStream blockStream = TexturePacker.class.getClassLoader().getResourceAsStream(blockPath);
-            if (blockStream == null) {
-                blockStream = mc.getResourceManager().getResource(blockLocation).getInputStream();
+            InputStream pixelSourceStream = TexturePacker.class.getClassLoader().getResourceAsStream(pixelSourcePath);
+            if (pixelSourceStream == null) {
+                pixelSourceStream = mc.getResourceManager().getResource(pixelSourceLocation).getInputStream();
             }
-            BufferedImage blockImage = ImageIO.read(blockStream);
-            blockStream.close();
+            BufferedImage pixelSourceImage = ImageIO.read(pixelSourceStream);
+            pixelSourceStream.close();
 
             InputStream templateStream = mc.getResourceManager().getResource(templateLocation).getInputStream();
             BufferedImage templateImage = ImageIO.read(templateStream);
             templateStream.close();
 
-            int blockW = blockImage.getWidth();
-            int blockH = blockImage.getHeight();
+            int pixelSourceW = pixelSourceImage.getWidth();
+            int pixelSourceH = pixelSourceImage.getHeight();
             int tempW = templateImage.getWidth();
             int tempH = templateImage.getHeight();
 
@@ -245,13 +251,13 @@ public class TexturePacker {
                         continue;
                     }
 
-                    int blockX = x % blockW;
-                    int blockY = y % blockH;
-                    int blockPixel = blockImage.getRGB(blockX, blockY);
+                    int pixelSourceX = x % pixelSourceW;
+                    int pixelSourceY = y % pixelSourceH;
+                    int pixelSourcePixel = pixelSourceImage.getRGB(pixelSourceX, pixelSourceY);
 
-                    int bgR = (blockPixel >> 16) & 0xFF;
-                    int bgG = (blockPixel >> 8) & 0xFF;
-                    int bgB = blockPixel & 0xFF;
+                    int bgR = (pixelSourcePixel >> 16) & 0xFF;
+                    int bgG = (pixelSourcePixel >> 8) & 0xFF;
+                    int bgB = pixelSourcePixel & 0xFF;
 
                     if (biomeTint != -1) {
                         bgR = (int) (bgR * tintR);
@@ -272,15 +278,15 @@ public class TexturePacker {
                 }
             }
 
-            String cleanBlock = blockPath.replace("/", "_").replace(".", "_");
+            String pixelSourceClean = pixelSourcePath.replace("/", "_").replace(".", "_");
             String cleanTemplate = templatePath.replace("/", "_").replace(".", "_");
-            String dynamicName = "mask_tiled_tint_" + cleanBlock + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
+            String dynamicName = "mask_tiled_tint_" + pixelSourceClean + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
 
             DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
             return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
 
         } catch (Exception e) {
-            System.err.println("maskTemplateWithBlock failed masking: " + e);
+            System.err.println("maskTemplateWithPixelSource failed masking: " + e);
             return templateLocation;
         }
     }

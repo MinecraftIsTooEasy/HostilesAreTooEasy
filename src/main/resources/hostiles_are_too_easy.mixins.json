@@ -18,10 +18,13 @@
     "entity.EntityCreeperMixin",
     "entity.EntitySilverfishMixin",
     "entity.EntitySkeletonMixin",
+    "entity.EntityZombieMixin",
     "render_entity.RenderArachnidMixin",
     "render_entity.RenderCreeperMixin",
+    "render_entity.RenderShadowMixin",
     "render_entity.RenderSilverfishMixin",
-    "render_entity.RenderSkeletonMixin"
+    "render_entity.RenderSkeletonMixin",
+    "render_entity.RenderZombieMixin"
   ],
   "injectors": {
     "defaultRequire": 1

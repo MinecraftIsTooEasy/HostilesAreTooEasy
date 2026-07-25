@@ -31,7 +31,7 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
-        int difficulty = get_difficulty_level(world);
+        int difficulty = get_difficulty_level(this.getWorld());
 
         if (this.rand.nextFloat() < difficulty * 0.2F) {
             this.celestialType = 1;
