@@ -1,13 +1,8 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.entity;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static vbonedra.hostiles_are_too_easy.difficulty_mode.DifficultyMode.get_difficulty_level;
 import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntityArachnid.class)
@@ -15,7 +10,7 @@ public abstract class EntityArachnidMixin extends EntityMob {
     public EntityArachnidMixin(World par1World) {
         super(par1World);
     }
-
+    // TODO: come up with idea for this, idk what to add cause Spider is Too Lame =p
 
 //    @Unique private int celestialType = 0;
 //

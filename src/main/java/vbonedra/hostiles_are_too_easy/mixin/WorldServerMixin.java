@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
-import static vbonedra.hostiles_are_too_easy.difficulty_mode.DifficultyMode.get_difficulty_level;
+import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 
 
 @Mixin(WorldServer.class)
@@ -31,7 +31,7 @@ public abstract class WorldServerMixin extends World {
         boolean can_see_sky = this.hasSkylight();
 
         int difficulty_level = get_difficulty_level(this.getWorld());
-        int difficulty_level_for_random = difficulty_level + 1; // when used in nextIntSafe: 0 - never, 1 - 50%, 2 - 66%, 3 - 75%, 4 - 80%
+        int difficulty_level_for_random = difficulty_level + 1;
         boolean is_hard_mode = difficulty_level >= 1;
         boolean is_extreme_mode = difficulty_level >= 2;
         boolean is_legendary_mode = difficulty_level >= 3;
@@ -153,7 +153,7 @@ public abstract class WorldServerMixin extends World {
 //                }
 //            }
 
-            // TODO: add EntitySlime.class to BiomeGenBase but don't spawn it in non swamp biomes in normal_mode
+            // TODO?: add EntitySlime.class to BiomeGenBase but don't spawn it in non swamp biomes in normal_mode
 //            if (entity_class == EntitySlime.class) {
 //                if (!this.blockTypeIsAbove(Block.stone, x, y, z)) {
 //                    cir.setReturnValue(entity_class);

@@ -1,7 +1,6 @@
 package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
-import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,10 +13,22 @@ public class BiomeGenHellMixin extends BiomeGenBase {
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void injectCtor(CallbackInfo callbackInfo) {
-        // TODO: add check if those are already added
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityHellhound.class, 10, 1, 2));
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityDemonSpider.class, 10, 1, 4));
-        this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernalCreeper.class, 10, 1, 1));
+    public void init(CallbackInfo callbackInfo) {
+        boolean hellhoundWasAdded = false;
+        boolean demonSpiderWasAdded = false;
+        boolean infernalCreeperWasAdded = false;
+
+        for (Object obj : this.spawnableMonsterList) {
+            if (obj instanceof SpawnListEntry) {
+                Class entityClass = ((SpawnListEntry) obj).entityClass;
+                if (entityClass == EntityHellhound.class) hellhoundWasAdded = true;
+                else if (entityClass == EntityDemonSpider.class) demonSpiderWasAdded = true;
+                else if (entityClass == EntityInfernalCreeper.class) infernalCreeperWasAdded = true;
+            }
+        }
+
+        if (!hellhoundWasAdded) this.spawnableMonsterList.add(new SpawnListEntry(EntityHellhound.class, 10, 1, 2));
+        if (!demonSpiderWasAdded) this.spawnableMonsterList.add(new SpawnListEntry(EntityDemonSpider.class, 10, 1, 4));
+        if (!infernalCreeperWasAdded) this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernalCreeper.class, 10, 1, 1));
     }
 }

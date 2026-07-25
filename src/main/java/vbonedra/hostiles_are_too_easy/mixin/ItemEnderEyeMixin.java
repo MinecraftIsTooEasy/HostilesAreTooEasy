@@ -12,7 +12,7 @@ import vbonedra.hostiles_are_too_easy.util.AchievementExtend;
 
 @Mixin(ItemEnderEye.class)
 public class ItemEnderEyeMixin {
-    // IDK: it doesn't need to be complex, but mayne it's better to make delay player-specific, so 2 players clicking frame won't interrupt each other, though who cares?
+    // TODO?: it doesn't need to be complex, but mayne it's better to make delay player-specific, so 2 players clicking frame won't interrupt each other, though who cares?
 
     @Unique private int lastSoundTick = 0;
 

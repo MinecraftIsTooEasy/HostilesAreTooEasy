@@ -10,6 +10,20 @@ import java.util.List;
 
 public class TexturePacker {
 
+    private static int getBlockPixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<BlockPixelData> blockPalette) {
+        int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
+        if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
+
+        double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
+
+        int targetBlockIdx = (int) (relativeBrightnessPct * (blockPalette.size() - 1));
+        targetBlockIdx = Math.min(blockPalette.size() - 1, Math.max(0, targetBlockIdx));
+
+        return blockPalette.get(targetBlockIdx).rgb;
+    }
+
+    private record BlockPixelData(int rgb, double brightness) {}
+
     public static ResourceLocation blendTextures(String bgPath, String fgPath, float bgFactor, float fgFactor) {
 
         ResourceLocation bgLocation = new ResourceLocation(bgPath);
@@ -70,7 +84,7 @@ public class TexturePacker {
             return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("blendTextures failed blending: " + e);
             return bgLocation;
         }
     }
@@ -185,25 +199,90 @@ public class TexturePacker {
             return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("maskTemplateWithBlockByBrightness failed masking: " + e);
             return templateLocation;
         }
     }
 
-    private static int getBlockPixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<BlockPixelData> blockPalette) {
-        int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
-        if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
+    public static ResourceLocation maskTemplateWithBlock(String blockPath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
+        ResourceLocation blockLocation = new ResourceLocation(blockPath);
+        ResourceLocation templateLocation = new ResourceLocation(templatePath);
 
-        double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
 
-        int targetBlockIdx = (int) (relativeBrightnessPct * (blockPalette.size() - 1));
-        targetBlockIdx = Math.min(blockPalette.size() - 1, Math.max(0, targetBlockIdx));
+            InputStream blockStream = TexturePacker.class.getClassLoader().getResourceAsStream(blockPath);
+            if (blockStream == null) {
+                blockStream = mc.getResourceManager().getResource(blockLocation).getInputStream();
+            }
+            BufferedImage blockImage = ImageIO.read(blockStream);
+            blockStream.close();
 
-        return blockPalette.get(targetBlockIdx).rgb;
-    }
+            InputStream templateStream = mc.getResourceManager().getResource(templateLocation).getInputStream();
+            BufferedImage templateImage = ImageIO.read(templateStream);
+            templateStream.close();
 
+            int blockW = blockImage.getWidth();
+            int blockH = blockImage.getHeight();
+            int tempW = templateImage.getWidth();
+            int tempH = templateImage.getHeight();
 
-    private record BlockPixelData(int rgb, double brightness) {
+            float tintR = ((biomeTint >> 16) & 0xFF) / 255.0F;
+            float tintG = ((biomeTint >> 8) & 0xFF) / 255.0F;
+            float tintB = (biomeTint & 0xFF) / 255.0F;
+
+            BufferedImage outputImage = new BufferedImage(tempW, tempH, BufferedImage.TYPE_INT_ARGB);
+            float totalFactor = bgFactor + fgFactor;
+            if (totalFactor <= 0.0f) totalFactor = 1.0f;
+
+            for (int y = 0; y < tempH; y++) {
+                for (int x = 0; x < tempW; x++) {
+                    int templatePixel = templateImage.getRGB(x, y);
+                    int templateA = (templatePixel >> 24) & 0xFF;
+
+                    if (templateA == 0) {
+                        outputImage.setRGB(x, y, 0x00000000);
+                        continue;
+                    }
+
+                    int blockX = x % blockW;
+                    int blockY = y % blockH;
+                    int blockPixel = blockImage.getRGB(blockX, blockY);
+
+                    int bgR = (blockPixel >> 16) & 0xFF;
+                    int bgG = (blockPixel >> 8) & 0xFF;
+                    int bgB = blockPixel & 0xFF;
+
+                    if (biomeTint != -1) {
+                        bgR = (int) (bgR * tintR);
+                        bgG = (int) (bgG * tintG);
+                        bgB = (int) (bgB * tintB);
+                    }
+
+                    int fgR = (templatePixel >> 16) & 0xFF;
+                    int fgG = (templatePixel >> 8) & 0xFF;
+                    int fgB = templatePixel & 0xFF;
+
+                    int finalR = Math.min(255, Math.max(0, (int) ((bgR * bgFactor + fgR * fgFactor) / totalFactor)));
+                    int finalG = Math.min(255, Math.max(0, (int) ((bgG * bgFactor + fgG * fgFactor) / totalFactor)));
+                    int finalB = Math.min(255, Math.max(0, (int) ((bgB * bgFactor + fgB * fgFactor) / totalFactor)));
+
+                    int blendedPixel = (templateA << 24) | (finalR << 16) | (finalG << 8) | finalB;
+                    outputImage.setRGB(x, y, blendedPixel);
+                }
+            }
+
+            String cleanBlock = blockPath.replace("/", "_").replace(".", "_");
+            String cleanTemplate = templatePath.replace("/", "_").replace(".", "_");
+            String dynamicName = "mask_tiled_tint_" + cleanBlock + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
+
+            DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
+            return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
+
+        } catch (Exception e) {
+            System.err.println("maskTemplateWithBlock failed masking: " + e);
+            return templateLocation;
+        }
     }
 
 }

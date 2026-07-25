@@ -1,20 +1,7 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.render_entity;
 
-import moddedmite.rustedironcore.network.Network;
-import net.minecraft.EntityArachnid;
 import net.minecraft.RenderArachnid;
-import net.minecraft.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
-import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
-import vbonedra.hostiles_are_too_easy.util.TexturePacker;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(RenderArachnid.class)
 public abstract class RenderArachnidMixin {
