@@ -5,13 +5,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-import vbonedra.hostiles_are_too_easy.util.SilverfishBlockType;
 
 @Mixin(EntitySilverfish.class)
 public abstract class EntitySilverfishMixin extends EntityMob implements ICelestialType {
-    @Unique private int celestialType = 0; // celestialType must be negative for non-SilverfishBlockType
+    @Unique private int celestialType = 0;
     @Override public int HATE$getCelestialType() {
         return this.celestialType;
     }
@@ -29,14 +29,12 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
             float health = 4.0F;
             float speed = 0.5F;
 
-            EnumEquipmentMaterial material = SilverfishBlockType.getEquipmentMaterialForBlockId(this.celestialType);
+            Block associatedBlock = Block.getBlock(this.celestialType);
+            if (associatedBlock != null) {
+                float hardness = associatedBlock.getBlockHardness(0);
+                if (hardness < 0.0F) hardness = 0.0F;
 
-            if (material != null) {
-                damage = 1.0F + (float) Math.cbrt(material.durability);
-                health = 4.0F + (float) Math.sqrt(material.durability) * 4.0F;
-                if (material.durability > 16.0F) {
-                    speed = 0.35F;
-                }
+                damage = 1.0F + hardness;
             }
 
             this.setEntityAttribute(SharedMonsterAttributes.attackDamage, damage);
@@ -56,13 +54,65 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
         }
     }
 
-    // TODO: instead of Override it must be Inject at HEAD of super.method
+    @Inject(method = "updateEntityActionState()V", at = @At("HEAD"), cancellable = true)
+    private void onUpdateEntityActionState(CallbackInfo ci) {
+        if (this.celestialType > 0) {
+            super.updateEntityActionState();
+            if (!this.worldObj.isRemote) {
+                if (!this.hasPath()) {
+                    if (this.entityToAttack == null) {
+                        this.updateWanderPath();
+                    } else {
+                        this.entityToAttack = null;
+                    }
+                }
+            }
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "getHurtSound()Ljava/lang/String;", at = @At("RETURN"), cancellable = true)
+    private void getHurtSound(CallbackInfoReturnable<String> cir) {
+        if (this.celestialType > 0) {
+            Block associatedBlock = Block.getBlock(this.celestialType);
+            if (associatedBlock != null && associatedBlock.stepSound != null) {
+                cir.setReturnValue(associatedBlock.stepSound.getStepSound());
+            }
+        }
+    }
+
+    @Inject(method = "getDeathSound()Ljava/lang/String;", at = @At("RETURN"), cancellable = true)
+    private void getDeathSound(CallbackInfoReturnable<String> cir) {
+        if (this.celestialType > 0) {
+            Block associatedBlock = Block.getBlock(this.celestialType);
+            if (associatedBlock != null && associatedBlock.stepSound != null) {
+                cir.setReturnValue(associatedBlock.stepSound.getBreakSound());
+            }
+        }
+    }
+
+    @Inject(method = "playStepSound(IIII)V", at = @At("HEAD"), cancellable = true)
+    private void onPlayStepSound(int par1, int par2, int par3, int par4, CallbackInfo ci) {
+        if (this.celestialType > 0) {
+            Block associatedBlock = Block.getBlock(this.celestialType);
+            if (associatedBlock != null && associatedBlock.stepSound != null) {
+                this.makeSound(associatedBlock.stepSound.getBreakSound(), 0.15F, 1.0F);
+                ci.cancel();
+            }
+        }
+    }
+
+
+
     @Override
     public float getNaturalDefense(DamageSource damage_source) {
         if (this.celestialType > 0) {
-            EnumEquipmentMaterial material = SilverfishBlockType.getEquipmentMaterialForBlockId(this.celestialType);
-            if (material != null) {
-                return super.getNaturalDefense(damage_source) + (float) Math.cbrt(material.durability) * 4.0F;
+            Block associatedBlock = Block.getBlock(this.celestialType);
+            if (associatedBlock != null) {
+                float hardness = associatedBlock.getBlockHardness(0);
+                if (hardness < 0.0F) hardness = 0.0F;
+                float extraDefense = hardness;
+                return super.getNaturalDefense(damage_source) + extraDefense;
             }
         }
         return super.getNaturalDefense(damage_source);
@@ -114,7 +164,6 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
 
         super.dropFewItems(recently_hit_by_player, damage_source);
     }
-
 
     @Override
     public boolean isImmuneTo(DamageSource damage_source) {
