@@ -22,16 +22,24 @@ public abstract class BlockMixin {
             }
 
             if (info.getMetadata() == 1) {
-                return;
+                if (!false) { // TODO: extend with ManyLib config
+                    return;
+                }
             }
 
             Block currentBlock = (Block) (Object) this;
-            float spawnChance = SilverfishBlockType.getSpawnChanceForBlockId(currentBlock.blockID);
+            World world = info.world;
+            float spawnChance = SilverfishBlockType.getSpawnChance(currentBlock.blockID, world);
 
             if (spawnChance > 0.0F) {
-                World world = info.world;
                 if (world.rand.nextFloat() <= spawnChance) {
-                    EntitySilverfish silverfish = new EntitySilverfish(world);
+                    Class<? extends EntitySilverfish> silverfishClass = SilverfishBlockType.getSilverfishClassForBlockId(currentBlock.blockID);
+                    EntitySilverfish silverfish;
+                    try {
+                        silverfish = silverfishClass.getConstructor(World.class).newInstance(world);
+                    } catch (Exception e) {
+                        silverfish = new EntitySilverfish(world);
+                    }
 
                     ((ICelestialType) silverfish).HATE$setCelestialType(currentBlock.blockID);
 

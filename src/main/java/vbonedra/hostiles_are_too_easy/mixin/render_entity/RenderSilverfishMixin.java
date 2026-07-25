@@ -59,7 +59,7 @@ public abstract class RenderSilverfishMixin {
             CelestialTypeCache.requestedEntities.remove(entityId);
         }
 
-        if (celestialType > 0) {
+        if (celestialType != 0) {
             Block block = Block.getBlock(celestialType);
             if (block == null) {
                 block = Block.dirt;

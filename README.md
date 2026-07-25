@@ -110,9 +110,9 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
                             - BlackWidowSpider
                             - PhaseSpider: TODO Warp celestialType - when path-phases it also teleports nearest to itself mob that targets same entity if it would make it closer to target
                     - Silverfish: ADDED Blockfish celestialType - spawns from some blocks
-                        - HoarySilverfish: TODO extend Blockfish celestialType in high grade ores
-                        - Netherspawn: TODO extend Blockfish celestialType in nether blocks
-                        - Copperspine: TODO extend Blockfish celestialType in ores
+                        - HoarySilverfish: ADDED extend Blockfish celestialType in high grade ores
+                        - Netherspawn: ADDED extend Blockfish celestialType in nether blocks
+                        - Copperspine: ADDED extend Blockfish celestialType in ores
                 - Golem
                     - Snowman: TODO Cloth/HardenedClay/Brick celestialType - built with wool blocks, doesnt die in non-cold biomes, corresponding throwable and armor; who even spawned one in MiTE? snow is hard to keep in non snowy biomes...
                     - IronGolem: TODO add other block golems, though ill hate texture modifications; TODO make mobs it would attack hate it and attack 1st; TODO add custom health percent based textures like in modern minecraft
