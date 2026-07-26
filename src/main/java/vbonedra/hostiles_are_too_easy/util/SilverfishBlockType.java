@@ -14,8 +14,8 @@ public class SilverfishBlockType {
         GUARANTEED
     }
 
-    public record BlockData(Rarity rarity, Class<? extends EntitySilverfish> silverfishClass, boolean replaceBlockDrop) {
-    }
+    // TODO: add experience for each blockfish, if replaceBlockDrop its same xp as if it was broken block, unless its base multiplied by value saved there
+    public record BlockData(Rarity rarity, Class<? extends EntitySilverfish> silverfishClass, boolean replaceBlockDrop) {}
 
     public static final Map<Integer, BlockData> blockDataMap = new HashMap<>();
 

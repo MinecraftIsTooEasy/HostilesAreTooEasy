@@ -41,7 +41,37 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
 * Simulated Harvesting: If killed using a tool made of the block's exact vein material (or an effective mining tool if it has no tool material), the Silverfish properly drops the block's loot items, taking player skills and Fortune multipliers into account.
 
 
-
+// `TODO`:
+- Mob AI Tweaks stolen ideas:
+    - sounds: entities create sounds, some entities could hear them and go check where they come from
+    - sleeping: if biped entity lost health it could enter sleepy state, it would sit and/or look down, while sleeping has lowered detecting range
+    - entities with tools could jump 1 block up of player is 2 blocks higher
+    - slimes could shoot slimeballs
+    - zombies could hold tiny slimes as weapons and rarely doors as shields
+    - skeletons and any other mobs that use ranged weapons back up when approached by their target
+    - Cold celestialType Skeleton - throws snowballs time to time
+    - Brick celestialType Skeleton - throws bricks time to time
+    - Skeleton: 360 shots - skeletons could jump and do 360 before shooting arrow
+    - Wither Skeleton: skull shoot - could shoot wither sculls once in a life if target is too far
+    - Enderman: hate lock - after attacked wont peaceful until kills attacker
+    - Blaze: prepare shot - summons 3-5 fireballs around itself and after short time shoots them
+    - Creeper: arrow shot - if got hit by arrows and they didnt broke creeper would summon randomly rotated arrows on explosion
+    - Villager: `TODO`: i forgot that they have careers, not all 
+        - they could hate player that treats them badly, e.g. attacks them or iron golems, places too many doors next to each other
+        - they have inventory player could access if they aren't hated
+        - they do staff based in professions
+            - Priest: throws healing potions at hurt villagers
+            - Blacksmith: heals iron golems, repairs tools other villagers use
+            - Farmer: cures blight if has bonemeal, shears sheep if has shears, milks cow if has buckets
+            - Librarian: enchant tools villagers use
+            - Butcher: bonemeals grass near animals if has bonemeal, feeds and kills animals if has food and dagger
+            - Nitwit: could attack monsters if iron golem isnt nearby
+        - player could pay villager an emerald for their service:
+            - Priest: would throw healing potion at player
+            - Blacksmith: would repair items from hotbar if player has nuggets in hotbar
+            - Farmer: would give some bread and maybe water bottle
+            - Librarian: would enchant items from hotbar
+            - Nitwit: would follow player and attack monsters
 
 
 // `TODO`:

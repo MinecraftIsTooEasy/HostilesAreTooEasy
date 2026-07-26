@@ -10,5 +10,7 @@ public interface ICelestialType {
     int celestialTypeCreeperMimic = 1;
     // EntityZombie
     int celestialTypeZombiePhase = 1;
+    // EntityPhaseSpider
+    int celestialTypeArachnidWarp = 1;
 
 }

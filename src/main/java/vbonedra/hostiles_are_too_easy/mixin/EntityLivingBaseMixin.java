@@ -120,4 +120,6 @@ public abstract class EntityLivingBaseMixin {
             }
         }
     }
+
+    // TODO: move all celestialType logic to this class?
 }

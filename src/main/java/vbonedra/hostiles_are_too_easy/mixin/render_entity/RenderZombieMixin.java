@@ -54,7 +54,7 @@ public abstract class RenderZombieMixin {
             CelestialTypeCache.requestedEntities.remove(entityId);
         }
 
-        if (celestialType == celestialTypeZombiePhase || true) {
+        if (celestialType == celestialTypeZombiePhase) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = phaseTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {
