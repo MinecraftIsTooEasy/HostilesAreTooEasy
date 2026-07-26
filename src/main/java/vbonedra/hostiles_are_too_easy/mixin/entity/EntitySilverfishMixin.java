@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.SilverfishBlockType;
 
 @Mixin(EntitySilverfish.class)
 public abstract class EntitySilverfishMixin extends EntityMob implements ICelestialType {
@@ -29,9 +30,9 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
             float health = 4.0F;
             float speed = 0.5F;
 
-            Block associatedBlock = Block.getBlock(this.celestialType);
-            if (associatedBlock != null) {
-                float hardness = associatedBlock.getBlockHardness(0);
+            Block block = Block.getBlock(this.celestialType);
+            if (block != null) {
+                float hardness = block.getBlockHardness(0);
                 if (hardness < 0.0F) hardness = 0.0F;
 
                 damage = 1.0F + hardness;
@@ -74,9 +75,9 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
     @Inject(method = "getHurtSound()Ljava/lang/String;", at = @At("RETURN"), cancellable = true)
     private void getHurtSound(CallbackInfoReturnable<String> cir) {
         if (this.celestialType > 0) {
-            Block associatedBlock = Block.getBlock(this.celestialType);
-            if (associatedBlock != null && associatedBlock.stepSound != null) {
-                cir.setReturnValue(associatedBlock.stepSound.getStepSound());
+            Block block = Block.getBlock(this.celestialType);
+            if (block != null && block.stepSound != null) {
+                cir.setReturnValue(block.stepSound.getStepSound());
             }
         }
     }
@@ -84,9 +85,9 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
     @Inject(method = "getDeathSound()Ljava/lang/String;", at = @At("RETURN"), cancellable = true)
     private void getDeathSound(CallbackInfoReturnable<String> cir) {
         if (this.celestialType > 0) {
-            Block associatedBlock = Block.getBlock(this.celestialType);
-            if (associatedBlock != null && associatedBlock.stepSound != null) {
-                cir.setReturnValue(associatedBlock.stepSound.getBreakSound());
+            Block block = Block.getBlock(this.celestialType);
+            if (block != null && block.stepSound != null) {
+                cir.setReturnValue(block.stepSound.getBreakSound());
             }
         }
     }
@@ -94,44 +95,29 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
     @Inject(method = "playStepSound(IIII)V", at = @At("HEAD"), cancellable = true)
     private void onPlayStepSound(int par1, int par2, int par3, int par4, CallbackInfo ci) {
         if (this.celestialType > 0) {
-            Block associatedBlock = Block.getBlock(this.celestialType);
-            if (associatedBlock != null && associatedBlock.stepSound != null) {
-                this.makeSound(associatedBlock.stepSound.getBreakSound(), 0.15F, 1.0F);
+            Block block = Block.getBlock(this.celestialType);
+            if (block != null && block.stepSound != null) {
+                this.makeSound(block.stepSound.getBreakSound(), 0.15F, 1.0F);
                 ci.cancel();
             }
         }
     }
 
-
-
-    @Override
-    public float getNaturalDefense(DamageSource damage_source) {
-        if (this.celestialType > 0) {
-            Block associatedBlock = Block.getBlock(this.celestialType);
-            if (associatedBlock != null) {
-                float hardness = associatedBlock.getBlockHardness(0);
-                if (hardness < 0.0F) hardness = 0.0F;
-                float extraDefense = hardness;
-                return super.getNaturalDefense(damage_source) + extraDefense;
-            }
-        }
-        return super.getNaturalDefense(damage_source);
-    }
-
+    // TODO: Override is awful, though idk how to move that to greater classes + its better for mine mod to override and force drop instead of other mods making Blockfish useless
     @Override
     protected void dropFewItems(boolean recently_hit_by_player, DamageSource damage_source) {
-        if (this.celestialType > 0) {
-            Block associatedBlock = Block.getBlock(celestialType);
+        if (celestialType > 0) {
+            Block block = Block.getBlock(celestialType);
 
-            if (associatedBlock != null) {
+            if (block != null) {
                 EntityPlayer player = (damage_source != null && damage_source.getResponsibleEntity() instanceof EntityPlayer)
                         ? (EntityPlayer) damage_source.getResponsibleEntity() : null;
 
                 ItemStack heldItem = (player != null) ? player.getHeldItemStack() : null;
 
                 boolean canMine = heldItem != null && (
-                        (associatedBlock instanceof BlockOre ore && heldItem.hasMaterial(ore.vein_material)) ||
-                                (heldItem.getItem() instanceof ItemTool tool && tool.isEffectiveAgainstBlock(associatedBlock, 0))
+                        (block instanceof BlockOre ore && heldItem.hasMaterial(ore.vein_material)) ||
+                                (heldItem.getItem() instanceof ItemTool tool && tool.isEffectiveAgainstBlock(block, 0)) && SilverfishBlockType.getReplaceBlockDropForBlockId(block.blockID)
                 );
 
                 if (!canMine) {
@@ -153,11 +139,11 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
                 info.drop_y = posY_int;
                 info.drop_z = posZ_int;
 
-                info.block = associatedBlock;
+                info.block = block;
                 info.responsible_entity = player;
                 info.responsible_item_stack = player.getHeldItem().getItemStackForStatsIcon();
 
-                associatedBlock.dropBlockAsEntityItem(info);
+                block.dropBlockAsEntityItem(info);
                 return;
             }
         }
@@ -165,22 +151,4 @@ public abstract class EntitySilverfishMixin extends EntityMob implements ICelest
         super.dropFewItems(recently_hit_by_player, damage_source);
     }
 
-    @Override
-    public boolean isImmuneTo(DamageSource damage_source) {
-        if (this.celestialType == 0 || damage_source == null) {
-            return super.isImmuneTo(damage_source);
-        }
-
-        Block associatedBlock = Block.getBlock(this.celestialType);
-        if (associatedBlock == null) {
-            return super.isImmuneTo(damage_source);
-        }
-
-        ItemStack item_stack = damage_source.getItemAttackedWith();
-        if (item_stack != null && item_stack.getItem() instanceof ItemTool) {
-            return !item_stack.getItemAsTool().isEffectiveAgainstBlock(associatedBlock, 0);
-        }
-
-        return true;
-    }
 }

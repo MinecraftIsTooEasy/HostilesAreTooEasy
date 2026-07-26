@@ -34,7 +34,7 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
         int difficulty = get_difficulty_level(this.getWorld());
 
         if (this.rand.nextFloat() < difficulty * 0.2F) {
-            this.celestialType = 1;
+            this.celestialType = celestialTypeCreeperMimic;
         }
         if (this.rand.nextFloat() < difficulty * 0.1F) {
             this.onStruckByLightning(null);

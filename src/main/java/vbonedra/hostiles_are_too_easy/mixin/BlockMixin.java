@@ -11,7 +11,7 @@ import vbonedra.hostiles_are_too_easy.util.SilverfishBlockType;
 @Mixin(Block.class)
 public abstract class BlockMixin {
 
-    @Inject(method = "dropBlockAsEntityItem(Lnet/minecraft/BlockBreakInfo;IIIF)I", at = @At("HEAD"))
+    @Inject(method = "dropBlockAsEntityItem(Lnet/minecraft/BlockBreakInfo;IIIF)I", at = @At("HEAD"), cancellable = true)
     private void dropBlockAsEntityItem_spawnSilverfishCelestialType(BlockBreakInfo info, int id_dropped, int subtype, int quantity, float chance, CallbackInfoReturnable<Integer> cir) {
         if (info != null && info.world != null && !info.world.isRemote) {
             if (info.x == Integer.MAX_VALUE) {
@@ -22,14 +22,14 @@ public abstract class BlockMixin {
             }
 
             if (info.getMetadata() == 1) {
-                if (!false) { // TODO: extend with ManyLib config
+                if (!true) { // TODO: extend with ManyLib config
                     return;
                 }
             }
 
             Block currentBlock = (Block) (Object) this;
             World world = info.world;
-            float spawnChance = SilverfishBlockType.getSpawnChance(currentBlock.blockID, world);
+            float spawnChance = SilverfishBlockType.getSpawnChanceForBlockId(currentBlock.blockID, world);
 
             if (spawnChance > 0.0F) {
                 if (world.rand.nextFloat() <= spawnChance) {
@@ -51,8 +51,12 @@ public abstract class BlockMixin {
                             0.0F
                     );
                     world.spawnEntityInWorld(silverfish);
+                    if (SilverfishBlockType.getReplaceBlockDropForBlockId(currentBlock.blockID)) {
+                        cir.setReturnValue(0);
+                    }
                 }
             }
         }
     }
+
 }

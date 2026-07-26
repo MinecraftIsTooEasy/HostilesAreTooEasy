@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
 
-    @Inject(method = "playerLoggedIn(Lnet/minecraft/ServerPlayer;)V", at = @At("RETURN"), remap = false)
+    @Inject(method = "playerLoggedIn(Lnet/minecraft/ServerPlayer;)V", at = @At("RETURN"))
     private void playerLoggedIn_grantAchievement(ServerPlayer player, CallbackInfo ci) {
         if (player != null && AchievementExtend.normalMode != null) {
             player.addStat(AchievementExtend.normalMode, 1);

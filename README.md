@@ -93,7 +93,7 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
                         - EarthElemental: `TODO` Mimic celestialType - mimics blocks it stands on, drops its actual block on death, cant be damaged unless tool correct for block
                             - ClayGolem: `TODO` cant have celestialType?
                         - Ghoul: `TODO` Vampire celestialType - heal on attacks to non-undead.
-                        - Zombie: `TODO` Phase celestialType - dodges attacks; Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
+                        - Zombie: `ADDED` Phase celestialType - dodges attacks; `TODO` Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
                             - Revenant: `TODO` Temerarious celestialType - cant be physically damaged while has armor, each physical attack removes 1 random armor piece, when all armor broken it gets increased speed
                     - Creeper: `ADDED` Mimic celestialType - mimics blocks it stands on with flaws
                         - InfernalCreeper: `ADDED`: Mimic celestialType - perfectly mimics

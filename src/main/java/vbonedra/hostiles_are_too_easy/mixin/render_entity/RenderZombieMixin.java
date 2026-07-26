@@ -15,12 +15,17 @@ import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import java.util.HashMap;
 import java.util.Map;
 
+import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeZombiePhase;
+
 
 @Mixin(RenderZombie.class)
 public abstract class RenderZombieMixin {
 
     @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
     @Unique String phaseTexture = "textures/entity/spider/phase_spider.png";
+    @Unique String bloodyTexture3 = "textures/items/ruby.png";
+    @Unique String bloodyTexture2 = "textures/items/spider_eye_fermented.png";
+    @Unique String bloodyTexture = "textures/entity/creeper/infernal_creeper.png";
 
 
     @Inject(method = "func_110863_a(Lnet/minecraft/EntityZombie;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
@@ -49,7 +54,7 @@ public abstract class RenderZombieMixin {
             CelestialTypeCache.requestedEntities.remove(entityId);
         }
 
-        if (celestialType == 1) {
+        if (celestialType == celestialTypeZombiePhase || true) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = phaseTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {

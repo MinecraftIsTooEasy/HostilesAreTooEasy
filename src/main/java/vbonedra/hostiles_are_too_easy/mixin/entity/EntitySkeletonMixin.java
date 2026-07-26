@@ -14,7 +14,7 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob implements ICelestialType {
+public abstract class EntitySkeletonMixin extends EntityLivingBase implements ICelestialType {
     @Unique private int celestialType = 0;
     @Override public int HATE$getCelestialType() {
         return this.celestialType;
@@ -29,14 +29,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
-            this.celestialType = 1;
+            this.celestialType = celestialTypeSkeletonWithered;
         }
     }
 
     // logic
     @Inject(method = "dropFewItems", at = @At("RETURN"))
     private void dropFewItemsEvolved(boolean recently_hit_by_player, DamageSource damage_source, CallbackInfo ci) {
-        if (this.celestialType == 1) {
+        if (this.celestialType == celestialTypeSkeletonWithered) {
             int looting = damage_source.getLootingModifier();
             int num_drops = this.rand.nextInt(3 + looting) - 1;
             if (num_drops > 0 && !recently_hit_by_player) {
@@ -55,13 +55,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
     }
     @Inject(method = "isHarmedByFire", at = @At("RETURN"), cancellable = true)
     private void isHarmedByFireEvolved(CallbackInfoReturnable<Boolean> cir) {
-        if (this.celestialType == 1) {
+        if (this.celestialType == celestialTypeSkeletonWithered) {
             cir.setReturnValue(false);
         }
     }
     @Inject(method = "isHarmedByLava", at = @At("RETURN"), cancellable = true)
     private void isHarmedByLavaEvolved(CallbackInfoReturnable<Boolean> cir) {
-        if (this.celestialType == 1) {
+        if (this.celestialType == celestialTypeSkeletonWithered) {
             cir.setReturnValue(false);
         }
     }
@@ -69,14 +69,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
     private void attackEntityAsMobEvolved(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
         EntityDamageResult result = cir.getReturnValue();
         if (result != null && !result.entityWasDestroyed()) {
-            if (result.entityLostHealth() && this.celestialType == 1 && target instanceof EntityLivingBase) {
+            if (result.entityLostHealth() && this.celestialType == celestialTypeSkeletonWithered && target instanceof EntityLivingBase) {
                 target.getAsEntityLivingBase().addPotionEffect(new PotionEffect(Potion.wither.id, 200));
             }
         }
     }
     @Inject(method = "attackEntityWithRangedAttack", at = @At(value = "RETURN"))
     private void attackEntityWithRangedAttackEvolved(EntityLivingBase target, float par2, CallbackInfo ci, @Local EntityArrow var3) {
-        if (this.celestialType == 1) {
+        if (this.celestialType == celestialTypeSkeletonWithered) {
             var3.setFire(100);
         }
     }

@@ -14,6 +14,8 @@ import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import java.util.HashMap;
 import java.util.Map;
 
+import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeSkeletonWithered;
+
 @Mixin(RenderSkeleton.class)
 public abstract class RenderSkeletonMixin {
 
@@ -47,7 +49,7 @@ public abstract class RenderSkeletonMixin {
             CelestialTypeCache.requestedEntities.remove(entityId);
         }
 
-        if (celestialType == 1) {
+        if (celestialType == celestialTypeSkeletonWithered) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = witheredTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {

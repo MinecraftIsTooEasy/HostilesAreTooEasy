@@ -30,7 +30,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
         if (this.rand.nextFloat() < difficulty * 0.05F) {
-            this.celestialType = 1;
+            this.celestialType = celestialTypeZombiePhase;
             this.max_num_evasions = this.rand.nextInt(3 + difficulty) + 2;
             this.num_evasions = this.rand.nextInt(this.max_num_evasions);
         }
@@ -48,12 +48,12 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.celestialType == 1);
+            cir.setReturnValue(this.celestialType == celestialTypeZombiePhase);
         }
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.celestialType == 1) {
+        if (this.celestialType == celestialTypeZombiePhase) {
             System.out.println("should evade");
             boolean can_evade = !damage.isFallDamage() && !damage.isFireDamage() && !damage.isPoison();
 
