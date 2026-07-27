@@ -39,13 +39,12 @@ public abstract class RendererLivingEntityMixin {
         if (par1EntityLivingBase instanceof EntityGhoul) {
             if (celestialType == ICelestialType.celestialTypeGhoulVampire) {
                 return TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        "textures/items/shards/flint.png",
+                        "textures/items/dye_powder_blue.png",
                         "textures/entity/earth_elemental/earth_elemental_glow.png",
                         1.0F,
                         0.0F,
                         true
                 );
-//                return new ResourceLocation("textures/entity/earth_elemental/earth_elemental_glow.png");
             }
         }
 
