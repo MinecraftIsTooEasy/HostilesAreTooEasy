@@ -2,6 +2,7 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -11,10 +12,57 @@ import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 
 import java.util.List;
 
+import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 import static vbonedra.hostiles_are_too_easy.util.ICelestialType.*;
+import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin {
+public abstract class EntityLivingBaseMixin extends Entity implements ICelestialType {
+    @Unique private int celestialType = 0;
+    @Override public int HATE$getCelestialType() {
+        return this.celestialType;
+    }
+    @Override public void HATE$setCelestialType(int type) {
+        this.celestialType = type;
+    }
+    public EntityLivingBaseMixin(World par1World) {
+        super(par1World);
+    }
+
+    // NOTE: could be an issue in some cases if super() isnt called in initialization
+    @Inject(method = "applyEntityAttributes()V", at = @At("HEAD"))
+    private void applyEntityAttributes_celestialTypeInitialization(CallbackInfo ci) {
+        World world = this.worldObj;
+        if (world != null && !world.isRemote) {
+            int difficulty = get_difficulty_level(world);
+            if ((Object) this instanceof EntityPhaseSpider) {
+                if (this.rand.nextFloat() < (float) difficulty * 0.05F) {
+                    this.celestialType = celestialTypeArachnidWarp;
+                }
+            }
+            else if ((Object) this instanceof EntityCreeper) {
+                if (this.rand.nextFloat() < difficulty * 0.2F) {
+                    this.celestialType = celestialTypeCreeperMimic;
+                }
+            }
+            else if ((Object) this instanceof EntitySkeleton) {
+                if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
+                    this.celestialType = celestialTypeSkeletonWithered;
+                }
+            }
+            else if ((Object) this instanceof EntityZombie) {
+                if (this.rand.nextFloat() < difficulty * 0.05F) {
+                    this.celestialType = celestialTypeZombiePhase;
+                }
+            }
+
+
+
+
+
+        }
+    }
+
 
     @Inject(method = "onDeath(Lnet/minecraft/DamageSource;)V", at = @At("HEAD"))
     private void onDeath_grantBossKillAchievements(DamageSource damageSource, CallbackInfo ci) {
@@ -105,21 +153,16 @@ public abstract class EntityLivingBaseMixin {
 
     @Inject(method = "writeEntityToNBT(Lnet/minecraft/NBTTagCompound;)V", at = @At("RETURN"))
     private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        if (this instanceof ICelestialType) {
-            int type = ((ICelestialType) this).HATE$getCelestialType();
-            par1NBTTagCompound.setInteger("HATECelestialType", type);
-        }
+        par1NBTTagCompound.setInteger("HATECelestialType", this.HATE$getCelestialType());
     }
 
     @Inject(method = "readEntityFromNBT(Lnet/minecraft/NBTTagCompound;)V", at = @At("RETURN"))
     private void readEntityFromNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
-        if (this instanceof ICelestialType) {
-            if (par1NBTTagCompound.hasKey("HATECelestialType")) {
-                int type = par1NBTTagCompound.getInteger("HATECelestialType");
-                ((ICelestialType) this).HATE$setCelestialType(type);
-            }
+        if (par1NBTTagCompound.hasKey("HATECelestialType")) {
+            this.HATE$setCelestialType(par1NBTTagCompound.getInteger("HATECelestialType"));
         }
     }
 
-    // TODO: move all celestialType logic to this class?
+
+
 }

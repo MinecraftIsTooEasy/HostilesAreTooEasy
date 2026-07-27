@@ -13,23 +13,9 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityPhaseSpider.class)
 public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICelestialType {
-    @Unique private int celestialType = 0;
-    @Override public int HATE$getCelestialType() {
-        return this.celestialType;
-    }
-    @Override public void HATE$setCelestialType(int type) {
-        this.celestialType = type;
-    }
+    @Unique private int celestialType = this.HATE$getCelestialType();
     public EntityPhaseSpiderMixin(World par1World) {
         super(par1World);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(World world, CallbackInfo ci) {
-        int difficulty = get_difficulty_level(this.getWorld());
-        if (this.rand.nextFloat() < difficulty * 0.05F) {
-            this.celestialType = celestialTypeArachnidWarp;
-        }
     }
 
     @Inject(method = "tryTeleportTo(DDD)Z", at = @At("RETURN"))

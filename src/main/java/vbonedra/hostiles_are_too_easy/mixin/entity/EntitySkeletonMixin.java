@@ -15,25 +15,11 @@ import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityLivingBase implements ICelestialType {
-    @Unique private int celestialType = 0;
-    @Override public int HATE$getCelestialType() {
-        return this.celestialType;
-    }
-    @Override public void HATE$setCelestialType(int type) {
-        this.celestialType = type;
-    }
+    @Unique private int celestialType = this.HATE$getCelestialType();
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(World world, CallbackInfo ci) {
-        if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
-            this.celestialType = celestialTypeSkeletonWithered;
-        }
-    }
-
-    // logic
     @Inject(method = "dropFewItems", at = @At("RETURN"))
     private void dropFewItemsEvolved(boolean recently_hit_by_player, DamageSource damage_source, CallbackInfo ci) {
         if (this.celestialType == celestialTypeSkeletonWithered) {

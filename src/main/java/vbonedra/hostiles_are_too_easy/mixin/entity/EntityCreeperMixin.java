@@ -14,13 +14,7 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends Entity implements ICelestialType {
-    @Unique private int celestialType = 0;
-    @Override public int HATE$getCelestialType() {
-        return this.celestialType;
-    }
-    @Override public void HATE$setCelestialType(int type) {
-        this.celestialType = type;
-    }
+    @Unique private int celestialType = this.HATE$getCelestialType();
     public EntityCreeperMixin(World par1World) {
         super(par1World);
     }
@@ -33,9 +27,6 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
 
-        if (this.rand.nextFloat() < difficulty * 0.2F) {
-            this.celestialType = celestialTypeCreeperMimic;
-        }
         if (this.rand.nextFloat() < difficulty * 0.1F) {
             this.onStruckByLightning(null);
         }

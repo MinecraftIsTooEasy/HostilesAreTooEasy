@@ -13,15 +13,9 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob implements ICelestialType {
-    @Unique private int celestialType = 0;
+    @Unique private int celestialType = this.HATE$getCelestialType();
     @Unique private int num_evasions;
     @Unique private int max_num_evasions;
-    @Override public int HATE$getCelestialType() {
-        return this.celestialType;
-    }
-    @Override public void HATE$setCelestialType(int type) {
-        this.celestialType = type;
-    }
     public EntityZombieMixin(World par1World) {
         super(par1World);
     }
@@ -29,8 +23,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
-        if (this.rand.nextFloat() < difficulty * 0.05F) {
-            this.celestialType = celestialTypeZombiePhase;
+        if (this.celestialType == celestialTypeZombiePhase) {
             this.max_num_evasions = this.rand.nextInt(3 + difficulty) + 2;
             this.num_evasions = this.rand.nextInt(this.max_num_evasions);
         }
@@ -90,7 +83,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
         }
     }
 
-    // Phase Zombie Logic (maybe move it to util class so it could be used by any entity?)
+    // Phase Zombie Logic (maybe move it to util class so it could be used by any other phasing entities?)
     @Unique
     public boolean tryTeleportAwayFrom(Entity entity, double min_distance) {
         if (!this.isDead && !(this.getHealth() <= 0.0F)) {
