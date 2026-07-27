@@ -14,7 +14,6 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends Entity implements ICelestialType {
-    @Unique private int celestialType = this.HATE$getCelestialType();
     public EntityCreeperMixin(World par1World) {
         super(par1World);
     }

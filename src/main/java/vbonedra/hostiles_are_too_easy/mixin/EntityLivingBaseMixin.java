@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.AchievementExtend;
@@ -18,7 +19,7 @@ import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements ICelestialType {
-    @Unique private int celestialType = 0;
+    @Unique private int celestialType = celestialTypeUnset;
     @Override public int HATE$getCelestialType() {
         return this.celestialType;
     }
@@ -29,82 +30,45 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         super(par1World);
     }
 
-    // NOTE: could be an issue in some cases if super() isnt called in initialization
     @Inject(method = "applyEntityAttributes()V", at = @At("HEAD"))
     private void applyEntityAttributes_celestialTypeInitialization(CallbackInfo ci) {
-        World world = this.worldObj;
-        if (world != null && !world.isRemote) {
-            int difficulty = get_difficulty_level(world);
-            if ((Object) this instanceof EntityPhaseSpider) {
-                if (this.rand.nextFloat() < (float) difficulty * 0.05F) {
-                    this.celestialType = celestialTypeArachnidWarp;
+        if (this.celestialType == celestialTypeUnset) {
+            this.celestialType = celestialTypeVanilla;
+            World world = this.worldObj;
+            if (world != null && !world.isRemote) {
+                int difficulty = get_difficulty_level(world);
+                if ((Object) this instanceof EntityPhaseSpider) {
+                    if (this.rand.nextFloat() < (float) difficulty * 0.05F) {
+                        this.celestialType = celestialTypeArachnidWarp;
+                    }
+                } else if ((Object) this instanceof EntityCreeper) {
+                    if (this.rand.nextFloat() < difficulty * 0.2F) {
+                        this.celestialType = celestialTypeCreeperMimic;
+                    }
+                } else if ((Object) this instanceof EntitySkeleton) {
+                    if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
+                        this.celestialType = celestialTypeSkeletonWithered;
+                    }
+                } else if ((Object) this instanceof EntityZombie) {
+                    if (this.rand.nextFloat() < difficulty * 0.05F) {
+                        this.celestialType = celestialTypeZombiePhase;
+                    }
                 }
+
             }
-            else if ((Object) this instanceof EntityCreeper) {
-                if (this.rand.nextFloat() < difficulty * 0.2F) {
-                    this.celestialType = celestialTypeCreeperMimic;
-                }
-            }
-            else if ((Object) this instanceof EntitySkeleton) {
-                if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
-                    this.celestialType = celestialTypeSkeletonWithered;
-                }
-            }
-            else if ((Object) this instanceof EntityZombie) {
-                if (this.rand.nextFloat() < difficulty * 0.05F) {
-                    this.celestialType = celestialTypeZombiePhase;
-                }
-            }
-
-
-
-
-
         }
     }
 
-
-    @Inject(method = "onDeath(Lnet/minecraft/DamageSource;)V", at = @At("HEAD"))
-    private void onDeath_grantBossKillAchievements(DamageSource damageSource, CallbackInfo ci) {
-        if ((Object) this instanceof EntityWither wither) {
-            if (!wither.worldObj.isRemote) {
-                double sqRadius = 16384D;
-                List<?> playersNearby = wither.worldObj.playerEntities;
-                for (Object obj : playersNearby) {
-                    if (obj instanceof EntityPlayer player) {
-                        double dX = player.posX - wither.posX;
-                        double dY = player.posY - wither.posY;
-                        double dZ = player.posZ - wither.posZ;
-                        if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
-                            if (AchievementExtend.killWither != null) {
-                                player.addStat(AchievementExtend.killWither, 1);
-                            }
-                            if (AchievementExtend.legendaryMode != null) {
-                                player.addStat(AchievementExtend.legendaryMode, 1);
-                            }
-                        }
-                    }
+    @ModifyVariable(method = "setEntityAttribute(Lnet/minecraft/Attribute;D)Lnet/minecraft/AttributeInstance;", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private double setEntityAttribute(double value, Attribute attribute) {
+        if (attribute == SharedMonsterAttributes.maxHealth) {
+            if ((Object) this instanceof EntitySkeleton) {
+                if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+                    return value * 2.0D;
                 }
             }
         }
-        if ((Object) this instanceof EntityDragon dragon) {
-            if (!dragon.worldObj.isRemote) {
-                double sqRadius = 16384D;
-                List<?> playersNearby = dragon.worldObj.playerEntities;
-                for (Object obj : playersNearby) {
-                    if (obj instanceof EntityPlayer player) {
-                        double dX = player.posX - dragon.posX;
-                        double dY = player.posY - dragon.posY;
-                        double dZ = player.posZ - dragon.posZ;
-                        if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
-                            if (AchievementExtend.endgameMode != null) {
-                                player.addStat(AchievementExtend.endgameMode, 1);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        return value;
     }
 
     @Inject(method = "getExperienceValue()I", at = @At("RETURN"), cancellable = true, remap = false)
@@ -165,4 +129,47 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
 
 
+
+    @Inject(method = "onDeath(Lnet/minecraft/DamageSource;)V", at = @At("HEAD"))
+    private void onDeath_grantBossKillAchievements(DamageSource damageSource, CallbackInfo ci) {
+        if ((Object) this instanceof EntityWither wither) {
+            if (!wither.worldObj.isRemote) {
+                double sqRadius = 16384D;
+                List<?> playersNearby = wither.worldObj.playerEntities;
+                for (Object obj : playersNearby) {
+                    if (obj instanceof EntityPlayer player) {
+                        double dX = player.posX - wither.posX;
+                        double dY = player.posY - wither.posY;
+                        double dZ = player.posZ - wither.posZ;
+                        if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
+                            if (AchievementExtend.killWither != null) {
+                                player.addStat(AchievementExtend.killWither, 1);
+                            }
+                            if (AchievementExtend.legendaryMode != null) {
+                                player.addStat(AchievementExtend.legendaryMode, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if ((Object) this instanceof EntityDragon dragon) {
+            if (!dragon.worldObj.isRemote) {
+                double sqRadius = 16384D;
+                List<?> playersNearby = dragon.worldObj.playerEntities;
+                for (Object obj : playersNearby) {
+                    if (obj instanceof EntityPlayer player) {
+                        double dX = player.posX - dragon.posX;
+                        double dY = player.posY - dragon.posY;
+                        double dZ = player.posZ - dragon.posZ;
+                        if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
+                            if (AchievementExtend.endgameMode != null) {
+                                player.addStat(AchievementExtend.endgameMode, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

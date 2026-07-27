@@ -15,9 +15,11 @@ public abstract class EntityBoneLordMixin extends EntitySkeleton {
     }
 
     @Inject(method = "trySummonTroop(Lnet/minecraft/EntityLivingBase;)I", at = @At(value = "INVOKE", target = "Lnet/minecraft/World;spawnEntityInWorld(Lnet/minecraft/Entity;)Z"))
-    private void inheritCelestialTypeToTroops(EntityLivingBase target, CallbackInfoReturnable<Integer> cir, @Local EntitySkeleton skeleton) {
+    private void trySummonTroop_celestialTypeShare(EntityLivingBase target, CallbackInfoReturnable<Integer> cir, @Local EntitySkeleton skeleton) {
         if (skeleton != null) {
             ((ICelestialType) skeleton).HATE$setCelestialType(((ICelestialType) this).HATE$getCelestialType());
+            skeleton.reapplyEntityAttributes();
+            skeleton.setHealth(skeleton.getMaxHealth());
         }
     }
 }

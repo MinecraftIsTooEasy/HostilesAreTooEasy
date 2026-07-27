@@ -4,13 +4,18 @@ public interface ICelestialType {
     int HATE$getCelestialType();
     void HATE$setCelestialType(int type);
 
+
+    int celestialTypeUnset = 0;
+    int celestialTypeVanilla = 1;
+
+
     // EntitySkeleton
-    int celestialTypeSkeletonWithered = 1;
+    int celestialTypeSkeletonWithered = celestialTypeVanilla + 1;
     // EntityCreeper
-    int celestialTypeCreeperMimic = 1;
+    int celestialTypeCreeperMimic = celestialTypeVanilla + 1;
     // EntityZombie
-    int celestialTypeZombiePhase = 1;
+    int celestialTypeZombiePhase = celestialTypeVanilla + 1;
     // EntityPhaseSpider
-    int celestialTypeArachnidWarp = 1;
+    int celestialTypeArachnidWarp = celestialTypeVanilla + 1;
 
 }

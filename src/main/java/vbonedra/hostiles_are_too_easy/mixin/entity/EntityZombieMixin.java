@@ -13,7 +13,6 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob implements ICelestialType {
-    @Unique private int celestialType = this.HATE$getCelestialType();
     @Unique private int num_evasions;
     @Unique private int max_num_evasions;
     public EntityZombieMixin(World par1World) {
@@ -23,7 +22,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
-        if (this.celestialType == celestialTypeZombiePhase) {
+        if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
             this.max_num_evasions = this.rand.nextInt(3 + difficulty) + 2;
             this.num_evasions = this.rand.nextInt(this.max_num_evasions);
         }
@@ -41,12 +40,12 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.celestialType == celestialTypeZombiePhase);
+            cir.setReturnValue(this.HATE$getCelestialType() == celestialTypeZombiePhase);
         }
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.celestialType == celestialTypeZombiePhase) {
+        if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
             System.out.println("should evade");
             boolean can_evade = !damage.isFallDamage() && !damage.isFireDamage() && !damage.isPoison();
 

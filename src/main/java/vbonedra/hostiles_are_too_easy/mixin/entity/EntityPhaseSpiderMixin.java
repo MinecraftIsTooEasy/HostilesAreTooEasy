@@ -13,14 +13,13 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityPhaseSpider.class)
 public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICelestialType {
-    @Unique private int celestialType = this.HATE$getCelestialType();
     public EntityPhaseSpiderMixin(World par1World) {
         super(par1World);
     }
 
     @Inject(method = "tryTeleportTo(DDD)Z", at = @At("RETURN"))
     private void tryTeleportTo(double pos_x, double pos_y, double pos_z, CallbackInfoReturnable<Boolean> cir) {
-        if (this.celestialType == celestialTypeArachnidWarp) {
+        if (this.HATE$getCelestialType() == celestialTypeArachnidWarp) {
             if (cir.getReturnValue()) {
 
                 double searchRadius = 4.0D;
