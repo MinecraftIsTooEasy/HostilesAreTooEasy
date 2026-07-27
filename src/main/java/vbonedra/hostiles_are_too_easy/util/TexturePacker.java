@@ -210,6 +210,10 @@ public class TexturePacker {
         }
     }
 
+
+    public static ResourceLocation maskTemplateWithPixelSource(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor) {
+        return maskTemplateWithPixelSource(pixelSourcePath, templatePath, bgFactor, fgFactor, -1);
+    }
     public static ResourceLocation maskTemplateWithPixelSource(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
         ResourceLocation pixelSourceLocation = new ResourceLocation(pixelSourcePath);
         ResourceLocation templateLocation = new ResourceLocation(templatePath);

@@ -69,7 +69,7 @@ public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICeles
                     this.worldObj.playSoundEffect(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ, "mob.endermen.portal", 1.0F, 1.0F);
 
                     if (targetMob instanceof EntityLiving) {
-                        ((EntityLiving) targetMob).send_position_update_immediately = true;
+                        targetMob.send_position_update_immediately = true;
                     }
                 }
             }

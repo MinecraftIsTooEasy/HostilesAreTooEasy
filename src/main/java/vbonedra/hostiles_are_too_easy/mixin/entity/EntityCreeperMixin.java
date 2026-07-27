@@ -34,7 +34,7 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
 
 
     @ModifyVariable(method = "onUpdate()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/EntityCreeper;getPowered()Z"), ordinal = 0)
-    private float explosion_size_vs_blocksModify(float explosion_size_vs_blocks) {
+    private float onUpdate_explosion_size_vs_blocksModify(float explosion_size_vs_blocks) {
         if (this.getWorld() == null) return explosion_size_vs_blocks;
         return this.explosionRadius * 0.715F + (get_difficulty_level(this.getWorld()) * 0.09625F);
     }

@@ -76,9 +76,7 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
 
 // `TODO`:
 - write better desc, this was written by ai and some sentences are straight maid up lies. i like how it formatted it though
-- add Phase Zombie - dodges some attacks, spawns rarely
 - add Mimic EarthElemental - mimics block it stands in or on, couldn't be damaged by wrong tool for block
-- add
 
 - Entities to modify
     - LightningBolt: strike player with condition in thunder, though iTF/iTE does it? not sure
@@ -117,20 +115,20 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
                     - Witch
                     - Blaze: `TODO` Fire celestialType - heals when in fire state, shoots more fireballs at once
                     - Enderman: `TODO` Rook celestialType - on teleportation switches places with player unless it makes them too far from each other, when hit with arrow teleports player to itself and teleports randomly
-                    - InvisibleStalker: `TODO` Light celestialType - doesn't remove light, invisibility and damaged based on brightness, armor increases with how invisible it is, making it almost invincible in darkness; Thief celestialType - moves faster, when attacks player it steals random item from inventory and runs away, when attacked in melee while running away it tries to attack and if succeed runs away again
-                    - FireElemental: `TODO` Water celestialType - spawns in dark water if in underworld or during blood moon, reverse of fire elemental, moves fast in water, takes away air when attacks, could throw snowballs that take away air, when air drained deals more damage and each attack prevents air regeneration for next few seconds
+                    - InvisibleStalker: `???` Light celestialType - doesn't remove light, invisibility and damaged based on brightness, armor increases with how invisible it is, making it almost invincible in darkness; Thief celestialType - moves faster, when attacks player it steals random item from inventory and runs away, when attacked in melee while running away it tries to attack and if succeed runs away again
+                    - FireElemental: `???` Water celestialType - spawns in dark water if in underworld or during blood moon, reverse of fire elemental, moves fast in water, takes away air when attacks, could throw snowballs that take away air, when air drained deals more damage and each attack prevents air regeneration for next few seconds
                     - AnimalWatcher
                         - EarthElemental: `TODO` Mimic celestialType - mimics blocks it stands on, drops its actual block on death, cant be damaged unless tool correct for block
-                            - ClayGolem: `TODO` cant have celestialType?
+                            - ClayGolem: `???` cant have celestialType?
                         - Ghoul: `TODO` Vampire celestialType - heal on attacks to non-undead.
-                        - Zombie: `ADDED` Phase celestialType - dodges attacks; `TODO` Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
-                            - Revenant: `TODO` Temerarious celestialType - cant be physically damaged while has armor, each physical attack removes 1 random armor piece, when all armor broken it gets increased speed
+                        - Zombie: `ADDED` Phase celestialType - dodges attacks; `???` Bloodthirsty celestialType - does something, i just wanna see zombie-zombiepigman textures that do something
+                            - Revenant: `???` Temerarious celestialType - cant be physically damaged while has armor, each physical attack removes 1 random armor piece, when all armor broken it gets increased speed
                     - Creeper: `ADDED` Mimic celestialType - mimics blocks it stands on with flaws
                         - InfernalCreeper: `ADDED`: Mimic celestialType - perfectly mimics
                     - Skeleton: `ADDED` Withered celestialType - wither skeleton
                         - Longdead
                             - LongdeadGuardian
-                        - BoneLord: `TODO`: summon corresponding celestialType
+                        - BoneLord: `ADDED`: summon corresponding celestialType
                             - AncientBoneLord
                     - Arachnid: `TODO` come up with celestialType, idk what to add
                         - Spider: `TODO` Demonic celestialType - same as demon spider, needed to remove demon spider replacing spiders, any non demon spider could become Demonic; `TODO` Broodmother celestialType - big spider that spawns spiders on death, spawned spiders are forced to be smaller than they usually are and have less health
@@ -138,7 +136,7 @@ The core mechanic introduces the Celestial Type, a special hidden type that modi
                         - CaveSpider 
                         - WoodSpider: `TODO` Widow celestialType - black widow but a bit weaker, needed to remove replacing spiders with black widows on spawn
                             - BlackWidowSpider
-                            - PhaseSpider: `TODO` Warp celestialType - when path-phases it also teleports nearest to itself mob that targets same entity if it would make it closer to target
+                            - PhaseSpider: `ADDED` Warp celestialType - when path-phases it also teleports nearest to itself mob that targets same entity if it would make it closer to target
                     - Silverfish: `ADDED` Blockfish celestialType - spawns from some blocks
                         - HoarySilverfish: `ADDED` extend Blockfish celestialType in high grade ores
                         - Netherspawn: `ADDED` extend Blockfish celestialType in nether blocks

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import moddedmite.rustedironcore.network.Network;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
+import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 
@@ -42,31 +43,11 @@ public abstract class RenderCreeperMixin {
     private void getCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) {
         if (par1EntityCreeper.worldObj == null) return;
 
-        int entityId = par1EntityCreeper.entityId;
-
-        if (!CelestialTypeCache.clientCelestialTypeMap.containsKey(entityId)) {
-            if (!CelestialTypeCache.requestedEntities.contains(entityId) && par1EntityCreeper.worldObj.isRemote) {
-                Network.sendToServer(new C2SRequestCelestialType(entityId));
-                CelestialTypeCache.requestedEntities.add(entityId);
-            }
-            return;
-        }
-
-        Integer typeObject = CelestialTypeCache.clientCelestialTypeMap.get(entityId);
-        if (typeObject == null) {
-            return;
-        }
-
-        int celestialType = typeObject;
-
-        if (par1EntityCreeper.isDead) {
-            CelestialTypeCache.clientCelestialTypeMap.remove(entityId);
-            CelestialTypeCache.requestedEntities.remove(entityId);
-            lastStoodBlockMap.remove(entityId);
-            lastStoodMetadataMap.remove(entityId);
-        }
+        int celestialType = CelestialTypeGetter.getCelestialType(par1EntityCreeper);
 
         if (celestialType == celestialTypeCreeperMimic) {
+            int entityId = par1EntityCreeper.entityId;
+
             int blockX = MathHelper.floor_double(par1EntityCreeper.posX);
             int blockY = MathHelper.floor_double(par1EntityCreeper.posY);
             int blockZ = MathHelper.floor_double(par1EntityCreeper.posZ);

@@ -4,18 +4,29 @@ public interface ICelestialType {
     int HATE$getCelestialType();
     void HATE$setCelestialType(int type);
 
-    // maybe not the best way to do it; yea it works, but it celestialTypeVanilla couldn't be used by any type, so Block celestialType Silverfish cant have block with id = celestialTypeVanilla
+    // NOTE: Silverfish celestialType must go below
     int celestialTypeUnset = 0;
-    int celestialTypeVanilla = 1;
+    int celestialTypeVanilla = -1;
+    int celestialTypeStartPositive = 0;
+    int celestialTypeStartNegative = -1;
 
 
     // EntitySkeleton
-    int celestialTypeSkeletonWithered = celestialTypeVanilla + 1;
+    int celestialTypeSkeletonWithered = celestialTypeStartPositive + 1;
     // EntityCreeper
-    int celestialTypeCreeperMimic = celestialTypeVanilla + 1;
+    int celestialTypeCreeperMimic = celestialTypeStartPositive + 1;
     // EntityZombie
-    int celestialTypeZombiePhase = celestialTypeVanilla + 1;
-    // EntityPhaseSpider
-    int celestialTypeArachnidWarp = celestialTypeVanilla + 1;
+    int celestialTypeZombiePhase = celestialTypeStartPositive + 1;
+    int celestialTypeZombieTemerarious = celestialTypeStartPositive + 2;
+    // EntityArachnid
+    int celestialTypeArachnidWarp = celestialTypeStartPositive + 1;
+    // EntityShadow
+    int celestialTypeShadowGloom = celestialTypeStartPositive + 1;
+    // EntityInvisibleStalker
+    int celestialTypeInvisibleStalkerThief = celestialTypeStartPositive + 1;
+    // EntityGhoul
+    int celestialTypeGhoulVampire = celestialTypeStartPositive + 1;
+
+
 
 }

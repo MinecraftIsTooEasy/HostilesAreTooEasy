@@ -22,7 +22,7 @@ public abstract class BlockMixin {
             }
 
             if (info.getMetadata() == 1) {
-                if (!true) { // TODO: extend with ManyLib config
+                if (false) { // TODO: extend with ManyLib config
                     return;
                 }
             }

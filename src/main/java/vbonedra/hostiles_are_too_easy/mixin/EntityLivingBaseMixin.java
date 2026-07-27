@@ -35,25 +35,35 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         if (this.celestialType == celestialTypeUnset) {
             this.celestialType = celestialTypeVanilla;
             World world = this.worldObj;
+            Object entity = this;
             if (world != null && !world.isRemote) {
                 int difficulty = get_difficulty_level(world);
-                if ((Object) this instanceof EntityPhaseSpider) {
+                if (entity instanceof EntityPhaseSpider) {
                     if (this.rand.nextFloat() < (float) difficulty * 0.05F) {
                         this.celestialType = celestialTypeArachnidWarp;
                     }
-                } else if ((Object) this instanceof EntityCreeper) {
+                }
+                else if (entity instanceof EntityCreeper) {
                     if (this.rand.nextFloat() < difficulty * 0.2F) {
                         this.celestialType = celestialTypeCreeperMimic;
                     }
-                } else if ((Object) this instanceof EntitySkeleton) {
+                }
+                else if (entity instanceof EntitySkeleton) {
                     if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
                         this.celestialType = celestialTypeSkeletonWithered;
                     }
-                } else if ((Object) this instanceof EntityZombie) {
+                }
+                else if (entity instanceof EntityZombie) {
                     if (this.rand.nextFloat() < difficulty * 0.05F) {
                         this.celestialType = celestialTypeZombiePhase;
                     }
                 }
+                else if (entity instanceof EntityGhoul) {
+                    if (this.rand.nextFloat() < difficulty * 0.15F) {
+                        this.celestialType = celestialTypeGhoulVampire;
+                    }
+                }
+
 
             }
         }
@@ -76,40 +86,37 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         Object entity = this;
 
         if (entity instanceof EntitySkeleton) {
-            int celestialType = ((ICelestialType) this).HATE$getCelestialType();
+            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeSkeletonWithered) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityZombie) {
-            int celestialType = ((ICelestialType) this).HATE$getCelestialType();
+            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
-            int celestialType = ((ICelestialType) this).HATE$getCelestialType();
+            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
         }
-
+        else if (entity instanceof EntityGhoul) {
+            int celestialType = this.HATE$getCelestialType();
+            if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);
+        }
 
     }
 
     @Inject(method = "getNaturalDefense(Lnet/minecraft/DamageSource;)F", at = @At("RETURN"), cancellable = true, remap = false)
     private void getNaturalDefense(DamageSource damage_source, CallbackInfoReturnable<Float> cir) {
         Object entity = this;
+        int celestialType = this.HATE$getCelestialType();
 
-        if (entity instanceof EntitySkeleton) {
-            int celestialType = ((ICelestialType) this).HATE$getCelestialType();
-            if (celestialType == celestialTypeSkeletonWithered) cir.setReturnValue((cir.getReturnValue() + 1) * 2);
+        if (entity instanceof EntityIronGolem) {
+            cir.setReturnValue(cir.getReturnValue() + 8);
         }
         else if (entity instanceof EntitySilverfish) {
-            int celestialType = ((ICelestialType) this).HATE$getCelestialType();
             if (celestialType > 0) {
                 Block block = Block.getBlock(celestialType);
                 if (block != null) {
-                    float hardness = block.getBlockHardness(0);
-                    if (hardness < 0.0F) {
-                        hardness = 0.0F;
-                    }
-                    float originalDefense = cir.getReturnValue();
-                    cir.setReturnValue(originalDefense + hardness);
+                    cir.setReturnValue(cir.getReturnValue() + Math.min(0f, block.getBlockHardness(0)));
                 }
             }
         }
