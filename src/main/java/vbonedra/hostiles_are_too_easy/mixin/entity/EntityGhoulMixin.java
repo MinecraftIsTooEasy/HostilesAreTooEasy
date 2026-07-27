@@ -22,7 +22,7 @@ public abstract class EntityGhoulMixin extends EntityAnimalWatcher implements IC
                     float health = this.getHealth();
                     if (health > 0.0F) {
                         if (health < this.getMaxHealth()) {
-                            this.setHealth(health + result.getAmountOfHealthLost());
+                            this.setHealth(health + Math.min(1.0F, result.getAmountOfHealthLost()));
                         }
                     }
                 }

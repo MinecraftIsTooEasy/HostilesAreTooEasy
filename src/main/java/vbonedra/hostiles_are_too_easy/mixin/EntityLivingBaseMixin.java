@@ -36,10 +36,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             this.celestialType = celestialTypeVanilla;
             World world = this.worldObj;
             Object entity = this;
-            if (world != null && !world.isRemote) {
+            if (world != null && world.isWorldServer()) {
                 int difficulty = get_difficulty_level(world);
                 if (entity instanceof EntityPhaseSpider) {
-                    if (this.rand.nextFloat() < (float) difficulty * 0.05F) {
+                    if (this.rand.nextFloat() < (float) difficulty * 0.05F || this.rand.nextFloat() < 0.005F) {
                         this.celestialType = celestialTypeArachnidWarp;
                     }
                 }
@@ -49,17 +49,17 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     }
                 }
                 else if (entity instanceof EntitySkeleton) {
-                    if (nextIntSafe(world, get_difficulty_level(world) + 1 - (world.isUnderworld() ? 1 : 2)) >= 1) {
+                    if (this.rand.nextFloat() < (difficulty - (world.isUnderworld() ? 0 : 1)) * 0.2) {
                         this.celestialType = celestialTypeSkeletonWithered;
                     }
                 }
                 else if (entity instanceof EntityZombie) {
-                    if (this.rand.nextFloat() < difficulty * 0.05F) {
+                    if (this.rand.nextFloat() < difficulty * 0.05F || this.rand.nextFloat() < 0.005F) {
                         this.celestialType = celestialTypeZombiePhase;
                     }
                 }
                 else if (entity instanceof EntityGhoul) {
-                    if (this.rand.nextFloat() < difficulty * 0.15F) {
+                    if (this.rand.nextFloat() < (difficulty + 1) * 0.1F) {
                         this.celestialType = celestialTypeGhoulVampire;
                     }
                 }
@@ -71,9 +71,11 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
     @ModifyVariable(method = "setEntityAttribute(Lnet/minecraft/Attribute;D)Lnet/minecraft/AttributeInstance;", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private double setEntityAttribute(double value, Attribute attribute) {
+        Object entity = this;
+        int celestialType = this.HATE$getCelestialType();
         if (attribute == SharedMonsterAttributes.maxHealth) {
-            if ((Object) this instanceof EntitySkeleton) {
-                if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+            if (entity instanceof EntitySkeleton) {
+                if (celestialType == celestialTypeSkeletonWithered) {
                     return value * 2.0D;
                 }
             }
@@ -84,21 +86,18 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
     @Inject(method = "getExperienceValue()I", at = @At("RETURN"), cancellable = true, remap = false)
     private void getExperienceValue(CallbackInfoReturnable<Integer> cir) {
         Object entity = this;
+        int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntitySkeleton) {
-            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeSkeletonWithered) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityZombie) {
-            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
-            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityGhoul) {
-            int celestialType = this.HATE$getCelestialType();
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);
         }
 
@@ -111,6 +110,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
         if (entity instanceof EntityIronGolem) {
             cir.setReturnValue(cir.getReturnValue() + 8);
+        }
+        else if (entity instanceof EntityGhoul) {
+            if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() + 4);
         }
         else if (entity instanceof EntitySilverfish) {
             if (celestialType > 0) {

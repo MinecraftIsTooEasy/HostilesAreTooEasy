@@ -9,18 +9,26 @@ import java.io.InputStream;
 import java.util.List;
 
 public class TexturePacker {
-
+    // TODO: code cleanup, this is just hell
     private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette) {
+        return getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette, false);
+    }
+        private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette, boolean reverseBrightness) {
         int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
         if (rankInTemplate < 0) rankInTemplate = -rankInTemplate - 1;
 
         double relativeBrightnessPct = (double) rankInTemplate / Math.max(1, templateBrightnesses.size() - 1);
+
+        if (reverseBrightness) {
+            relativeBrightnessPct = 1.0 - relativeBrightnessPct;
+        }
 
         int targetPixelSourceIdx = (int) (relativeBrightnessPct * (pixelSourcePalette.size() - 1));
         targetPixelSourceIdx = Math.min(pixelSourcePalette.size() - 1, Math.max(0, targetPixelSourceIdx));
 
         return pixelSourcePalette.get(targetPixelSourceIdx).rgb;
     }
+
 
     private record PixelSourcePixelData(int rgb, double brightness) {}
 
@@ -90,12 +98,21 @@ public class TexturePacker {
     }
 
     public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath) {
-        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, 1F, 0F, -1);
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, 1F, 0F, -1, false);
     }
     public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor) {
-        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, bgFactor, fgFactor, -1);
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, bgFactor, fgFactor, -1, false);
     }
     public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, int biomeTint) {
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, bgFactor, fgFactor, biomeTint, false);
+    }
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, boolean reverseBrightness) {
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, 1F, 0F, -1, reverseBrightness);
+    }
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, boolean reverseBrightness) {
+        return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, bgFactor, fgFactor, -1, reverseBrightness);
+    }
+    public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, int biomeTint, boolean reverseBrightness) {
         ResourceLocation pixelSourceLocation = new ResourceLocation(pixelSourcePath);
         ResourceLocation templateLocation = new ResourceLocation(templatePath);
 
@@ -183,7 +200,7 @@ public class TexturePacker {
                     int fgB = templatePixel & 0xFF;
                     double currentTemplateBrightness = 0.2126 * fgR + 0.7152 * fgG + 0.0722 * fgB;
 
-                    int pixelSourcePixel = getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette);
+                    int pixelSourcePixel = getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette, reverseBrightness);
                     int bgR = (pixelSourcePixel >> 16) & 0xFF;
                     int bgG = (pixelSourcePixel >> 8) & 0xFF;
                     int bgB = pixelSourcePixel & 0xFF;
@@ -199,7 +216,7 @@ public class TexturePacker {
 
             String pixelSourceClean = pixelSourcePath.replace("/", "_").replace(".", "_");
             String cleanTemplate = templatePath.replace("/", "_").replace(".", "_");
-            String dynamicName = "mask_brightness_tint_" + pixelSourceClean + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor;
+            String dynamicName = "mask_brightness_tint_" + pixelSourceClean + "_" + cleanTemplate + "_" + biomeTint + "_" + bgFactor + "_" + fgFactor + "_" + reverseBrightness;
 
             DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
             return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);

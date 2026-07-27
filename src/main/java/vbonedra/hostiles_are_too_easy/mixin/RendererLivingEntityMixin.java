@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 
 @Mixin(RendererLivingEntity.class)
 public abstract class RendererLivingEntityMixin {
@@ -37,7 +38,14 @@ public abstract class RendererLivingEntityMixin {
 
         if (par1EntityLivingBase instanceof EntityGhoul) {
             if (celestialType == ICelestialType.celestialTypeGhoulVampire) {
-                return new ResourceLocation("textures/entity/earth_elemental/earth_elemental_glow.png");
+                return TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                        "textures/items/shards/flint.png",
+                        "textures/entity/earth_elemental/earth_elemental_glow.png",
+                        1.0F,
+                        0.0F,
+                        true
+                );
+//                return new ResourceLocation("textures/entity/earth_elemental/earth_elemental_glow.png");
             }
         }
 

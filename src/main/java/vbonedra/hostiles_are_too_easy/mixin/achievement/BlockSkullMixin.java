@@ -17,7 +17,7 @@ public class BlockSkullMixin {
 
     @Inject(method = "makeWither(Lnet/minecraft/World;IIILnet/minecraft/TileEntitySkull;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/World;spawnEntityInWorld(Lnet/minecraft/Entity;)Z"))
     private void makeWither_grantAchievement(World world, int x, int y, int z, TileEntitySkull skull, CallbackInfo ci) {
-        if (!world.isRemote) {
+        if (world.isWorldServer()) {
             double sqRadius = 16384D;
 
             List<?> playersNearby = world.playerEntities;

@@ -13,7 +13,7 @@ public abstract class BlockMixin {
 
     @Inject(method = "dropBlockAsEntityItem(Lnet/minecraft/BlockBreakInfo;IIIF)I", at = @At("HEAD"), cancellable = true)
     private void dropBlockAsEntityItem_spawnSilverfishCelestialType(BlockBreakInfo info, int id_dropped, int subtype, int quantity, float chance, CallbackInfoReturnable<Integer> cir) {
-        if (info != null && info.world != null && !info.world.isRemote) {
+        if (info != null && info.world != null && info.world.isWorldServer()) {
             if (info.x == Integer.MAX_VALUE) {
                 info.x = info.drop_x;
                 info.y = info.drop_y;
