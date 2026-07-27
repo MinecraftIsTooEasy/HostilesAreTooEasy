@@ -4,7 +4,7 @@ public interface ICelestialType {
     int HATE$getCelestialType();
     void HATE$setCelestialType(int type);
 
-
+    // maybe not the best way to do it; yea it works, but it celestialTypeVanilla couldn't be used by any type, so Block celestialType Silverfish cant have block with id = celestialTypeVanilla
     int celestialTypeUnset = 0;
     int celestialTypeVanilla = 1;
 

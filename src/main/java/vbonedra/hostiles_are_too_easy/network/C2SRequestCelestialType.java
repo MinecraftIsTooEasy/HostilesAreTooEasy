@@ -4,6 +4,7 @@ import net.minecraft.*;
 import moddedmite.rustedironcore.network.Packet;
 import moddedmite.rustedironcore.network.PacketByteBuf;
 import moddedmite.rustedironcore.network.Network;
+import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 
 public record C2SRequestCelestialType(int entityId) implements Packet {
 
@@ -18,20 +19,17 @@ public record C2SRequestCelestialType(int entityId) implements Packet {
 
     @Override
     public void apply(EntityPlayer player) {
-        if (player instanceof ServerPlayer && player.worldObj instanceof WorldServer worldServer) {
+        if (player instanceof ServerPlayer serverPlayer && player.worldObj instanceof WorldServer worldServer) {
             Entity entity = worldServer.getEntityByID(this.entityId);
 
-            NBTTagCompound entityNbt = new NBTTagCompound();
             int celestialType = 0;
-            if (entity != null) entity.writeEntityToNBT(entityNbt);
-            if (entityNbt.hasKey("HATECelestialType")) {
-                celestialType = entityNbt.getInteger("HATECelestialType");
+            if (entity instanceof ICelestialType celestialEntity) {
+                celestialType = celestialEntity.HATE$getCelestialType();
             }
 
-            Network.sendToClient((ServerPlayer) player, new S2CResponseCelestialType(this.entityId, celestialType));
+            Network.sendToClient(serverPlayer, new S2CResponseCelestialType(this.entityId, celestialType));
         }
     }
-
 
     @Override
     public ResourceLocation getChannel() {

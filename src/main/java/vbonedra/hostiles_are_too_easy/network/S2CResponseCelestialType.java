@@ -16,13 +16,13 @@ public class S2CResponseCelestialType implements Packet {
 
     public S2CResponseCelestialType(PacketByteBuf buf) {
         this.entityId = buf.readInt();
-        this.celestialType = buf.readInt();
+        this.celestialType = buf.readShort();
     }
 
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeInt(this.entityId);
-        buf.writeInt(this.celestialType);
+        buf.writeShort(this.celestialType);
     }
 
     @Override
@@ -31,7 +31,6 @@ public class S2CResponseCelestialType implements Packet {
             CelestialTypeCache.receiveCelestialTypeFromServer(this.entityId, this.celestialType);
         }
     }
-
 
     @Override
     public ResourceLocation getChannel() {
