@@ -16,10 +16,10 @@ public abstract class EntityArachnidMixin extends EntityMob {
 
     @Inject(method = "findNonPlayerToAttack(F)Lnet/minecraft/Entity;", at = @At("RETURN"), cancellable = true)
     private void findNonPlayerToAttack_addEntityIronGolem(float max_distance, CallbackInfoReturnable<Entity> cir) {
-        if (this.peacefulDuringDay() && this.getBrightness(1.0F) > 0.5F && this.isOutdoors()) {
-            return;
-        }
         if (cir.getReturnValue() == null) {
+            if (this.peacefulDuringDay() && this.getBrightness(1.0F) > 0.5F && this.isOutdoors()) {
+                return;
+            }
             AxisAlignedBB searchBox = this.boundingBox.expand(max_distance, max_distance / 4.0F, max_distance);
 
             Entity targetGolem = this.worldObj.findNearestSeenEntityWithinAABB(

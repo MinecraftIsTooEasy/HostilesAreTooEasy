@@ -124,6 +124,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
     }
 
+
     @Inject(method = "writeEntityToNBT(Lnet/minecraft/NBTTagCompound;)V", at = @At("RETURN"))
     private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
         par1NBTTagCompound.setInteger("HATECelestialType", this.HATE$getCelestialType());

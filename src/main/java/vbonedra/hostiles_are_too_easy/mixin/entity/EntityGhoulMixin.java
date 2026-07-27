@@ -29,4 +29,6 @@ public abstract class EntityGhoulMixin extends EntityAnimalWatcher implements IC
             }
         }
     }
+
+
 }
