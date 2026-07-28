@@ -92,23 +92,33 @@ public abstract class EntityMixin {
             if (celestialType == 1) {
                 langKey = "entity.arachnid_warp.name";
             }
-        } else if (entity instanceof EntityCreeper) {
+        }
+        else if (entity instanceof EntityCreeper) {
             if (celestialType == 1) {
                 langKey = "entity.creeper_mimic.name";
             }
-        } else if (entity instanceof EntitySkeleton) {
+        }
+        else if (entity instanceof EntitySkeleton) {
             if (celestialType == 1) {
                 langKey = "entity.skeleton_withered.name";
             }
-        } else if (entity instanceof EntityZombie) {
+        }
+        else if (entity instanceof EntityZombie) {
             if (celestialType == 1) {
                 langKey = "entity.zombie_phase.name";
             }
-        } else if (entity instanceof EntityGhoul) {
+        }
+        else if (entity instanceof EntityGhoul) {
             if (celestialType == 1) {
                 langKey = "entity.ghoul_vampire.name";
             }
         }
+        else if (entity instanceof EntityShadow) {
+            if (celestialType == 1) {
+                langKey = "entity.shadow_gloom.name";
+            }
+        }
+
         return langKey;
     }
 

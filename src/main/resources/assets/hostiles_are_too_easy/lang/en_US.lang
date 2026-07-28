@@ -22,4 +22,5 @@ entity.creeper_mimic.name=Mimic
 entity.skeleton_withered.name=Withered
 entity.zombie_phase.name=Phase
 entity.ghoul_vampire.name=Vampire
+entity.shadow_gloom.name=Gloom
 
