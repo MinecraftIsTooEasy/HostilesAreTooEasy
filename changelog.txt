@@ -17,5 +17,3 @@
     - legendary-mode (3): on killing Wither
     - endgame-mode (4): on killing Dragon
 
-# Planned
-- when mining clay blocks silverfish could spawn
