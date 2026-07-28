@@ -23,25 +23,28 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
 
     @Inject(method = "applyEntityAttributes()V", at = @At("RETURN"))
     private void applyEntityAttributes(CallbackInfo ci) {
-        double calculatedHealth = IronGolemBlockType.getMaxHealthForBlockId(this.HATE$getCelestialType());
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculatedHealth);
-        this.setHealth((float)calculatedHealth);
+        int celestialType = this.HATE$getCelestialType();
+        if (celestialType >= celestialTypeStartPositive) {
+            double calculatedHealth = IronGolemBlockType.getMaxHealthForBlockId(celestialType);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculatedHealth);
+            this.setHealth((float)calculatedHealth);
+        }
     }
 
     @Inject(method = "attackEntityAsMob(Lnet/minecraft/Entity;)Lnet/minecraft/EntityDamageResult;", at = @At("HEAD"), cancellable = true)
     private void attackEntityAsMob(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
-        int blockId = this.HATE$getCelestialType();
-        if (blockId >= celestialTypeStartPositive) {
+        int celestialType = this.HATE$getCelestialType();
+        if (celestialType >= celestialTypeStartPositive) {
             this.attackTimer = 10;
             this.worldObj.setEntityState(this, EnumEntityState.golem_throw);
 
 
             DamageSource damageSource = DamageSource.causeMobDamage(this);
 
-            if (IronGolemBlockType.isSilverAspectForBlockId(blockId)) damageSource.setSilverAspect();
-            if (IronGolemBlockType.isMagicAspectForBlockId(blockId)) damageSource.setMagicAspect();
+            if (IronGolemBlockType.isSilverAspectForBlockId(celestialType)) damageSource.setSilverAspect();
+            if (IronGolemBlockType.isMagicAspectForBlockId(celestialType)) damageSource.setMagicAspect();
 
-            Damage damage = new Damage(damageSource, IronGolemBlockType.getBaseDamageForBlockId(blockId));
+            Damage damage = new Damage(damageSource, IronGolemBlockType.getBaseDamageForBlockId(celestialType));
 
             EntityDamageResult result = target.attackEntityFrom(damage);
             if (result == null) {
@@ -60,21 +63,24 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
 
     @Inject(method = "dropFewItems(ZLnet/minecraft/DamageSource;)V", at = @At("HEAD"), cancellable = true)
     private void dropFewItems(boolean recentlyHitByPlayer, DamageSource damageSource, CallbackInfo ci) {
-        ci.cancel();
+        int celestialType = this.HATE$getCelestialType();
+        if (celestialType >= celestialTypeStartPositive) {
+            ci.cancel();
 
-        int numFlowers = this.rand.nextInt(3);
-        for (int i = 0; i < numFlowers; ++i) {
-            this.dropItem(Block.plantRed.blockID, 1);
-        }
+            int numFlowers = this.rand.nextInt(3);
+            for (int i = 0; i < numFlowers; ++i) {
+                this.dropItem(Block.plantRed.blockID, 1);
+            }
 
-        if (recentlyHitByPlayer && !this.has_taken_massive_fall_damage) {
-            int numDrops = 3 + this.rand.nextInt(3 + damageSource.getLootingModifier());
+            if (recentlyHitByPlayer && !this.has_taken_massive_fall_damage) {
+                int numDrops = 3 + this.rand.nextInt(3 + damageSource.getLootingModifier());
 
-            Item matchingNugget = IronGolemBlockType.getItemForBlockId(this.HATE$getCelestialType());
+                Item matchingNugget = IronGolemBlockType.getItemForBlockId(celestialType);
 
-            if (matchingNugget != null) {
-                for (int i = 0; i < numDrops; ++i) {
-                    this.dropItem(matchingNugget.itemID, 1);
+                if (matchingNugget != null) {
+                    for (int i = 0; i < numDrops; ++i) {
+                        this.dropItem(matchingNugget.itemID, 1);
+                    }
                 }
             }
         }
@@ -83,6 +89,9 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
 
     @Inject(method = "getExperienceValue()I", at = @At("RETURN"), cancellable = true)
     private void getExperienceValue(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getExperienceForBlockId(this.HATE$getCelestialType()));
+        int celestialType = this.HATE$getCelestialType();
+        if (celestialType >= celestialTypeStartPositive) {
+            cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getExperienceForBlockId(celestialType));
+        }
     }
 }

@@ -13,13 +13,13 @@ public abstract class BlockPumpkinMixin {
 
     @Inject(method = "onBlockAdded(Lnet/minecraft/World;III)V", at = @At("HEAD"), cancellable = true)
     private void HATE$checkForCustomMetalGolems(World world, int x, int y, int z, CallbackInfo ci) {
-//        if (world.isWorldClient()) {
-//            return;
-//        }
+        if (world.isWorldClient()) {
+            return;
+        }
 
         int blockId = world.getBlockId(x, y - 1, z);
 
-        if (blockId == Block.blockIron.blockID || blockId == 0) {
+        if (blockId == 0) {
             return;
         }
 

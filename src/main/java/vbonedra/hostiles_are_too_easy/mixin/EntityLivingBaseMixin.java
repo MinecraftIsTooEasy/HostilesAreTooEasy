@@ -80,9 +80,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     return value * 2.0D;
                 }
             }
-//            if (entity instanceof EntityIronGolem) {
-//                return IronGolemBlockType.getMaxHealthForBlockId(celestialType);
-//            }
         }
 
         return value;
@@ -115,7 +112,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntityIronGolem) {
-            cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
+            if (celestialType >= celestialTypeStartPositive) {
+                cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
+            }
         }
         if (entity instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() + 4);
@@ -136,8 +135,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntityIronGolem) {
-            if (IronGolemBlockType.isValidGolemBlock(celestialType)) {
-                return IronGolemBlockType.getRegenPercentageForBlockId(celestialType);
+            if (celestialType >= celestialTypeStartPositive) {
+                if (IronGolemBlockType.isValidGolemBlock(celestialType)) {
+                    return IronGolemBlockType.getRegenPercentageForBlockId(celestialType);
+                }
             }
         }
 

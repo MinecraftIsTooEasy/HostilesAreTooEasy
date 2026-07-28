@@ -20,7 +20,7 @@ public abstract class RenderIronGolemMixin {
     private final Map<String, ResourceLocation> HATE$golemBlendedCache = new HashMap<>();
 
     @Unique
-    private String HATE$getBlockTexturePath(Block block, int metadata) {
+    private String getBlockTexturePath(Block block, int metadata) {
         if (block == null) return "textures/blocks/iron_block.png";
         try {
             Icon blockIcon = block.getIcon(1, metadata);
@@ -42,7 +42,7 @@ public abstract class RenderIronGolemMixin {
         if (celestialType != 0) {
             Block block = Block.getBlock(celestialType);
             if (block == null) {
-                block = Block.blockIron;
+                return;
             }
 
             int metadata = 0;
@@ -61,7 +61,7 @@ public abstract class RenderIronGolemMixin {
 
             if (!HATE$golemBlendedCache.containsKey(cacheKey)) {
                 ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        HATE$getBlockTexturePath(block, metadata),
+                        getBlockTexturePath(block, metadata),
                         templateTexture,
                         3.0F,
                         0.0F,

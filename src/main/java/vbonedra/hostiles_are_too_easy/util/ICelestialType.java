@@ -4,7 +4,7 @@ public interface ICelestialType {
     int HATE$getCelestialType();
     void HATE$setCelestialType(int type);
 
-    // NOTE: Silverfish celestialType must go below
+    // NOTE: celestialType that uses blockId must go from negative
     int celestialTypeUnset = 0;
     int celestialTypeVanilla = -1;
     int celestialTypeStartPositive = 0;

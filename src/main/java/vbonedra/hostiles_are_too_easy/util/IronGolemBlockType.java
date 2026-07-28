@@ -36,7 +36,7 @@ public class IronGolemBlockType {
 
     public static final Map<Integer, GolemBlockData> golemDataMap = new HashMap<>();
 
-    private static final GolemBlockData DEFAULT_IRON_DATA = new GolemBlockData(EnumEquipmentMaterial.iron, Item.ironNugget);
+    private static final GolemBlockData DEFAULT_DATA = new GolemBlockData(EnumEquipmentMaterial.iron, Item.ironNugget);
 
     static {
         golemDataMap.put(Block.blockCopper.blockID, new GolemBlockData(EnumEquipmentMaterial.copper, Item.copperNugget).setCustomRegen(0.5F));
@@ -44,7 +44,7 @@ public class IronGolemBlockType {
 
         golemDataMap.put(Block.blockGold.blockID, new GolemBlockData(EnumEquipmentMaterial.gold, Item.goldNugget).setMagicAspect().setCustomRegen(3.0F));
 
-        golemDataMap.put(Block.blockIron.blockID, DEFAULT_IRON_DATA);
+        golemDataMap.put(Block.blockIron.blockID, DEFAULT_DATA);
         golemDataMap.put(Block.blockAncientMetal.blockID, new GolemBlockData(EnumEquipmentMaterial.ancient_metal, Item.ancientMetalNugget));
 
         golemDataMap.put(Block.blockMithril.blockID, new GolemBlockData(EnumEquipmentMaterial.mithril, Item.mithrilNugget).setMagicAspect().setCustomRegen(2.0F));
@@ -59,7 +59,7 @@ public class IronGolemBlockType {
 
     public static GolemBlockData getGolemData(int blockId) {
         GolemBlockData data = golemDataMap.get(blockId);
-        return data != null ? data : DEFAULT_IRON_DATA;
+        return data != null ? data : DEFAULT_DATA;
     }
 
     public static float getDurabilityForBlockId(int blockId) {
