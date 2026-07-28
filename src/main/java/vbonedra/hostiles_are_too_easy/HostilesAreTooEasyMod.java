@@ -12,9 +12,6 @@ public class HostilesAreTooEasyMod implements ModInitializer {
     public static final String MOD_ID = "hostiles_are_too_easy";
     public static final String MOD_NAME = "HostilesAreTooEasy";
 
-    // This logger is used to write text to the console and the log file.
-    // It is considered best practice to use your mod id as the logger's name.
-    // That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger HATE_LOGGER = LogManager.getLogger(MOD_ID);
 
     @Override

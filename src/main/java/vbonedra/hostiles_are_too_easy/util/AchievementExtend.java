@@ -16,7 +16,7 @@ public class AchievementExtend {
 
     public static void registerAchievements() {
         spawnWither = new Achievement(
-                IdUtil.getNextAchievementID(),
+        IdUtil.getNextAchievementID(),
                 "spawnWither",
                 1,
                 16,

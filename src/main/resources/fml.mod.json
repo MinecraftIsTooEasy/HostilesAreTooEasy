@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "hostiles_are_too_easy",
   "version": "${version}",
-  "name": "HaTE mod",
+  "name": "HATE mod",
   "description": "This mod makes basic mobs harder and adds dynamic world difficulty!",
   "authors": [
-    "Me!"
+    "vbonedra"
   ],
   "contact": {
     "homepage": "https://minecraftistooeasy.github.io/",
-    "sources": "https://github.com/MinecraftIsTooEasy/hostiles-are-too-easy"
+    "sources": "https://github.com/MinecraftIsTooEasy/HostilesAreTooEasy"
   },
   "license": "CC0-1.0",
   "icon": "assets/hostiles_are_too_easy/icon.png",
