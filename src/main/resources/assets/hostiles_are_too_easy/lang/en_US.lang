@@ -15,6 +15,7 @@ achievement.killWither=of Withering Heights
 achievement.killWither.desc=and don't hold back.
 
 notification.end_frame_block=§4The Wither is yet to be slayed.
+notification.wither_block=§4The Wither needs more free space.
 
 entity.arachnid_warp.name=Warp
 entity.creeper_mimic.name=Mimic

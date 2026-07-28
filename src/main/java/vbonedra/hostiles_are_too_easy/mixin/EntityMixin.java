@@ -31,13 +31,16 @@ public abstract class EntityMixin {
 
             ItemStack item_stack = damage_source.getItemAttackedWith();
             if (item_stack != null && item_stack.getItem() instanceof ItemTool) {
-                cir.setReturnValue(!item_stack.getItemAsTool().isEffectiveAgainstBlock(associatedBlock, 0));
+                cir.setReturnValue(!item_stack.getItemAsTool().isEffectiveAgainstBlock(associatedBlock, 0) || damage_source.isExplosion());
                 return;
             }
 
             cir.setReturnValue(true);
         }
         else if (entity instanceof EntityCreeper) {
+            cir.setReturnValue(damage_source.isExplosion());
+        }
+        else if (entity instanceof EntityWither) {
             cir.setReturnValue(damage_source.isExplosion());
         }
     }

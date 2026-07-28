@@ -113,7 +113,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
         if (entity instanceof EntityIronGolem) {
             if (celestialType >= celestialTypeStartPositive) {
-                cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
+                if (damage_source.bypassesMundaneArmor()) {
+                    cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
+                }
             }
         }
         if (entity instanceof EntityGhoul) {
@@ -159,8 +161,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
     }
 
 
-
-
     @Inject(method = "onDeath(Lnet/minecraft/DamageSource;)V", at = @At("HEAD"))
     private void onDeath_grantBossKillAchievements(DamageSource damageSource, CallbackInfo ci) {
         if ((Object) this instanceof EntityWither wither) {
@@ -203,4 +203,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             }
         }
     }
+
+
 }
