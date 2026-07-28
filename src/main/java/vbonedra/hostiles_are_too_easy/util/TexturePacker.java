@@ -10,6 +10,7 @@ import java.util.List;
 
 public class TexturePacker {
     // TODO: code cleanup, this is just hell
+    // TODO: add support for reading dynamic textures and add cascade calls
     private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette) {
         return getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette, false);
     }
@@ -96,6 +97,124 @@ public class TexturePacker {
             return bgLocation;
         }
     }
+    public static ResourceLocation blendColorOnTexture(String bgPath, float targetR, float targetG, float targetB, float targetA, float bgFactor, float colorFactor) {
+        ResourceLocation bgLocation = new ResourceLocation(bgPath);
+
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            InputStream bgStream = mc.getResourceManager().getResource(bgLocation).getInputStream();
+            BufferedImage bgImage = ImageIO.read(bgStream);
+            bgStream.close();
+
+            int width = bgImage.getWidth();
+            int height = bgImage.getHeight();
+            BufferedImage combinedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            float totalFactor = bgFactor + colorFactor;
+            if (totalFactor <= 0.0f) {
+                totalFactor = 1.0f;
+            }
+
+            int fgR = Math.min(255, Math.max(0, (int) (targetR * 255.0f)));
+            int fgG = Math.min(255, Math.max(0, (int) (targetG * 255.0f)));
+            int fgB = Math.min(255, Math.max(0, (int) (targetB * 255.0f)));
+            int fgA = Math.min(255, Math.max(0, (int) (targetA * 255.0f)));
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int bgPixel = bgImage.getRGB(x, y);
+
+                    int bgA = (bgPixel >> 24) & 0xFF;
+                    int bgR = (bgPixel >> 16) & 0xFF;
+                    int bgG = (bgPixel >> 8) & 0xFF;
+                    int bgB = bgPixel & 0xFF;
+
+                    int finalA;
+                    if (bgA > 0) {
+                        finalA = Math.min(255, Math.max(0, (int) ((bgA * bgFactor + fgA * colorFactor) / totalFactor)));
+                    } else {
+                        finalA = 0;
+                    }
+
+                    int finalR = Math.min(255, Math.max(0, (int) ((bgR * bgFactor + fgR * colorFactor) / totalFactor)));
+                    int finalG = Math.min(255, Math.max(0, (int) ((bgG * bgFactor + fgG * colorFactor) / totalFactor)));
+                    int finalB = Math.min(255, Math.max(0, (int) ((bgB * bgFactor + fgB * colorFactor) / totalFactor)));
+
+                    int blendedPixel = (finalA << 24) | (finalR << 16) | (finalG << 8) | finalB;
+                    combinedImage.setRGB(x, y, blendedPixel);
+                }
+            }
+
+            String cleanBg = bgPath.replace("/", "_").replace(".", "_");
+            String dynamicName = "colorblend_" + cleanBg + "_" + fgR + "_" + fgG + "_" + fgB + "_" + fgA + "_" + bgFactor + "_" + colorFactor;
+
+            DynamicTexture dynamicTexture = new DynamicTexture(combinedImage);
+            return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
+
+        } catch (Exception e) {
+            System.err.println("blendColorOnTexture failed blending: " + e);
+            return bgLocation;
+        }
+    }
+    public static ResourceLocation blendHexColorOnTexture(String bgPath, String hexColor, float bgFactor, float colorFactor) {
+        ResourceLocation bgLocation = new ResourceLocation(bgPath);
+
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            InputStream bgStream = mc.getResourceManager().getResource(bgLocation).getInputStream();
+            BufferedImage bgImage = ImageIO.read(bgStream);
+            bgStream.close();
+
+            int width = bgImage.getWidth();
+            int height = bgImage.getHeight();
+            BufferedImage combinedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            float totalFactor = bgFactor + colorFactor;
+            if (totalFactor <= 0.0f) {
+                totalFactor = 1.0f;
+            }
+
+            String cleanHex = hexColor.replace("#", "");
+            int colorInt = Integer.parseInt(cleanHex, 16);
+
+            int fgR = (colorInt >> 16) & 0xFF;
+            int fgG = (colorInt >> 8) & 0xFF;
+            int fgB = colorInt & 0xFF;
+            int fgA = 255;
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int bgPixel = bgImage.getRGB(x, y);
+
+                    int bgA = (bgPixel >> 24) & 0xFF;
+                    int bgR = (bgPixel >> 16) & 0xFF;
+                    int bgG = (bgPixel >> 8) & 0xFF;
+                    int bgB = bgPixel & 0xFF;
+
+                    int finalA = (bgA > 0) ? Math.min(255, Math.max(0, (int) ((bgA * bgFactor + fgA * colorFactor) / totalFactor))) : 0;
+                    int finalR = Math.min(255, Math.max(0, (int) ((bgR * bgFactor + fgR * colorFactor) / totalFactor)));
+                    int finalG = Math.min(255, Math.max(0, (int) ((bgG * bgFactor + fgG * colorFactor) / totalFactor)));
+                    int finalB = Math.min(255, Math.max(0, (int) ((bgB * bgFactor + fgB * colorFactor) / totalFactor)));
+
+                    int blendedPixel = (finalA << 24) | (finalR << 16) | (finalG << 8) | finalB;
+                    combinedImage.setRGB(x, y, blendedPixel);
+                }
+            }
+
+            String cleanBg = bgPath.replace("/", "_").replace(".", "_");
+            String dynamicName = "hexblend_" + cleanBg + "_" + cleanHex + "_" + bgFactor + "_" + colorFactor;
+
+            DynamicTexture dynamicTexture = new DynamicTexture(combinedImage);
+            return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
+
+        } catch (Exception e) {
+            System.err.println("blendHexColorOnTexture failed blending: " + e);
+            return bgLocation;
+        }
+    }
+
 
     public static ResourceLocation maskTemplateWithPixelSourceByBrightness(String pixelSourcePath, String templatePath) {
         return maskTemplateWithPixelSourceByBrightness(pixelSourcePath, templatePath, 1F, 0F, -1, false);

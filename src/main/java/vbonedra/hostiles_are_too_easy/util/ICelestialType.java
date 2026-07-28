@@ -17,7 +17,6 @@ public interface ICelestialType {
     int celestialTypeCreeperMimic = celestialTypeStartPositive + 1;
     // EntityZombie
     int celestialTypeZombiePhase = celestialTypeStartPositive + 1;
-    int celestialTypeZombieTemerarious = celestialTypeStartPositive + 2;
     // EntityArachnid
     int celestialTypeArachnidWarp = celestialTypeStartPositive + 1;
     // EntityShadow

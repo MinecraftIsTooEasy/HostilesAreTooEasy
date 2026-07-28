@@ -2,6 +2,7 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.EntityPlayer;
 import net.minecraft.ItemEnderEye;
+import net.minecraft.Minecraft;
 import net.minecraft.StatCollector;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,12 +26,12 @@ public class ItemEnderEyeMixin {
                 if (player.worldObj.isRemote) {
                     this.displayActionBarMessage(StatCollector.translateToLocal("notification.end_frame_block"));
 
-                    net.minecraft.Minecraft mc = net.minecraft.Minecraft.getMinecraft();
+                    Minecraft mc = Minecraft.getMinecraft();
                     if (mc.ingameGUI != null) {
                         int currentTick = mc.ingameGUI.getUpdateCounter();
                         if (currentTick - this.lastSoundTick >= 60 || currentTick < this.lastSoundTick) {
                             this.lastSoundTick = currentTick;
-                            this.playClientWitherSound(mc);
+                            this.playClientWitherSound();
                         }
                     }
                 }
@@ -40,13 +41,14 @@ public class ItemEnderEyeMixin {
     }
 
     @Unique private void displayActionBarMessage(String text) {
-        net.minecraft.Minecraft mc = net.minecraft.Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getMinecraft();
         if (mc.ingameGUI != null) {
             mc.ingameGUI.func_110326_a(text, false);
         }
     }
 
-    @Unique private void playClientWitherSound(net.minecraft.Minecraft mc) {
+    @Unique private void playClientWitherSound() {
+        Minecraft mc = Minecraft.getMinecraft();
         if (mc.sndManager != null) {
             float pitch = (mc.theWorld.rand.nextFloat() - mc.theWorld.rand.nextFloat()) * 0.2F + 1.0F;
             mc.sndManager.playSoundFX("mob.wither.idle", 1.0F, pitch);

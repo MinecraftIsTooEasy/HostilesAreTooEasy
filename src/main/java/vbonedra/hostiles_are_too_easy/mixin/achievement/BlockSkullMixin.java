@@ -97,6 +97,7 @@ public class BlockSkullMixin {
                     ci.cancel();
 
                     this.displayActionBarMessage(StatCollector.translateToLocal("notification.wither_block"));
+                    this.playClientWitherSound();
                 }
             }
         }
@@ -114,10 +115,18 @@ public class BlockSkullMixin {
     }
     @Unique
     private void displayActionBarMessage(String text) {
-        net.minecraft.Minecraft mc = net.minecraft.Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getMinecraft();
         if (mc.ingameGUI != null) {
             mc.ingameGUI.func_110326_a(text, false);
         }
     }
+    @Unique private void playClientWitherSound() {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.sndManager != null) {
+            float pitch = (mc.theWorld.rand.nextFloat() - mc.theWorld.rand.nextFloat()) * 0.2F + 1.0F;
+            mc.sndManager.playSoundFX("mob.wither.idle", 1.0F, pitch);
+        }
+    }
+
 }
 

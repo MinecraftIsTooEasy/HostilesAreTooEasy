@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 
+import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeUnset;
 import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeVanilla;
 
 @Mixin(Entity.class)
@@ -24,14 +25,18 @@ public abstract class EntityMixin {
         }
         if (entity instanceof EntitySilverfish) {
 
-            if (celestialType == celestialTypeVanilla || damage_source == null) return;
+            if (celestialType == celestialTypeVanilla || celestialType == celestialTypeUnset || damage_source == null) return;
 
-            Block associatedBlock = Block.getBlock(celestialType);
-            if (associatedBlock == null) return;
-
+            Block block = Block.getBlock(celestialType);
             ItemStack item_stack = damage_source.getItemAttackedWith();
-            if (item_stack != null && item_stack.getItem() instanceof ItemTool) {
-                cir.setReturnValue(!item_stack.getItemAsTool().isEffectiveAgainstBlock(associatedBlock, 0) || damage_source.isExplosion());
+            if (block == null) return;
+
+            if (damage_source == DamageSource.fall) {
+                return;
+            } else if (damage_source.isMelee() && damage_source.getResponsibleEntity() instanceof EntityIronGolem) {
+                return;
+            } else if (item_stack != null && item_stack.getItem() instanceof ItemTool) {
+                cir.setReturnValue(!item_stack.getItemAsTool().isEffectiveAgainstBlock(block, 0) || damage_source.isExplosion());
                 return;
             }
 

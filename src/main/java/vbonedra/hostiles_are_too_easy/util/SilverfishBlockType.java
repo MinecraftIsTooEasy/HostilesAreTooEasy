@@ -49,10 +49,10 @@ public class SilverfishBlockType {
         int difficulty_level = DifficultyMode.get_difficulty_level(world);
 
         return switch (data.rarity) {
-            case FREQUENT -> (1.0F + difficulty_level) / 4.0F;
-            case COMMON -> (1.0F + difficulty_level) / 8.0F;
-            case UNCOMMON -> (1.0F + difficulty_level) / 16.0F;
-            case RARE -> (1.0F + difficulty_level) / 32.0F;
+            case FREQUENT -> (1.0F + difficulty_level) / 6.0F;
+            case COMMON -> (1.0F + difficulty_level) / 12.0F;
+            case UNCOMMON -> (1.0F + difficulty_level) / 24.0F;
+            case RARE -> (1.0F + difficulty_level) / 48.0F;
             case GUARANTEED -> 1.0F;
         };
     }

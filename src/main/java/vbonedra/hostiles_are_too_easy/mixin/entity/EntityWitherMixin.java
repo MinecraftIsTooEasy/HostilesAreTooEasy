@@ -71,7 +71,7 @@ public abstract class EntityWitherMixin extends EntityMob {
         if (this.rand.nextFloat() < 0.025F) {
             this.worldObj.playSoundAtEntity(this, "mob.ghast.scream", 1.0F, 1.0F);
 
-            EntityLargeFireball fireball = new EntityLargeFireball(this.worldObj, this, motionX, motionY, motionZ);
+            EntityLargeFireball fireball = new EntityLargeFireball(this.worldObj, this, motionX / 2, motionY / 2, motionZ / 2);
             fireball.field_92057_e = 1;
             fireball.posX = spawnX;
             fireball.posY = spawnY;

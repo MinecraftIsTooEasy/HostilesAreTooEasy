@@ -63,6 +63,11 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                         this.celestialType = celestialTypeGhoulVampire;
                     }
                 }
+                else if (entity instanceof EntityShadow) {
+                    if (this.rand.nextFloat() < difficulty * 0.1F || this.rand.nextFloat() < 0.005F || true) {
+                        this.celestialType = celestialTypeShadowGloom;
+                    }
+                }
 
 
             }
@@ -102,6 +107,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
         else if (entity instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);
+        }
+        else if (entity instanceof EntityShadow) {
+            if (celestialType == celestialTypeShadowGloom) cir.setReturnValue(cir.getReturnValue() * 2);
         }
 
     }

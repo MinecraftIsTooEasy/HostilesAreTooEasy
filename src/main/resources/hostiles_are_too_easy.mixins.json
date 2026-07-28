@@ -26,6 +26,7 @@
     "entity.EntityGhoulMixin",
     "entity.EntityIronGolemMixin",
     "entity.EntityPhaseSpiderMixin",
+    "entity.EntityShadowMixin",
     "entity.EntitySilverfishMixin",
     "entity.EntitySkeletonMixin",
     "entity.EntityWitherMixin",
