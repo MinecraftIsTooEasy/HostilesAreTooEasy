@@ -1,20 +1,10 @@
-- bobber dies if it's 32+ blocks from player
-- theres 1.5 to 2.5 seconds window to catch item
-- when item reeled player gets 1 to 6 xp
-- Item: Fish only =(
-    - 80% chance: Small Fish
-    - 20% chance
-        - if Ocean
-            - if in 33x4x33 area under bobber has any Dirt, Grass or Sand blocks: Small Fish
-            - unless in 33x4x33 area under bobber has any Dirt, Grass or Sand blocks: Large Fish
-        - unless Ocean: Small Fish
-- Fishing Chance
-    - chance: based on how close daytime to sunset or sunrise with time being 600 to 2400
-    - if Blue Moon: chance set to 600
-    - modifiers
-        - lightning could strike (rain ir thunder, in non-snowy biome, if bobber could see sky, if Rainy Biome or Blood Moon): x0.5 chance
-        - if skills enabled and not fisherman: x2 chance
-        - Lure Enchantment: x(0.9 ^ level) chance
-        - Worm in hotbar: x0.5 chance
-    - random: if rolls 1 in chance
-    - min to max time approximation: 110 to 4800 ticks aka 5.5 to 240 seconds
+
+    wood(0.5F, 10, EnumQuality.fine, "wood"),
+    obsidian(2.0F, 0, EnumQuality.fine, "obsidian"),
+    copper(4.0F, 30, EnumQuality.excellent, "copper"),
+    silver(4.0F, 30, EnumQuality.excellent, "silver"),
+    gold(4.0F, 50, EnumQuality.superb, "gold"),
+    iron(8.0F, 30, EnumQuality.masterwork, "iron"),
+    ancient_metal(16.0F, 40, EnumQuality.masterwork, "ancient_metal"),
+    mithril(64.0F, 100, EnumQuality.legendary, "mithril"),
+    adamantium(256.0F, 40, EnumQuality.legendary, "adamantium"),

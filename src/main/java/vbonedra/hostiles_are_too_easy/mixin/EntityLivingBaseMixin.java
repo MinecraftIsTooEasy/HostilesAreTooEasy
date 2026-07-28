@@ -2,14 +2,14 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.AchievementExtend;
 import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.IronGolemBlockType;
 
 import java.util.List;
 
@@ -73,15 +73,21 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
     private double setEntityAttribute(double value, Attribute attribute) {
         Object entity = this;
         int celestialType = this.HATE$getCelestialType();
+
         if (attribute == SharedMonsterAttributes.maxHealth) {
             if (entity instanceof EntitySkeleton) {
                 if (celestialType == celestialTypeSkeletonWithered) {
                     return value * 2.0D;
                 }
             }
+//            if (entity instanceof EntityIronGolem) {
+//                return IronGolemBlockType.getMaxHealthForBlockId(celestialType);
+//            }
         }
+
         return value;
     }
+
 
     @Inject(method = "getExperienceValue()I", at = @At("RETURN"), cancellable = true, remap = false)
     private void getExperienceValue(CallbackInfoReturnable<Integer> cir) {
@@ -109,9 +115,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntityIronGolem) {
-            cir.setReturnValue(cir.getReturnValue() + 8);
+            cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
         }
-        else if (entity instanceof EntityGhoul) {
+        if (entity instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() + 4);
         }
         else if (entity instanceof EntitySilverfish) {
@@ -122,6 +128,20 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 }
             }
         }
+    }
+
+    @ModifyConstant(method = "onLivingUpdate()V", constant = @Constant(floatValue = 0.1F))
+    private float modifyRegenPercentage(float original) {
+        Object entity = this;
+        int celestialType = this.HATE$getCelestialType();
+
+        if (entity instanceof EntityIronGolem) {
+            if (IronGolemBlockType.isValidGolemBlock(celestialType)) {
+                return IronGolemBlockType.getRegenPercentageForBlockId(celestialType);
+            }
+        }
+
+        return original;
     }
 
 
