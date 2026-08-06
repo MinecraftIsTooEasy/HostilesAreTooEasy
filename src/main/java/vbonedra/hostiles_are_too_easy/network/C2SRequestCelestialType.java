@@ -4,7 +4,7 @@ import net.minecraft.*;
 import moddedmite.rustedironcore.network.Packet;
 import moddedmite.rustedironcore.network.PacketByteBuf;
 import moddedmite.rustedironcore.network.Network;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 public record C2SRequestCelestialType(int entityId) implements Packet {
 

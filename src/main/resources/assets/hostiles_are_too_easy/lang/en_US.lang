@@ -17,10 +17,14 @@ achievement.killWither.desc=and don't hold back.
 notification.end_frame_block=§4The Wither is yet to be slayed.
 notification.wither_block=§4The Wither needs more free space.
 
-entity.arachnid_warp.name=Warp
-entity.creeper_mimic.name=Mimic
-entity.skeleton_withered.name=Withered
-entity.zombie_phase.name=Phase
-entity.ghoul_vampire.name=Vampire
-entity.shadow_gloom.name=Gloom
+entity.prefix.pre=
+entity.prefix.post=
+entity.postfix.pre= (
+entity.postfix.post=)
+entity.arachnid.warp=Warp
+entity.creeper.mimic=Mimic
+entity.skeleton.withered=Withered
+entity.zombie.phase=Phase
+entity.ghoul.vampire=Vampire
+entity.shadow.gloom=Gloom
 

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 @Mixin(EntityShadow.class)
 public abstract class EntityShadowMixin extends EntityMob implements ICelestialType {

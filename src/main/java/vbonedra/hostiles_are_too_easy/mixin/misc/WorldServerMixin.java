@@ -1,4 +1,4 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.misc;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ public abstract class WorldServerMixin extends World {
     }
 
     @Inject(method = "getSuitableCreature", at = @At("RETURN"), cancellable = true)
-    private void catchFailedSpawnsWithFullLogic(EnumCreatureType creature_type, int x, int y, int z, CallbackInfoReturnable<Class<?>> cir) {
+    private void getSuitableCreature(EnumCreatureType creature_type, int x, int y, int z, CallbackInfoReturnable<Class<?>> cir) {
         boolean is_in_overworld = this.isOverworld();
         boolean is_in_underworld = this.isUnderworld();
         boolean is_in_hell = this.isTheNether();

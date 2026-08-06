@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-import vbonedra.hostiles_are_too_easy.util.IronGolemBlockType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
 
 @Mixin(EntityIronGolem.class)
 public abstract class EntityIronGolemMixin extends EntityGolem implements ICelestialType {
@@ -24,7 +24,7 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
     @Inject(method = "applyEntityAttributes()V", at = @At("RETURN"))
     private void applyEntityAttributes(CallbackInfo ci) {
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType >= celestialTypeStartPositive) {
+        if (celestialType >= 0) {
             double calculatedHealth = IronGolemBlockType.getMaxHealthForBlockId(celestialType);
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculatedHealth);
             this.setHealth((float)calculatedHealth);
@@ -34,7 +34,7 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
     @Inject(method = "attackEntityAsMob(Lnet/minecraft/Entity;)Lnet/minecraft/EntityDamageResult;", at = @At("HEAD"), cancellable = true)
     private void attackEntityAsMob(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType >= celestialTypeStartPositive) {
+        if (celestialType >= 0) {
             this.attackTimer = 10;
             this.worldObj.setEntityState(this, EnumEntityState.golem_throw);
 
@@ -64,7 +64,7 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
     @Inject(method = "dropFewItems(ZLnet/minecraft/DamageSource;)V", at = @At("HEAD"), cancellable = true)
     private void dropFewItems(boolean recentlyHitByPlayer, DamageSource damageSource, CallbackInfo ci) {
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType >= celestialTypeStartPositive) {
+        if (celestialType >= 0) {
             ci.cancel();
 
             int numFlowers = this.rand.nextInt(3);
@@ -90,7 +90,7 @@ public abstract class EntityIronGolemMixin extends EntityGolem implements ICeles
     @Inject(method = "getExperienceValue()I", at = @At("RETURN"), cancellable = true)
     private void getExperienceValue(CallbackInfoReturnable<Integer> cir) {
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType >= celestialTypeStartPositive) {
+        if (celestialType >= 0) {
             cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getExperienceForBlockId(celestialType));
         }
     }

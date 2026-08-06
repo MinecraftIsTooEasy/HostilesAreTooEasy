@@ -2,8 +2,8 @@ package vbonedra.hostiles_are_too_easy.network;
 
 import moddedmite.rustedironcore.network.Network;
 import net.minecraft.Entity;
-import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 public class CelestialTypeGetter {
 
@@ -13,11 +13,6 @@ public class CelestialTypeGetter {
         }
 
         int entityId = entity.entityId;
-        if (entity.isDead) {
-            CelestialTypeCache.clientCelestialTypeMap.remove(entityId);
-            CelestialTypeCache.requestedEntities.remove(entityId);
-            return ICelestialType.celestialTypeVanilla;
-        }
         Integer cachedType = CelestialTypeCache.clientCelestialTypeMap.get(entityId);
         if (cachedType != null) {
             return cachedType;

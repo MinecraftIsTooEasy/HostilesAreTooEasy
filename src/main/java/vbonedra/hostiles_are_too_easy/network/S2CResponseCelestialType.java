@@ -3,7 +3,7 @@ package vbonedra.hostiles_are_too_easy.network;
 import net.minecraft.*;
 import moddedmite.rustedironcore.network.Packet;
 import moddedmite.rustedironcore.network.PacketByteBuf;
-import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 
 public class S2CResponseCelestialType implements Packet {
     private final int entityId;

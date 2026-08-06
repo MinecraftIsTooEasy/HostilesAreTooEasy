@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 

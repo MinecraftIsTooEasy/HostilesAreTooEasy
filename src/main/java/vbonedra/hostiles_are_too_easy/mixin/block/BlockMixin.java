@@ -1,12 +1,12 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.block;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-import vbonedra.hostiles_are_too_easy.util.SilverfishBlockType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.SilverfishBlockType;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {

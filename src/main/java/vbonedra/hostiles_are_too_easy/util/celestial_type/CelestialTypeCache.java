@@ -1,4 +1,4 @@
-package vbonedra.hostiles_are_too_easy.util;
+package vbonedra.hostiles_are_too_easy.util.celestial_type;
 
 import java.util.HashMap;
 import java.util.HashSet;

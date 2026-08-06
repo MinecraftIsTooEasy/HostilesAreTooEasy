@@ -1,4 +1,4 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.misc;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;

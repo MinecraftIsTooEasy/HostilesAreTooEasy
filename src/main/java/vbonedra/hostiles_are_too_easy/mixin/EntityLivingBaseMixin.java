@@ -2,19 +2,17 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.AchievementExtend;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-import vbonedra.hostiles_are_too_easy.util.IronGolemBlockType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
 
 import java.util.List;
 
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
-import static vbonedra.hostiles_are_too_easy.util.ICelestialType.*;
 import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntityLivingBase.class)
@@ -33,42 +31,43 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
     @Inject(method = "applyEntityAttributes()V", at = @At("HEAD"))
     private void applyEntityAttributes_celestialTypeInitialization(CallbackInfo ci) {
         if (this.celestialType == celestialTypeUnset) {
+            // TODO: add canXray data
             this.celestialType = celestialTypeVanilla;
             World world = this.worldObj;
             Object entity = this;
             if (world != null && world.isWorldServer()) {
                 int difficulty = get_difficulty_level(world);
+                double chanceLurkers = world.canBlockSeeTheSky(this.getBlockPosX(), this.getBlockPosY(), this.getBlockPosZ()) ? 0.05 : world.isOverworld() ? 0.1 : 0.2;
                 if (entity instanceof EntityPhaseSpider) {
-                    if (this.rand.nextFloat() < (float) difficulty * 0.05F || this.rand.nextFloat() < 0.005F) {
-                        this.celestialType = celestialTypeArachnidWarp;
+                    if (this.rand.nextFloat() < difficulty * chanceLurkers * 0.5) {
+                        this.celestialType = celestialTypePhaseSpiderWarp;
                     }
                 }
                 else if (entity instanceof EntityCreeper) {
-                    if (this.rand.nextFloat() < difficulty * 0.2F) {
-                        this.celestialType = celestialTypeCreeperMimic;
+                    if (this.rand.nextFloat() < difficulty * 0.2) {
+                        this.celestialType = celestialTypeCreeperFlawedMimic;
                     }
                 }
                 else if (entity instanceof EntitySkeleton) {
-                    if (this.rand.nextFloat() < (difficulty - (world.isUnderworld() ? 0 : 1)) * 0.2) {
+                    if (this.rand.nextFloat() < (difficulty - (world.isOverworld() ? 1 : 0)) * chanceLurkers) {
                         this.celestialType = celestialTypeSkeletonWithered;
                     }
                 }
                 else if (entity instanceof EntityZombie) {
-                    if (this.rand.nextFloat() < difficulty * 0.05F || this.rand.nextFloat() < 0.005F) {
+                    if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
                         this.celestialType = celestialTypeZombiePhase;
                     }
                 }
                 else if (entity instanceof EntityGhoul) {
-                    if (this.rand.nextFloat() < (difficulty + 1) * 0.1F) {
+                    if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers) {
                         this.celestialType = celestialTypeGhoulVampire;
                     }
                 }
                 else if (entity instanceof EntityShadow) {
-                    if (this.rand.nextFloat() < difficulty * 0.1F || this.rand.nextFloat() < 0.005F) {
+                    if (this.rand.nextFloat() < difficulty * 0.1) {
                         this.celestialType = celestialTypeShadowGloom;
                     }
                 }
-
 
             }
         }
@@ -103,7 +102,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
-            if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (celestialType == celestialTypeCreeperFlawedMimic) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);
@@ -120,7 +119,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntityIronGolem) {
-            if (celestialType >= celestialTypeStartPositive) {
+            if (celestialType >= 0) {
                 if (damage_source.bypassesMundaneArmor()) {
                     cir.setReturnValue(cir.getReturnValue() + IronGolemBlockType.getNaturalDefenseForBlockId(celestialType));
                 }
@@ -145,7 +144,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntityIronGolem) {
-            if (celestialType >= celestialTypeStartPositive) {
+            if (celestialType >= 0) {
                 if (IronGolemBlockType.isValidGolemBlock(celestialType)) {
                     return IronGolemBlockType.getRegenPercentageForBlockId(celestialType);
                 }

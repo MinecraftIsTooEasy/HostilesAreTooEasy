@@ -10,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import moddedmite.rustedironcore.network.Network;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeZombiePhase;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeZombiePhase;
 
 
 @Mixin(RenderZombie.class)
@@ -49,11 +49,6 @@ public abstract class RenderZombieMixin {
         }
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityZombie);
-
-        if (par1EntityZombie.isDead) {
-            CelestialTypeCache.clientCelestialTypeMap.remove(entityId);
-            CelestialTypeCache.requestedEntities.remove(entityId);
-        }
 
         if (celestialType == celestialTypeZombiePhase) {
             String templateTexture = cir.getReturnValue().getResourcePath();

@@ -10,22 +10,17 @@ import vbonedra.hostiles_are_too_easy.network.HATEBackgroundNetwork;
 
 public class HostilesAreTooEasyMod implements ModInitializer {
     public static final String MOD_ID = "hostiles_are_too_easy";
+    public static final String MOD_ID_COMPACT = "hate";
     public static final String MOD_NAME = "HostilesAreTooEasy";
 
-    public static final Logger HATE_LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger HATE_LOGGER = LogManager.getLogger(MOD_NAME);
 
     @Override
     public void onInitialize() {
-        // This code runs as soon as Minecraft is in a mod-load-ready state.
-        // However, some things (like resources) may still be uninitialized.
-        // Proceed with mild caution.
-
         HATE_LOGGER.info("Zombies are Too Easy! Creepers are Too Easy! Phase Spiders are Too Easy! Too Easy! Too Easy! Too Easy!");
         HATEBackgroundNetwork.init();
-        // Add resource pack domain, default "minecraft"
         ModResourceManager.addResourcePackDomain(MOD_ID);
 
-        //Register an event listening object
         HATEEventRIC.register();
     }
 }

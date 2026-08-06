@@ -2,14 +2,10 @@ package vbonedra.hostiles_are_too_easy.mixin.entity;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-
-import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 @Mixin(EntityPhaseSpider.class)
 public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICelestialType {
@@ -19,7 +15,7 @@ public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICeles
 
     @Inject(method = "tryTeleportTo(DDD)Z", at = @At("RETURN"))
     private void tryTeleportTo(double pos_x, double pos_y, double pos_z, CallbackInfoReturnable<Boolean> cir) {
-        if (this.HATE$getCelestialType() == celestialTypeArachnidWarp) {
+        if (this.HATE$getCelestialType() == celestialTypePhaseSpiderWarp) {
             if (cir.getReturnValue()) {
 
                 double searchRadius = 4.0D;

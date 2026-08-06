@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import moddedmite.rustedironcore.network.Network;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.CelestialTypeCache;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,10 +50,6 @@ public abstract class RenderShadowMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(shadow);
 
-        if (shadow.isDead) {
-            CelestialTypeCache.clientCelestialTypeMap.remove(entityId);
-            CelestialTypeCache.requestedEntities.remove(entityId);
-        }
 
         if (celestialType == ICelestialType.celestialTypeShadowGloom) {
             String templateTexture = cir.getReturnValue().getResourcePath();

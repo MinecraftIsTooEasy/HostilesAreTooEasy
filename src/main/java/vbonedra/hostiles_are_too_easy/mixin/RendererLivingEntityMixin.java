@@ -5,8 +5,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.*;
 
 @Mixin(RendererLivingEntity.class)
 public abstract class RendererLivingEntityMixin {
@@ -23,23 +24,31 @@ public abstract class RendererLivingEntityMixin {
                 return new ResourceLocation("textures/entity/skeleton/longdead_guardian_glow.png");
             }
         }
-
         if (par1EntityLivingBase instanceof EntityZombie zombie) {
             if (zombie.isRevenant()) {
                 return new ResourceLocation("textures/entity/zombie/revenant_glow.png");
             }
         }
-
         if (par1EntityLivingBase instanceof EntityArachnid) {
             if (par1EntityLivingBase.getClass() == EntityPhaseSpider.class) {
                 return new ResourceLocation("textures/entity/spider/phase_spider_glow.png");
             }
         }
-
         if (par1EntityLivingBase instanceof EntityGhoul) {
-            if (celestialType == ICelestialType.celestialTypeGhoulVampire) {
+            if (celestialType == celestialTypeGhoulVampire) {
                 return TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        "textures/items/dye_powder_blue.png",
+                        "textures/items/dye_powder_green.png",
+                        "textures/entity/earth_elemental/earth_elemental_glow.png",
+                        1.0F,
+                        0.0F,
+                        true
+                );
+            }
+        }
+        if (par1EntityLivingBase instanceof EntityShadow) {
+            if (celestialType == celestialTypeShadowGloom) {
+                return TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                        "textures/items/ruby.png",
                         "textures/entity/earth_elemental/earth_elemental_glow.png",
                         1.0F,
                         0.0F,
@@ -50,4 +59,6 @@ public abstract class RendererLivingEntityMixin {
 
         return glowing_texture;
     }
+
+
 }

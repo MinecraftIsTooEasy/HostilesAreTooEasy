@@ -1,20 +1,16 @@
 package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
-import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeUnset;
-import static vbonedra.hostiles_are_too_easy.util.ICelestialType.celestialTypeVanilla;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.*;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-
 
     @Inject(method = "isImmuneTo(Lnet/minecraft/DamageSource;)Z", at = @At("RETURN"), cancellable = true)
     private void isImmuneTo(DamageSource damage_source, CallbackInfoReturnable<Boolean> cir) {
@@ -52,7 +48,7 @@ public abstract class EntityMixin {
 
 
     @Inject(method = "getEntityName()Ljava/lang/String;", at = @At("RETURN"), cancellable = true)
-    private void getCustomCelestialEntityName(CallbackInfoReturnable<String> cir) {
+    private void getEntityName(CallbackInfoReturnable<String> cir) {
         Object entity = this;
 
         if (!(entity instanceof ICelestialType)) {
@@ -60,66 +56,26 @@ public abstract class EntityMixin {
         }
 
         int celestialType = ((ICelestialType) entity).HATE$getCelestialType();
+        String name = cir.getReturnValue();
+
+        if (entity instanceof EntityIronGolem) {
+            if (Block.blocksList[celestialType] != null) {
+                cir.setReturnValue(Block.blocksList[celestialType].getLocalizedName() + " " + name);
+            }
+        }
+        if (entity instanceof EntitySilverfish) {
+            if (Block.blocksList[celestialType] != null) {
+                cir.setReturnValue(Block.blocksList[celestialType].getLocalizedName() + " " + name);
+            }
+        }
+
         if (celestialType <= 0) {
             return;
         }
 
-        if (entity instanceof EntityIronGolem) {
-            if (Block.blocksList[celestialType] != null) {
-                String blockName = Block.blocksList[celestialType].getLocalizedName();
-                String originalName = cir.getReturnValue();
-                cir.setReturnValue(blockName + " " + originalName);
-            }
-            return;
-        }
 
-        String originalName = cir.getReturnValue();
-        String langKey = getString(entity, celestialType);
+        cir.setReturnValue(getPrefix(entity, celestialType) + name);
 
-        if (langKey != null) {
-            String translatedName = StatCollector.translateToLocal(langKey);
-            if (!translatedName.equals(langKey)) {
-                cir.setReturnValue(translatedName + " " + originalName);
-            }
-        }
-    }
-
-    @Unique
-    private static @Nullable String getString(Object entity, int celestialType) {
-        String langKey = null;
-
-        if (entity instanceof EntityPhaseSpider) {
-            if (celestialType == 1) {
-                langKey = "entity.arachnid_warp.name";
-            }
-        }
-        else if (entity instanceof EntityCreeper) {
-            if (celestialType == 1) {
-                langKey = "entity.creeper_mimic.name";
-            }
-        }
-        else if (entity instanceof EntitySkeleton) {
-            if (celestialType == 1) {
-                langKey = "entity.skeleton_withered.name";
-            }
-        }
-        else if (entity instanceof EntityZombie) {
-            if (celestialType == 1) {
-                langKey = "entity.zombie_phase.name";
-            }
-        }
-        else if (entity instanceof EntityGhoul) {
-            if (celestialType == 1) {
-                langKey = "entity.ghoul_vampire.name";
-            }
-        }
-        else if (entity instanceof EntityShadow) {
-            if (celestialType == 1) {
-                langKey = "entity.shadow_gloom.name";
-            }
-        }
-
-        return langKey;
     }
 
 }

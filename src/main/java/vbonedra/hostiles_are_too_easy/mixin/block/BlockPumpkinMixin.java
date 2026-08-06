@@ -1,12 +1,12 @@
-package vbonedra.hostiles_are_too_easy.mixin;
+package vbonedra.hostiles_are_too_easy.mixin.block;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import vbonedra.hostiles_are_too_easy.util.ICelestialType;
-import vbonedra.hostiles_are_too_easy.util.IronGolemBlockType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
 
 @Mixin(BlockPumpkin.class)
 public abstract class BlockPumpkinMixin {
