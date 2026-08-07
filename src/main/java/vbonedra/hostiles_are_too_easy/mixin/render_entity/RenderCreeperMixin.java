@@ -12,7 +12,7 @@ import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeCreeperFlawedMimic;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeCreeperMimic;
 
 @Mixin(RenderCreeper.class)
 public abstract class RenderCreeperMixin {
@@ -42,7 +42,7 @@ public abstract class RenderCreeperMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityCreeper);
 
-        if (celestialType == celestialTypeCreeperFlawedMimic) {
+        if (celestialType == celestialTypeCreeperMimic) {
             int entityId = par1EntityCreeper.entityId;
 
             int blockX = MathHelper.floor_double(par1EntityCreeper.posX);

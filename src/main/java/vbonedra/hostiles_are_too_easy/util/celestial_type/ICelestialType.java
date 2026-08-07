@@ -16,14 +16,10 @@ public interface ICelestialType {
     // TODO: use celestialSubtype instead of celestialType to store blockId
 
     // TODO: mobs that attack animals could scent players with health under 50%
-    // TODO: GelatinousCube cant rake more than 6 damage, if damage is greater than 6, it follows: 4 + (rt(8 * (damage - 4) + 1) - 1) / 2
+    // TODO: GelatinousCube cant take more than 6 damage, if damage is greater than 6, it follows: 4 + (rt(8 * (damage - 4) + 1) - 1) / 2
 
     // celestialType - main type of entity granted on spawn
     // celestialSubtype - dynamic type of entity granted based on environment, could be mixed with main type, represents states like sickness or conversion phase
-
-    // all skeletons shoot faster the closer target is
-    // all animals afraid of players with weapons
-
 
     // Squid
     int celestialTypeSquidGlow = 1; // Glow - spawns in dark waters, alongside slowness poisons target
@@ -90,12 +86,12 @@ public interface ICelestialType {
     int celestialTypeRevenantBrute = 1; // Brute - when dies heals back 60% max health and loses 3% max health each second
     // PigZombie
     int celestialTypePigZombiePigMan = 1; // PigMan - attacks players without golden armor
+    // Creeper, InfernalCreeper
+    int celestialTypeCreeperMimic = 1; // FlawedMimic - mimics blocks with flaws
     // Creeper
-    int celestialTypeCreeperFlawedMimic = 1; // FlawedMimic - mimics blocks with flaws
     int celestialTypeCreeperFire = 1; // Fire - spreads fire on explosion
     int celestialTypeCreeperElectric = 1; // Electric - strikes lightnings at nearby target and at nearby creepers
     // InfernalCreeper
-    int celestialTypeInfernalCreeperPerfectMimic = 1; // PerfectMimic - perfectly mimics blocks
     int celestialTypeInfernalCreeperLava = 1; // Lava - spreads lava on explosion
     int celestialTypeInfernalCreeperDoom = 1; // Doom - insanely high blocks explosion
     // Skeleton, Longdead, LongdeadGuardian, BoneLord, AncientBoneLord
@@ -104,7 +100,7 @@ public interface ICelestialType {
     // Arachnid, CaveSpider, Spider, DemonSpider, WoodSpider, BlackWidowSpider, PhaseSpider
     int celestialTypeArachnidBroodmother = 1; // Broodmother
     // PhaseSpider
-    int celestialTypePhaseSpiderWarp = 1; // Warp - teleports nearby
+    int celestialTypePhaseSpiderWarp = 1; // Warp - teleports nearby entity to its position before teleporting
     // Silverfish, HoarySilverfish, Netherspawn, Copperspine
     int celestialTypeSilverfishBlockfish = 1; // Blockfish
     // Snowman

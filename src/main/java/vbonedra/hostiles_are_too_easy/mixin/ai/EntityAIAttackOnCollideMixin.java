@@ -15,8 +15,7 @@ public class EntityAIAttackOnCollideMixin {
     private void init_addGolemTarget(EntityCreature par1EntityCreature, Class par2Class, double par3, boolean par5, CallbackInfo ci) {
         if (par2Class == net.minecraft.EntityPlayer.class && !(par1EntityCreature instanceof EntityIronGolem)) {
             if (par1EntityCreature.tasks != null) {
-                EntityAIAttackOnCollide golemAttackTask = new EntityAIAttackOnCollide(par1EntityCreature, EntityIronGolem.class, par3, par5);
-                par1EntityCreature.tasks.addTask(3, golemAttackTask);
+                par1EntityCreature.tasks.addTask(3, new EntityAIAttackOnCollide(par1EntityCreature, EntityIronGolem.class, par3, par5));
             }
         }
     }

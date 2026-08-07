@@ -37,7 +37,7 @@ public abstract class RendererLivingEntityMixin {
         if (par1EntityLivingBase instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) {
                 return TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        "textures/items/dye_powder_green.png",
+                        "textures/blocks/wool_colored_green.png",
                         "textures/entity/earth_elemental/earth_elemental_glow.png",
                         1.0F,
                         0.0F,
@@ -48,7 +48,7 @@ public abstract class RendererLivingEntityMixin {
         if (par1EntityLivingBase instanceof EntityShadow) {
             if (celestialType == celestialTypeShadowGloom) {
                 return TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        "textures/items/ruby.png",
+                        "textures/blocks/wool_colored_red.png",
                         "textures/entity/earth_elemental/earth_elemental_glow.png",
                         1.0F,
                         0.0F,

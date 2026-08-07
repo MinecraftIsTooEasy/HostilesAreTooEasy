@@ -45,8 +45,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 }
                 else if (entity instanceof EntityCreeper) {
                     if (this.rand.nextFloat() < difficulty * 0.2) {
-                        this.celestialType = celestialTypeCreeperFlawedMimic;
+                        this.celestialType = celestialTypeCreeperMimic;
                     }
+
                 }
                 else if (entity instanceof EntitySkeleton) {
                     if (this.rand.nextFloat() < (difficulty - (world.isOverworld() ? 1 : 0)) * chanceLurkers) {
@@ -102,7 +103,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
-            if (celestialType == celestialTypeCreeperFlawedMimic) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityGhoul) {
             if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);

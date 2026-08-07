@@ -13,8 +13,7 @@ public class EntityAINearestAttackableTargetMixin {
     private void init_addGolemTarget(EntityCreature par1EntityCreature, Class par2Class, int par3, boolean par4, boolean par5, IEntitySelector par6IEntitySelector, CallbackInfo ci) {
         if (par2Class == net.minecraft.EntityPlayer.class && !(par1EntityCreature instanceof EntityIronGolem)) {
             if (par1EntityCreature.targetTasks != null) {
-                EntityAINearestAttackableTarget golemTargetTask = new EntityAINearestAttackableTarget(par1EntityCreature, EntityIronGolem.class, par3, par4, par5, par6IEntitySelector);
-                par1EntityCreature.targetTasks.addTask(3, golemTargetTask);
+                par1EntityCreature.targetTasks.addTask(3, new EntityAINearestAttackableTarget(par1EntityCreature, EntityIronGolem.class, par3, par4, par5, par6IEntitySelector));
             }
         }
     }

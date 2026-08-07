@@ -46,11 +46,9 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
         if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
-            System.out.println("should evade");
             boolean can_evade = !damage.isFallDamage() && !damage.isFireDamage() && !damage.isPoison();
 
             if (can_evade && this.num_evasions > 0) {
-                System.out.println("can evade " + this.num_evasions);
                 --this.num_evasions;
                 Entity entity = damage.getImmediateEntity();
                 if (entity == null) {
@@ -58,7 +56,6 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
                 }
 
                 if (this.tryTeleportAwayFrom(entity, 3.0F)) {
-                    System.out.println("evaded");
                     cir.setReturnValue(null);
                     cir.cancel();
                 }
