@@ -20,7 +20,7 @@ import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.
 public abstract class RenderArachnidMixin {
 
     @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
-    @Unique String warpTexture = "textures/items/shards/obsidian.png";
+    @Unique String warpTexture = "textures/items/blocks/wool_colored_lime.png";
 
     @Inject(method = "getArachnidTextures(Lnet/minecraft/EntityArachnid;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getArachnidTextures(EntityArachnid par1EntityArachnid, CallbackInfoReturnable<ResourceLocation> cir) {

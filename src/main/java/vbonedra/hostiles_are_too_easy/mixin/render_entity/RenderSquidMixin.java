@@ -1,43 +1,40 @@
 package vbonedra.hostiles_are_too_easy.mixin.render_entity;
 
+import moddedmite.rustedironcore.network.Network;
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import moddedmite.rustedironcore.network.Network;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(RenderShadow.class)
-public abstract class RenderShadowMixin {
+@Mixin(RenderSquid.class)
+public abstract class RenderSquidMixin {
 
     @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
 
-    @Unique String gloomTexture = "textures/blocks/wool_colored_magenta.png";
-    @Unique String spectralTexture = "textures/blocks/wool_colored_yellow.png";
-
     @Inject(method = "getEntityTexture(Lnet/minecraft/Entity;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getEntityTexture(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (!(par1Entity instanceof EntityShadow shadow)) {
+        if (!(par1Entity instanceof EntitySquid squid)) {
             return;
         }
 
-        if (shadow.worldObj == null) {
+        if (squid.worldObj == null) {
             return;
         }
 
-        int entityId = shadow.entityId;
+        int entityId = squid.entityId;
 
         if (!CelestialTypeCache.clientCelestialTypeMap.containsKey(entityId)) {
-            if (!CelestialTypeCache.requestedEntities.contains(entityId) && shadow.worldObj.isRemote) {
+            if (!CelestialTypeCache.requestedEntities.contains(entityId) && squid.worldObj.isRemote) {
                 Network.sendToServer(new C2SRequestCelestialType(entityId));
                 CelestialTypeCache.requestedEntities.add(entityId);
             }
@@ -49,35 +46,17 @@ public abstract class RenderShadowMixin {
             return;
         }
 
-        int celestialType = CelestialTypeGetter.getCelestialType(shadow);
+        int celestialType = CelestialTypeGetter.getCelestialType(squid);
 
-
-        String templateTexture = cir.getReturnValue().getResourcePath();
         if (celestialType == ICelestialType.celestialTypeShadowGloom) {
-            String cacheKey = gloomTexture + "_" + templateTexture;
+            String templateTexture = cir.getReturnValue().getResourcePath();
+            String cacheKey = "squid_" + templateTexture;
 
             if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        gloomTexture,
-                        templateTexture,
-                        1.0F,
-                        15.0F
-                );
+                ResourceLocation finalBlendedTexture = TexturePacker.getEmptyTransparentTexture();
                 blendedCache.put(cacheKey, finalBlendedTexture);
             }
-            cir.setReturnValue(blendedCache.get(cacheKey));
-        } else if (celestialType == ICelestialType.celestialTypeShadowSpectral) {
-            String cacheKey = spectralTexture + "_" + templateTexture;
 
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        spectralTexture,
-                        templateTexture,
-                        1.0F,
-                        7.0F
-                );
-                blendedCache.put(cacheKey, finalBlendedTexture);
-            }
             cir.setReturnValue(blendedCache.get(cacheKey));
         }
     }

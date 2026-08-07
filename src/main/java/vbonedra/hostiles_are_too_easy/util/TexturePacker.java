@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.util.List;
 
 public class TexturePacker {
-    // TODO: code cleanup, this is just hell
-    // TODO: add support for reading dynamic textures and add cascade calls
     private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette) {
         return getPixelSourcePixel(templateBrightnesses, currentTemplateBrightness, pixelSourcePalette, false);
     }
@@ -430,5 +428,21 @@ public class TexturePacker {
             return templateLocation;
         }
     }
+
+
+    public static ResourceLocation getEmptyTransparentTexture() {
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+            BufferedImage outputImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            outputImage.setRGB(0, 0, 0x00FFFFFF);
+            String dynamicName = "empty_transparent_pixel_1x1";
+            DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
+            return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
+        } catch (Exception e) {
+            System.err.println("Failed creating empty transparent texture: " + e);
+            return new ResourceLocation("missingno");
+        }
+    }
+
 
 }

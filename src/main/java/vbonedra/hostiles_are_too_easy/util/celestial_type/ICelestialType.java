@@ -18,12 +18,14 @@ public interface ICelestialType {
     // TODO: mobs that attack animals could scent players with health under 50%
     // TODO: GelatinousCube cant take more than 6 damage, if damage is greater than 6, it follows: 4 + (rt(8 * (damage - 4) + 1) - 1) / 2
 
+    // TODO: blaze's small fireball could be replaced with fireball that cant explode spawner
+
     // celestialType - main type of entity granted on spawn
     // celestialSubtype - dynamic type of entity granted based on environment, could be mixed with main type, represents states like sickness or conversion phase
 
     // Squid
     int celestialTypeSquidGlow = 1; // Glow - spawns in dark waters, alongside slowness poisons target
-    int celestialTypeKraken = 1; // Kraken - spawns in deep dark waters, large scale, pulls nearby players and animals to itself
+    int celestialTypeSquidKraken = 2; // Kraken - spawns in deep dark waters, large scale, pulls nearby players and animals to itself
     // Villager
     int celestialSubtypeVillagerBloodClump = 1; // BloodClump - villager turns into blood clump, loses all interactions, scares other villagers which prevents trading, could be cured by enchanted golden apple while has strong regeneration effect
     int celestialSubtypeVillagerSick = 1; // Sick - cant trade or breed, must be cured with golden apple
@@ -58,11 +60,11 @@ public interface ICelestialType {
     int celestialTypeWightHermit = 1; // Hermit - drains xp faster, wears chain armor and uses clubs
     // Shadow
     int celestialTypeShadowGloom = 1; // Gloom - stats and attack effects based on light level
-    int celestialTypeShadowSpectral = 1; // Spectral - phases a few path nodes, transparency based on light level with being fully invisible in darkness
+    int celestialTypeShadowSpectral = 2; // Spectral - phases a few path nodes, transparency based on light level with being fully invisible in darkness
     // Witch
     int celestialTypeWitchCrazy = 1; // Crazy - throws potions faster, when dies turns into big vampire bat that flies away, drops potion of disenchanting, summons stronger foes, when summons foes could turn into one of them to blend in
-    // Blaze - small fireball could be replaced with fireball that cant explode spawner
-    int celestialTypeBlazeMelting = 1; // Melting - instead of hooting it flies towards player and attacks with no delay
+    // Blaze
+    int celestialTypeBlazeMelting = 1; // Melting - instead of shooting it flies towards player and attacks with no delay
     int celestialTypeBlazePyromaniac = 1; // Pyromaniac - throws rows of small fireballs
     // Enderman - once attacked never loses aggro
     int celestialTypeEndermanAlbino = 1; // Albino - water doesn't affect it, has higher stats
@@ -80,8 +82,8 @@ public interface ICelestialType {
     // Zombie, Revenant, PigZombie
     int celestialTypeZombiePhase = 1; // Phase - dodges attacks
     // Zombie
-    int celestialTypeZombieRipper = 1; // Ripper - lunges at target with increased damage when airborne
     int celestialTypeZombiePlague = 1; // Plague - attacks apply strong poison
+    int celestialTypeZombieRipper = 2; // Ripper - lunges at target with increased damage when airborne
     // Revenant
     int celestialTypeRevenantBrute = 1; // Brute - when dies heals back 60% max health and loses 3% max health each second
     // PigZombie

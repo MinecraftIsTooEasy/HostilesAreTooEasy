@@ -31,13 +31,15 @@
 * Zombies (All)
   * Phase: looks Phase Spider colored, dodges attacks
 * Phase Spider
-  * Warp: looks Obsidian Colored, on teleportation nearby hostile gets teleported to its position
+  * Warp: looks lime colored, on teleportation nearby hostile gets teleported to its position
 * Ghoul
   * Vampire: has green glowing eyes, heals when attacks by 1.0 health or dealt damage health whichever is greater
 * Shadow
   * Gloom: has red glowing eyes, speed and damage based on brightness, based on brightness could apply effects such as Wither, Nausea and Blindness
+  * Spectral: skips a few path nodes in darkness
 * Creepers (All)
-  * Mimic: mimics block it stands on, Infernal Creeper mimics perfectly, all otheres with flaws
-
+  * Mimic: looks as block it stands on, Infernal Creeper mimics perfectly, all others with flaws
+* Squid
+  * Glow: looks cyan colored and glows, applies stronger effects and drowns target at contact
 
 ---

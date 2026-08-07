@@ -2,6 +2,7 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,10 +14,15 @@ import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
 import java.util.List;
 
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
-import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements ICelestialType {
+    @Shadow
+    public abstract Vec3 getPosition(float par1);
+
+    @Shadow
+    public abstract Block getBlockAtFeet();
+
     @Unique private int celestialType = celestialTypeUnset;
     @Override public int HATE$getCelestialType() {
         return this.celestialType;
@@ -65,8 +71,23 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     }
                 }
                 else if (entity instanceof EntityShadow) {
-                    if (this.rand.nextFloat() < difficulty * 0.1) {
+                    if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
                         this.celestialType = celestialTypeShadowGloom;
+                    }
+                    if (this.rand.nextFloat() < difficulty * 0.1) {
+                        this.celestialType = celestialTypeShadowSpectral;
+                    }
+                }
+                else if (entity instanceof EntitySquid) {
+                    if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
+                        this.celestialType = celestialTypeSquidGlow;
+                    }
+                }
+                else if (entity instanceof EntityInvisibleStalker) {
+                    if (entity.getClass().getSimpleName().equals("EntityInvisibleStalker")) {
+                        if (this.rand.nextFloat() < difficulty * 0.05) {
+                            this.celestialType = celestialTypeInvisibleStalkerMirror;
+                        }
                     }
                 }
 
@@ -81,9 +102,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
         if (attribute == SharedMonsterAttributes.maxHealth) {
             if (entity instanceof EntitySkeleton) {
-                if (celestialType == celestialTypeSkeletonWithered) {
-                    return value * 2.0D;
-                }
+                if (celestialType == celestialTypeSkeletonWithered) return value * 2.0D;
+            }
+            else if (entity instanceof EntitySquid) {
+                if (celestialType == celestialTypeSquidGlow) return value * 2.0D;
             }
         }
 
@@ -97,7 +119,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         int celestialType = this.HATE$getCelestialType();
 
         if (entity instanceof EntitySkeleton) {
-            if (celestialType == celestialTypeSkeletonWithered) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (celestialType != celestialTypeVanilla) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityZombie) {
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
@@ -110,9 +132,17 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
         else if (entity instanceof EntityShadow) {
             if (celestialType == celestialTypeShadowGloom) cir.setReturnValue(cir.getReturnValue() * 2);
+            else if (celestialType == celestialTypeShadowSpectral) cir.setReturnValue(cir.getReturnValue() * 2);
+        }
+        else if (entity instanceof EntitySquid) {
+            if (celestialType == celestialTypeSquidGlow) cir.setReturnValue(cir.getReturnValue() * 2);
+        }
+        else if (entity instanceof EntityInvisibleStalker) {
+            if (celestialType == celestialTypeInvisibleStalkerMirror) cir.setReturnValue(cir.getReturnValue() * 2);
         }
 
     }
+
 
     @Inject(method = "getNaturalDefense(Lnet/minecraft/DamageSource;)F", at = @At("RETURN"), cancellable = true, remap = false)
     private void getNaturalDefense(DamageSource damage_source, CallbackInfoReturnable<Float> cir) {
@@ -170,16 +200,16 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
 
     @Inject(method = "onDeath(Lnet/minecraft/DamageSource;)V", at = @At("HEAD"))
-    private void onDeath_grantBossKillAchievements(DamageSource damageSource, CallbackInfo ci) {
-        if ((Object) this instanceof EntityWither wither) {
-            if (!wither.worldObj.isRemote) {
+    private void onDeath(DamageSource damageSource, CallbackInfo ci) {
+        if (!this.worldObj.isRemote) {
+            if ((Object) this instanceof EntityWither) {
                 double sqRadius = 16384D;
-                List<?> playersNearby = wither.worldObj.playerEntities;
+                List<?> playersNearby = this.worldObj.playerEntities;
                 for (Object obj : playersNearby) {
                     if (obj instanceof EntityPlayer player) {
-                        double dX = player.posX - wither.posX;
-                        double dY = player.posY - wither.posY;
-                        double dZ = player.posZ - wither.posZ;
+                        double dX = player.posX - this.posX;
+                        double dY = player.posY - this.posY;
+                        double dZ = player.posZ - this.posZ;
                         if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
                             if (AchievementExtend.killWither != null) {
                                 player.addStat(AchievementExtend.killWither, 1);
@@ -191,21 +221,26 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     }
                 }
             }
-        }
-        if ((Object) this instanceof EntityDragon dragon) {
-            if (!dragon.worldObj.isRemote) {
+            if ((Object) this instanceof EntityDragon) {
                 double sqRadius = 16384D;
-                List<?> playersNearby = dragon.worldObj.playerEntities;
+                List<?> playersNearby = this.worldObj.playerEntities;
                 for (Object obj : playersNearby) {
                     if (obj instanceof EntityPlayer player) {
-                        double dX = player.posX - dragon.posX;
-                        double dY = player.posY - dragon.posY;
-                        double dZ = player.posZ - dragon.posZ;
+                        double dX = player.posX - this.posX;
+                        double dY = player.posY - this.posY;
+                        double dZ = player.posZ - this.posZ;
                         if ((dX * dX + dY * dY + dZ * dZ) <= sqRadius) {
                             if (AchievementExtend.endgameMode != null) {
                                 player.addStat(AchievementExtend.endgameMode, 1);
                             }
                         }
+                    }
+                }
+            }
+            if ((Object) this instanceof EntityInvisibleStalker) {
+                if (this.HATE$getCelestialType() == ICelestialType.celestialTypeInvisibleStalkerMirror) {
+                    for (int slot = 0; slot <= 4; slot++) {
+                        this.setCurrentItemOrArmor(slot, null);
                     }
                 }
             }

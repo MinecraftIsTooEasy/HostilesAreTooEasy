@@ -23,11 +23,13 @@
     "entity.EntityBoneLordMixin",
     "entity.EntityCreeperMixin",
     "entity.EntityGhoulMixin",
+    "entity.EntityInvisibleStalkerMixin",
     "entity.EntityIronGolemMixin",
     "entity.EntityPhaseSpiderMixin",
     "entity.EntityShadowMixin",
     "entity.EntitySilverfishMixin",
     "entity.EntitySkeletonMixin",
+    "entity.EntitySquidMixin",
     "entity.EntityWitherMixin",
     "entity.EntityZombieMixin",
     "misc.BiomeGenHellMixin",
@@ -40,6 +42,7 @@
     "render_entity.RenderShadowMixin",
     "render_entity.RenderSilverfishMixin",
     "render_entity.RenderSkeletonMixin",
+    "render_entity.RenderSquidMixin",
     "render_entity.RenderZombieMixin"
   ],
   "injectors": {
