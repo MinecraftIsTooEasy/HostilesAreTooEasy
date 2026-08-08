@@ -9,15 +9,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
+import java.util.UUID;
+
+import static vbonedra.hostiles_are_too_easy.HostilesAreTooEasyMod.MOD_ID;
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob implements ICelestialType {
     @Unique private int num_evasions;
     @Unique private int max_num_evasions;
+    @Unique private static final UUID PLAGUE_SPEED_BOOST_UUID = UUID.fromString("B9ECE624-95E1-4560-A62E-2A4789505F2B");
+    @Unique private static final AttributeModifier PLAGUE_SPEED_BOOST = (new AttributeModifier(PLAGUE_SPEED_BOOST_UUID, MOD_ID + ":" + "Plague zombie speed boost", 0.3D, 1)).setSaved(false);
+    @Unique private Entity previousEntityToAttack;
     public EntityZombieMixin(World par1World) {
         super(par1World);
     }
+
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
@@ -32,17 +39,34 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "onUpdate", at = @At("HEAD"))
     public void onUpdate(CallbackInfo ci) {
         if (this.onServer() && this.getHealth() > 0.0F) {
-            if (this.num_evasions < this.max_num_evasions && this.getTicksExistedWithOffset() % 200 == 0) {
-                ++this.num_evasions;
+            if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
+                if (this.num_evasions < this.max_num_evasions && this.getTicksExistedWithOffset() % 200 == 0) {
+                    ++this.num_evasions;
+                }
+            }
+            else if (this.HATE$getCelestialType() == celestialTypeZombiePlague) {
+                EntityLivingBase currentTarget = this.getTarget();
+                if (this.previousEntityToAttack != currentTarget) {
+                    AttributeInstance speedAttribute = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+                    if (speedAttribute != null) {
+                        speedAttribute.removeModifier(PLAGUE_SPEED_BOOST);
+                        if (currentTarget != null && currentTarget.isEntityAlive()) {
+                            speedAttribute.applyModifier(PLAGUE_SPEED_BOOST);
+                        }
+                    }
+                }
+                this.previousEntityToAttack = currentTarget;
             }
         }
     }
+
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
             cir.setReturnValue(this.HATE$getCelestialType() == celestialTypeZombiePhase);
         }
     }
+
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
         if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {

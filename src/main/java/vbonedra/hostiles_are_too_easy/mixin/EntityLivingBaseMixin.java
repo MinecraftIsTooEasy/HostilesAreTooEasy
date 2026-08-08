@@ -2,7 +2,6 @@ package vbonedra.hostiles_are_too_easy.mixin;
 
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,11 +16,6 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements ICelestialType {
-    @Shadow
-    public abstract Vec3 getPosition(float par1);
-
-    @Shadow
-    public abstract Block getBlockAtFeet();
 
     @Unique private int celestialType = celestialTypeUnset;
     @Override public int HATE$getCelestialType() {
@@ -29,6 +23,13 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
     }
     @Override public void HATE$setCelestialType(int type) {
         this.celestialType = type;
+    }
+    @Unique private int celestialSubtype = celestialSubtypeUnset;
+    @Override public int HATE$getCelestialSubtype() {
+        return this.celestialSubtype;
+    }
+    @Override public void HATE$setCelestialSubtype(int type) {
+        this.celestialSubtype = type;
     }
     public EntityLivingBaseMixin(World par1World) {
         super(par1World);
@@ -53,7 +54,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     if (this.rand.nextFloat() < difficulty * 0.2) {
                         this.celestialType = celestialTypeCreeperMimic;
                     }
-
                 }
                 else if (entity instanceof EntitySkeleton) {
                     if (this.rand.nextFloat() < (difficulty - (world.isOverworld() ? 1 : 0)) * chanceLurkers) {
@@ -63,6 +63,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 else if (entity instanceof EntityZombie) {
                     if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
                         this.celestialType = celestialTypeZombiePhase;
+                    }
+                    else if (this.rand.nextFloat() < difficulty * chanceLurkers) {
+                        this.celestialType = celestialTypeZombiePlague;
+                        this.celestialSubtype = (byte) this.rand.nextInt(256);
                     }
                 }
                 else if (entity instanceof EntityGhoul) {
@@ -74,7 +78,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
                         this.celestialType = celestialTypeShadowGloom;
                     }
-                    if (this.rand.nextFloat() < difficulty * 0.1) {
+                    else if (this.rand.nextFloat() < difficulty * 0.1) {
                         this.celestialType = celestialTypeShadowSpectral;
                     }
                 }
@@ -123,6 +127,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
         else if (entity instanceof EntityZombie) {
             if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (celestialType == celestialTypeZombiePlague) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
             if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
@@ -142,7 +147,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
 
     }
-
 
     @Inject(method = "getNaturalDefense(Lnet/minecraft/DamageSource;)F", at = @At("RETURN"), cancellable = true, remap = false)
     private void getNaturalDefense(DamageSource damage_source, CallbackInfoReturnable<Float> cir) {
@@ -185,16 +189,32 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         return original;
     }
 
+    @Inject(method = "attackEntityFrom(Lnet/minecraft/Damage;)Lnet/minecraft/EntityDamageResult;", at = @At("RETURN"))
+    private void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
+        EntityDamageResult result = cir.getReturnValue();
+        if (result != null && result.entityLostHealth() && !result.entityWasDestroyed()) {
+            Entity attacker = damage.getResponsibleEntity();
+            if (attacker instanceof EntityZombie && attacker instanceof ICelestialType) {
+                int celestialType = ((ICelestialType) attacker).HATE$getCelestialType();
+                if (celestialType == celestialTypeZombiePlague) {
+                    EntityLivingBase victim = (EntityLivingBase) (Object) this;
+                    victim.addPotionEffect(new PotionEffect(Potion.poison.id, 75, 1));
+                }
+            }
+        }
+    }
 
     @Inject(method = "writeEntityToNBT(Lnet/minecraft/NBTTagCompound;)V", at = @At("RETURN"))
     private void writeEntityToNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
         par1NBTTagCompound.setInteger("HATECelestialType", this.HATE$getCelestialType());
+        par1NBTTagCompound.setInteger("HATECelestialSubtype", this.HATE$getCelestialSubtype());
     }
 
     @Inject(method = "readEntityFromNBT(Lnet/minecraft/NBTTagCompound;)V", at = @At("RETURN"))
     private void readEntityFromNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci) {
         if (par1NBTTagCompound.hasKey("HATECelestialType")) {
             this.HATE$setCelestialType(par1NBTTagCompound.getInteger("HATECelestialType"));
+            this.HATE$setCelestialSubtype(par1NBTTagCompound.getInteger("HATECelestialSubtype"));
         }
     }
 

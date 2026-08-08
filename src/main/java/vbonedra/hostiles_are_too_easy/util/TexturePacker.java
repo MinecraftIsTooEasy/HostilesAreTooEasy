@@ -430,6 +430,96 @@ public class TexturePacker {
     }
 
 
+    public static ResourceLocation maskTemplateWithPixelSourceByPattern(String pixelSourcePath, String templatePath, float bgFactor, float fgFactor, byte patternId, float amountFactor) {
+        ResourceLocation pixelSourceLocation = new ResourceLocation(pixelSourcePath);
+        ResourceLocation templateLocation = new ResourceLocation(templatePath);
+
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            InputStream pixelSourceStream = TexturePacker.class.getClassLoader().getResourceAsStream(pixelSourcePath);
+            if (pixelSourceStream == null) {
+                pixelSourceStream = mc.getResourceManager().getResource(pixelSourceLocation).getInputStream();
+            }
+            BufferedImage pixelSourceImage = ImageIO.read(pixelSourceStream);
+            pixelSourceStream.close();
+
+            InputStream templateStream = mc.getResourceManager().getResource(templateLocation).getInputStream();
+            BufferedImage templateImage = ImageIO.read(templateStream);
+            templateStream.close();
+
+            int pixelSourceW = pixelSourceImage.getWidth();
+            int pixelSourceH = pixelSourceImage.getHeight();
+            int tempW = templateImage.getWidth();
+            int tempH = templateImage.getHeight();
+
+            java.util.List<Integer> pixelSourcePalette = new java.util.ArrayList<>();
+            for (int bY = 0; bY < pixelSourceH; bY++) {
+                for (int bX = 0; bX < pixelSourceW; bX++) {
+                    int rgb = pixelSourceImage.getRGB(bX, bY);
+                    if (((rgb >> 24) & 0xFF) != 0) {
+                        pixelSourcePalette.add(rgb);
+                    }
+                }
+            }
+
+            if (pixelSourcePalette.isEmpty()) {
+                pixelSourcePalette.add(0xFFFFFFFF);
+            }
+
+            java.util.Random random = new java.util.Random(patternId);
+            BufferedImage outputImage = new BufferedImage(tempW, tempH, BufferedImage.TYPE_INT_ARGB);
+            float totalFactor = bgFactor + fgFactor;
+            if (totalFactor <= 0.0f) totalFactor = 1.0f;
+
+            for (int y = 0; y < tempH; y++) {
+                for (int x = 0; x < tempW; x++) {
+                    int templatePixel = templateImage.getRGB(x, y);
+                    int templateA = (templatePixel >> 24) & 0xFF;
+
+                    if (templateA == 0) {
+                        outputImage.setRGB(x, y, 0x00000000);
+                        continue;
+                    }
+
+                    int fgR = (templatePixel >> 16) & 0xFF;
+                    int fgG = (templatePixel >> 8) & 0xFF;
+                    int fgB = templatePixel & 0xFF;
+
+                    int finalR = fgR;
+                    int finalG = fgG;
+                    int finalB = fgB;
+
+                    if (random.nextFloat() < amountFactor) {
+                        int pixelSourcePixel = pixelSourcePalette.get(random.nextInt(pixelSourcePalette.size()));
+                        int bgR = (pixelSourcePixel >> 16) & 0xFF;
+                        int bgG = (pixelSourcePixel >> 8) & 0xFF;
+                        int bgB = pixelSourcePixel & 0xFF;
+
+                        finalR = Math.min(255, Math.max(0, (int) ((bgR * bgFactor + fgR * fgFactor) / totalFactor)));
+                        finalG = Math.min(255, Math.max(0, (int) ((bgG * bgFactor + fgG * fgFactor) / totalFactor)));
+                        finalB = Math.min(255, Math.max(0, (int) ((bgB * bgFactor + fgB * fgFactor) / totalFactor)));
+                    }
+
+                    int blendedPixel = (templateA << 24) | (finalR << 16) | (finalG << 8) | finalB;
+                    outputImage.setRGB(x, y, blendedPixel);
+                }
+            }
+
+            String pixelSourceClean = pixelSourcePath.replace("/", "_").replace(".", "_");
+            String cleanTemplate = templatePath.replace("/", "_").replace(".", "_");
+            String dynamicName = "mask_pattern_" + pixelSourceClean + "_" + cleanTemplate + "_" + patternId + "_" + amountFactor + "_" + bgFactor + "_" + fgFactor;
+
+            DynamicTexture dynamicTexture = new DynamicTexture(outputImage);
+            return mc.getTextureManager().getDynamicTextureLocation(dynamicName, dynamicTexture);
+
+        } catch (Exception e) {
+            System.err.println("maskTemplateWithPixelSourceByPattern failed masking: " + e);
+            return templateLocation;
+        }
+    }
+
+
     public static ResourceLocation getEmptyTransparentTexture() {
         try {
             Minecraft mc = Minecraft.getMinecraft();

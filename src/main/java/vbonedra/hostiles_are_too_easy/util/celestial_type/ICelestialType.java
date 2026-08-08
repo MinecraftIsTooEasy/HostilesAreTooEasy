@@ -7,6 +7,8 @@ import java.util.Objects;
 public interface ICelestialType {
     int HATE$getCelestialType();
     void HATE$setCelestialType(int type);
+    int HATE$getCelestialSubtype();
+    void HATE$setCelestialSubtype(int type);
 
     int celestialTypeUnset = 0;
     int celestialTypeVanilla = -1;
@@ -82,8 +84,8 @@ public interface ICelestialType {
     // Zombie, Revenant, PigZombie
     int celestialTypeZombiePhase = 1; // Phase - dodges attacks
     // Zombie
-    int celestialTypeZombiePlague = 1; // Plague - attacks apply strong poison
-    int celestialTypeZombieRipper = 2; // Ripper - lunges at target with increased damage when airborne
+    int celestialTypeZombiePlague = 2; // Plague - attacks apply strong poison
+    int celestialTypeZombieRipper = 3; // Ripper - lunges at target with increased damage when airborne
     // Revenant
     int celestialTypeRevenantBrute = 1; // Brute - when dies heals back 60% max health and loses 3% max health each second
     // PigZombie
