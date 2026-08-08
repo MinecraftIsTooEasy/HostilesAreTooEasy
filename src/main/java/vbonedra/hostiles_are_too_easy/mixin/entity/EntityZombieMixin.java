@@ -18,8 +18,8 @@ import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_
 public abstract class EntityZombieMixin extends EntityMob implements ICelestialType {
     @Unique private int num_evasions;
     @Unique private int max_num_evasions;
-    @Unique private static final UUID PLAGUE_SPEED_BOOST_UUID = UUID.fromString("B9ECE624-95E1-4560-A62E-2A4789505F2B");
-    @Unique private static final AttributeModifier PLAGUE_SPEED_BOOST = (new AttributeModifier(PLAGUE_SPEED_BOOST_UUID, MOD_ID + ":" + "Plague zombie speed boost", 0.3D, 1)).setSaved(false);
+    @Unique private static final UUID PLAGUE_SPEED_BOOST_UUID = UUID.nameUUIDFromBytes((MOD_ID+":plague_zombie_speed").getBytes());
+    @Unique private static final AttributeModifier PLAGUE_SPEED_BOOST = (new AttributeModifier(PLAGUE_SPEED_BOOST_UUID, MOD_ID+":plague_zombie_speed", 0.3D, 1)).setSaved(false);
     @Unique private Entity previousEntityToAttack;
     public EntityZombieMixin(World par1World) {
         super(par1World);

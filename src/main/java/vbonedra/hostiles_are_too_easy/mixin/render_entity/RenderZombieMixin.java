@@ -32,7 +32,7 @@ public abstract class RenderZombieMixin {
 
 
     @Inject(method = "func_110863_a(Lnet/minecraft/EntityZombie;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void func_110860_a(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir) {
+    private void func_110863_a(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir) {
         if (par1EntityZombie.worldObj == null) return;
 
         int entityId = par1EntityZombie.entityId;

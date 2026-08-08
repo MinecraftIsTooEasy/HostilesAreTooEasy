@@ -198,7 +198,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 int celestialType = ((ICelestialType) attacker).HATE$getCelestialType();
                 if (celestialType == celestialTypeZombiePlague) {
                     EntityLivingBase victim = (EntityLivingBase) (Object) this;
-                    victim.addPotionEffect(new PotionEffect(Potion.poison.id, 75, 1));
+                    victim.addPotionEffect(new PotionEffect(Potion.poison.id, 480, 0));
                 }
             }
         }
