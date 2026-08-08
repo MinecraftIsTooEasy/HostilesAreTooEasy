@@ -20,11 +20,6 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
     @Shadow private int fuseTime;
     @Shadow private int timeSinceIgnited;
 
-//    @Redirect(method = "<init>(Lnet/minecraft/World;)V", at = @At(value = "NEW", target = "net/minecraft/EntityAINearestAttackableTarget"))
-//    private EntityAINearestAttackableTarget init_alwaysCanSeeEntityAINearestAttackableTarget(EntityCreature par1EntityCreature, Class par2Class, int par3, boolean par4) {
-//        return new EntityAINearestAttackableTarget(par1EntityCreature, EntityPlayer.class, 0, false, par4);
-//    }
-
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());

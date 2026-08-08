@@ -15,12 +15,12 @@ public abstract class EntityAITargetMixin {
 
     @Shadow protected EntityCreature taskOwner;
 
-    @Inject(method = "shouldCheckSight", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "shouldCheckSight", at = @At("RETURN"), cancellable = true)
     private void shouldCheckSight(Entity potentialTarget, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue()) {
-            if (this.taskOwner instanceof EntityCreeper) {
+        if (cir.getReturnValue()) {
+            if (this.taskOwner.getClass() == EntityCreeper.class) {
                 if (!this.taskOwner.worldObj.canBlockSeeTheSky(this.taskOwner.getBlockPosX(), this.taskOwner.getBlockPosY(), this.taskOwner.getBlockPosZ())) {
-                    cir.setReturnValue(true);
+                    cir.setReturnValue(false);
                 }
             }
         }

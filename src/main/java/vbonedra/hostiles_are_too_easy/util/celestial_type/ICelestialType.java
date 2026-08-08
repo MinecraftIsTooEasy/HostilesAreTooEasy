@@ -131,39 +131,39 @@ public interface ICelestialType {
         String prefix = null;
 
         if (entity instanceof EntityPhaseSpider) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypePhaseSpiderWarp) {
                 prefix = "entity.arachnid.warp";
             }
         } else if (entity instanceof EntityCreeper) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeCreeperMimic) {
                 prefix = "entity.creeper.mimic";
             }
         } else if (entity instanceof EntitySkeleton) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeSkeletonWithered) {
                 prefix = "entity.skeleton.withered";
             }
         } else if (entity instanceof EntityZombie) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeZombiePhase) {
                 prefix = "entity.zombie.phase";
-            } else if (celestialType == 2) {
+            } else if (celestialType == celestialTypeZombiePlague) {
                 prefix = "entity.zombie.plague";
             }
         } else if (entity instanceof EntityGhoul) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeGhoulVampire) {
                 prefix = "entity.ghoul.vampire";
             }
         } else if (entity instanceof EntityShadow) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeShadowGloom) {
                 prefix = "entity.shadow.gloom";
-            } else if (celestialType == 2) {
+            } else if (celestialType == celestialTypeShadowSpectral) {
                 prefix = "entity.shadow.spectral";
             }
         } else if (entity instanceof EntitySquid) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeSquidGlow) {
                 prefix = "entity.squid.glow";
             }
         } else if (entity instanceof EntityInvisibleStalker) {
-            if (celestialType == 1) {
+            if (celestialType == celestialTypeInvisibleStalkerMirror) {
                 prefix = "entity.stalker.mirror";
             }
         }
