@@ -30,6 +30,7 @@
   * Withered: looks darker with Wither Skeleton patterns, x2 health, attacks with fire
 * Zombies (All)
   * Phase: looks Phase Spider colored, dodges attacks
+  * Plague: looks infected with red dots all over the body, faster when has target, infects on attack
 * Phase Spider
   * Warp: looks lime colored, on teleportation nearby hostile gets teleported to its position
 * Ghoul
