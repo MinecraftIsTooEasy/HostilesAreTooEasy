@@ -134,40 +134,49 @@ public interface ICelestialType {
             if (celestialType == 1) {
                 prefix = "entity.arachnid.warp";
             }
-        }
-        else if (entity instanceof EntityCreeper) {
+        } else if (entity instanceof EntityCreeper) {
             if (celestialType == 1) {
                 prefix = "entity.creeper.mimic";
             }
-        }
-        else if (entity instanceof EntitySkeleton) {
+        } else if (entity instanceof EntitySkeleton) {
             if (celestialType == 1) {
                 prefix = "entity.skeleton.withered";
             }
-        }
-        else if (entity instanceof EntityZombie) {
+        } else if (entity instanceof EntityZombie) {
             if (celestialType == 1) {
                 prefix = "entity.zombie.phase";
+            } else if (celestialType == 2) {
+                prefix = "entity.zombie.plague";
             }
-        }
-        else if (entity instanceof EntityGhoul) {
+        } else if (entity instanceof EntityGhoul) {
             if (celestialType == 1) {
                 prefix = "entity.ghoul.vampire";
             }
-        }
-        else if (entity instanceof EntityShadow) {
+        } else if (entity instanceof EntityShadow) {
             if (celestialType == 1) {
                 prefix = "entity.shadow.gloom";
+            } else if (celestialType == 2) {
+                prefix = "entity.shadow.spectral";
+            }
+        } else if (entity instanceof EntitySquid) {
+            if (celestialType == 1) {
+                prefix = "entity.squid.glow";
+            }
+        } else if (entity instanceof EntityInvisibleStalker) {
+            if (celestialType == 1) {
+                prefix = "entity.stalker.mirror";
             }
         }
+
         if (prefix != null) {
             String pre = StatCollector.translateToLocal("entity.prefix.pre");
             pre = Objects.equals(pre, "") ? " " : pre;
             String post = StatCollector.translateToLocal("entity.prefix.post");
             post = Objects.equals(post, "") ? " " : post;
             return pre + StatCollector.translateToLocal(prefix) + post;
+        } else {
+            return "";
         }
-        else return "";
     }
 
 

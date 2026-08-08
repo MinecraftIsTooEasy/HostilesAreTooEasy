@@ -25,6 +25,10 @@ entity.arachnid.warp=Warp
 entity.creeper.mimic=Mimic
 entity.skeleton.withered=Withered
 entity.zombie.phase=Phase
+entity.zombie.plague=Plague
 entity.ghoul.vampire=Vampire
 entity.shadow.gloom=Gloom
+entity.shadow.spectral=Spectral
+entity.squid.glow=Glow
+entity.stalker.mirror=Mirror
 
