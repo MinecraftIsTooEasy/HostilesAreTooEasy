@@ -9,10 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
-import static vbonedra.hostiles_are_too_easy.util.RandomUtil.nextIntSafe;
-
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityLivingBase implements ICelestialType {
+public abstract class EntitySkeletonMixin extends EntityMob implements ICelestialType {
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }

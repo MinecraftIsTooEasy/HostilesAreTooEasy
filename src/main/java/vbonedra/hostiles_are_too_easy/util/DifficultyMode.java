@@ -8,6 +8,7 @@ public class DifficultyMode {
 
     public static int get_difficulty_level(World worldObj) {
         int difficulty_level = 0;
+        if (worldObj == null) return difficulty_level;
         if (worldObj.getWorldInfo().hasAchievementUnlocked(hardMode)) difficulty_level = 1;
         if (worldObj.getWorldInfo().hasAchievementUnlocked(extremeMode)) difficulty_level = 2;
         if (worldObj.getWorldInfo().hasAchievementUnlocked(legendaryMode)) difficulty_level = 3;
