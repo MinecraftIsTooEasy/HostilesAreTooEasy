@@ -15,6 +15,7 @@
     "ai.EntityAIAttackOnCollideMixin",
     "ai.EntityAICreeperSwellMixin",
     "ai.EntityAINearestAttackableTargetMixin",
+    "ai.EntityAITargetMixin",
     "ai.MixinEntityAIArrowAttack",
     "ai.MixinEntityAIFleeAttackerOrPanic",
     "block.BlockMixin",

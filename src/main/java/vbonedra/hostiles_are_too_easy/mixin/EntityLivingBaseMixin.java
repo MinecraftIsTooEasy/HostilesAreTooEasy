@@ -44,7 +44,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             Object entity = this;
             if (world != null && world.isWorldServer()) {
                 int difficulty = get_difficulty_level(world);
-                double chanceLurkers = world.canBlockSeeTheSky(this.getBlockPosX(), this.getBlockPosY(), this.getBlockPosZ()) ? 0.05 : world.isOverworld() ? 0.1 : 0.2;
+                // TODO: dangerous, caused log spam cause chunk wasn't loaded, might be fixed by chunk check but still requires caution
+                boolean isLoaded = world.getChunkProvider().chunkExists(this.getChunkPosX(), this.getChunkPosZ());
+                double chanceLurkers = isLoaded && world.canBlockSeeTheSky(this.getBlockPosX(), this.getBlockPosY(), this.getBlockPosZ()) ? 0.05 : world.isOverworld() ? 0.1 : 0.2;
                 if (entity instanceof EntityPhaseSpider) {
                     if (this.rand.nextFloat() < difficulty * chanceLurkers * 0.5) {
                         this.celestialType = celestialTypePhaseSpiderWarp;
