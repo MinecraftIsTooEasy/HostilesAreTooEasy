@@ -21,8 +21,9 @@ public class MixinEntityAIArrowAttack {
         int maxRangedAttackTime = entityAIArrowAttack.maxRangedAttackTime;
         if (this.attackTarget != null) {
             double distanceSq = this.entityHost.getDistanceSq(this.attackTarget.posX, this.attackTarget.posY, this.attackTarget.posZ);
-            if (distanceSq < 256.0) {
-                double proximity = 1.0 - (Math.sqrt(distanceSq) / 16.0);
+            double distanceStart = 12.0;
+            if (distanceSq < distanceStart * distanceStart) {
+                double proximity = 1.0 - (Math.sqrt(distanceSq) / distanceStart);
                 double progressionFactor = 0.5;
                 if (this.entityHost.worldObj != null) {
                     int difficulty = get_difficulty_level(this.entityHost.worldObj);
