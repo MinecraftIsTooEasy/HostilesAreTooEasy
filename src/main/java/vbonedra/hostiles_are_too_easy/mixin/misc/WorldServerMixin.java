@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.List;
 
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 
@@ -37,7 +36,7 @@ public abstract class WorldServerMixin extends World {
         boolean is_legendary_mode = difficulty_level >= 3;
         boolean is_endgame_mode = difficulty_level >= 4;
 
-        boolean depth_random_overworld = this.nextIntSafe(48 * difficulty_level) >= y;
+        boolean depth_random_overworld = this.nextIntSafe(48 * difficulty_level) > y;
         boolean random_underworld = is_in_underworld && ((is_extreme_mode && this.rand.nextFloat() >= 0.5f) || is_legendary_mode);
 
         // "evolve" mobs
@@ -101,149 +100,149 @@ public abstract class WorldServerMixin extends World {
         }
 
 
-        boolean overworld_heigh_spawn = is_hard_mode && depth_random_overworld && (!can_see_sky || is_legendary_mode);
-
-        boolean is_blood_moon_up = this.isBloodMoon(true);
-        boolean is_freezing_biome = this.getBiomeGenForCoords(x, z).isFreezing();
-        boolean is_desert_biome = this.getBiomeGenForCoords(x, z).isDesertBiome();
-
-        boolean can_spawn_ghouls_on_surface = is_blood_moon_up || is_hard_mode;
-        boolean can_spawn_wights_on_surface = (is_hard_mode && is_freezing_biome) || is_extreme_mode;
-        boolean can_spawn_shadows_on_surface = (is_hard_mode && is_desert_biome) || is_extreme_mode;
-
-        // add new mob conditions
-        for(int attempt = 0; attempt < 16; ++attempt) {
-            List possible_creatures = this.getChunkProvider().getPossibleCreatures(creature_type, x, y, z);
-            if (possible_creatures == null || possible_creatures.isEmpty()) {
-                cir.setReturnValue(null);
-                return;
-            }
-
-            SpawnListEntry entry = (SpawnListEntry)WeightedRandom.getRandomItem(this.rand, possible_creatures);
-            Class<?> entity_class = entry.entityClass;
-
-            if (entity_class == EntityInfernalCreeper.class) {
-                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityDemonSpider.class) {
-                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityHellhound.class) {
-                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-//            if (entity_class == EntityVampireBat.class) {
-//                if (!is_in_overworld || y <= 48 || is_blood_moon_up) {
+//        boolean overworld_heigh_spawn = is_hard_mode && depth_random_overworld && (!can_see_sky || is_legendary_mode);
+//
+//        boolean is_blood_moon_up = this.isBloodMoon(true);
+//        boolean is_freezing_biome = this.getBiomeGenForCoords(x, z).isFreezing();
+//        boolean is_desert_biome = this.getBiomeGenForCoords(x, z).isDesertBiome();
+//
+//        boolean can_spawn_ghouls_on_surface = is_blood_moon_up || is_hard_mode;
+//        boolean can_spawn_wights_on_surface = (is_hard_mode && is_freezing_biome) || is_extreme_mode;
+//        boolean can_spawn_shadows_on_surface = (is_hard_mode && is_desert_biome) || is_extreme_mode;
+//
+//        // add new mob conditions
+//        for(int attempt = 0; attempt < 16; ++attempt) {
+//            List possible_creatures = this.getChunkProvider().getPossibleCreatures(creature_type, x, y, z);
+//            if (possible_creatures == null || possible_creatures.isEmpty()) {
+//                cir.setReturnValue(null);
+//                return;
+//            }
+//
+//            SpawnListEntry entry = (SpawnListEntry)WeightedRandom.getRandomItem(this.rand, possible_creatures);
+//            Class<?> entity_class = entry.entityClass;
+//
+//            if (entity_class == EntityInfernalCreeper.class) {
+//                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-//            if (entity_class == EntityNightwing.class) {
-//                if (!is_in_overworld || y <= 32 || is_blood_moon_up) {
+//            if (entity_class == EntityDemonSpider.class) {
+//                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-
-            // TODO?: add EntitySlime.class to BiomeGenBase but don't spawn it in non swamp biomes in normal_mode
-//            if (entity_class == EntitySlime.class) {
-//                if (!this.blockTypeIsAbove(Block.stone, x, y, z)) {
+//            if (entity_class == EntityHellhound.class) {
+//                if (!is_in_overworld || is_in_hell || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-//            if (entity_class == EntityJelly.class) {
-//                if (this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////            if (entity_class == EntityVampireBat.class) {
+////                if (!is_in_overworld || y <= 48 || is_blood_moon_up) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+////            if (entity_class == EntityNightwing.class) {
+////                if (!is_in_overworld || y <= 32 || is_blood_moon_up) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+//
+//            // TODO?: add EntitySlime.class to BiomeGenBase but don't spawn it in non swamp biomes in normal_mode
+////            if (entity_class == EntitySlime.class) {
+////                if (!this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+////            if (entity_class == EntityJelly.class) {
+////                if (this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+////            if (entity_class == EntityBlob.class) {
+////                if ((!is_in_overworld || y <= 40) && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+////            if (entity_class == EntityPudding.class) {
+////                if ((!is_in_overworld || y <= 24) && this.getBlock(x, y - 1, z) == Block.stone && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+//
+////            if (entity_class == EntityOoze.class) {
+////                if ((!is_in_overworld || y <= 32) && this.getBlock(x, y - 1, z) == Block.stone && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+//
+//
+//            if (entity_class == EntityGhoul.class) {
+//                if (!is_in_overworld || can_spawn_ghouls_on_surface) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-//            if (entity_class == EntityBlob.class) {
-//                if ((!is_in_overworld || y <= 40) && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+//            if (entity_class == EntityWight.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn || can_spawn_wights_on_surface) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-//            if (entity_class == EntityPudding.class) {
-//                if ((!is_in_overworld || y <= 24) && this.getBlock(x, y - 1, z) == Block.stone && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+//            if (entity_class == EntityRevenant.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-
-//            if (entity_class == EntityOoze.class) {
-//                if ((!is_in_overworld || y <= 32) && this.getBlock(x, y - 1, z) == Block.stone && this.blockTypeIsAbove(Block.stone, x, y, z)) {
+//            if (entity_class == EntityInvisibleStalker.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-
-
-            if (entity_class == EntityGhoul.class) {
-                if (!is_in_overworld || can_spawn_ghouls_on_surface) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityWight.class) {
-                if (!is_in_overworld || overworld_heigh_spawn || can_spawn_wights_on_surface) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityRevenant.class) {
-                if (!is_in_overworld || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityInvisibleStalker.class) {
-                if (!is_in_overworld || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityEarthElemental.class) {
-                if (!is_in_overworld || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityBoneLord.class) {
-                if (!is_in_overworld || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityHellhound.class) {
-                if (!is_in_overworld || overworld_heigh_spawn) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-            if (entity_class == EntityShadow.class) {
-                if (!is_in_overworld || (overworld_heigh_spawn || can_spawn_shadows_on_surface) && !can_see_sky) {
-                    cir.setReturnValue(entity_class);
-                    return;
-                }
-            }
-//            if (entity_class == EntityWoodSpider.class) {
-//                if ((this.canBlockSeeTheSky(x, y, z) || this.blockTypeIsAbove(Block.leaves, x, y, z) || this.blockTypeIsAbove(Block.wood, x, y, z))
-//                        && this.blockTypeIsNearTo(Block.wood.blockID, x, y, z, 5, 2)
-//                        && this.blockTypeIsNearTo(Block.leaves.blockID, x, y + 5, z, 5, 5)) {
+//            if (entity_class == EntityEarthElemental.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn) {
 //                    cir.setReturnValue(entity_class);
 //                    return;
 //                }
 //            }
-
-        }
+//            if (entity_class == EntityBoneLord.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn) {
+//                    cir.setReturnValue(entity_class);
+//                    return;
+//                }
+//            }
+//            if (entity_class == EntityHellhound.class) {
+//                if (!is_in_overworld || overworld_heigh_spawn) {
+//                    cir.setReturnValue(entity_class);
+//                    return;
+//                }
+//            }
+//            if (entity_class == EntityShadow.class) {
+//                if (!is_in_overworld || (overworld_heigh_spawn || can_spawn_shadows_on_surface) && !can_see_sky) {
+//                    cir.setReturnValue(entity_class);
+//                    return;
+//                }
+//            }
+////            if (entity_class == EntityWoodSpider.class) {
+////                if ((this.canBlockSeeTheSky(x, y, z) || this.blockTypeIsAbove(Block.leaves, x, y, z) || this.blockTypeIsAbove(Block.wood, x, y, z))
+////                        && this.blockTypeIsNearTo(Block.wood.blockID, x, y, z, 5, 2)
+////                        && this.blockTypeIsNearTo(Block.leaves.blockID, x, y + 5, z, 5, 5)) {
+////                    cir.setReturnValue(entity_class);
+////                    return;
+////                }
+////            }
+//
+//        }
     }
 }

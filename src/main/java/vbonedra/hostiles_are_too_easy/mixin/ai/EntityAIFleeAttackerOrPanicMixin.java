@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(EntityAIFleeAttackerOrPanic.class)
-public class MixinEntityAIFleeAttackerOrPanic {
+public class EntityAIFleeAttackerOrPanicMixin {
 
     @Shadow private int panic_countdown;
     @Shadow public void startPanicking() {}

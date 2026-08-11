@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
 
 @Mixin(EntityAIArrowAttack.class)
-public class MixinEntityAIArrowAttack {
+public class EntityAIArrowAttackMixin {
     @Final @Shadow private EntityLiving entityHost;
     @Shadow private EntityLivingBase attackTarget;
 

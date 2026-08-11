@@ -110,9 +110,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             if (entity instanceof EntitySkeleton) {
                 if (celestialType == celestialTypeSkeletonWithered) return value * 2.0D;
             }
-            else if (entity instanceof EntitySquid) {
-                if (celestialType == celestialTypeSquidGlow) return value * 2.0D;
-            }
         }
 
         return value;

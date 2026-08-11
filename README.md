@@ -17,6 +17,7 @@
 * Animal Afraid of Tools: mobs that afraid of attackers are also afraid of tools
 * Golem Targeting: mobs that target player also target iron golems
 * Xray Creeper Explosions: creeper could explode even with blocked line of sight to target
+* Greater Sense: creepers could xray if they could see sky, undead mobs could xray if target has less than 40& health, arthropods could xray if target has less than 20% health
 
 ---
 ### Other Changes
@@ -41,6 +42,6 @@
 * Creepers (All)
   * Mimic: looks as block it stands on, Infernal Creeper mimics perfectly, all others with flaws
 * Squid
-  * Glow: looks cyan colored and glows, applies stronger effects and drowns target at contact
+  * Glow: looks cyan colored and glows, has increased attack area, applies stronger effects and drowns target at contact
 
 ---

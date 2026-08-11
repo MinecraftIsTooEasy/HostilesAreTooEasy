@@ -15,7 +15,7 @@ public abstract class EntitySquidMixin extends EntityWaterMob implements ICelest
 
     @Inject(method = "onCollideWithPlayer", at = @At("RETURN"))
     public void onCollideWithPlayer(EntityPlayer player, CallbackInfo ci) {
-        if (!this.worldObj.isRemote && this.getDistanceToEntity(player) < 1.0F) {
+        if (!this.onServer() && this.getDistanceToEntity(player) < 2.0F) {
             if (this.HATE$getCelestialType() == ICelestialType.celestialTypeSquidGlow) {
                 player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 4));
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
