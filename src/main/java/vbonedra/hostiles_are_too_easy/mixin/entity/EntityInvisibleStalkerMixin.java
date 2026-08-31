@@ -5,7 +5,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntityInvisibleStalker.class)
 public abstract class EntityInvisibleStalkerMixin extends EntityLiving implements ICelestialType {
@@ -15,7 +18,7 @@ public abstract class EntityInvisibleStalkerMixin extends EntityLiving implement
 
     @Inject(method = "onLivingUpdate", at = @At("RETURN"))
     public void onLivingUpdate(CallbackInfo ci) {
-        if (this.HATE$getCelestialType() == ICelestialType.celestialType_InvisibleStalker_Mirror) {
+        if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialInvisibleStalker.MIRROR.id)) {
             EntityLivingBase target = this.getTarget();
             if (target != null) {
                 for (int slot = 0; slot <= 4; slot++) {

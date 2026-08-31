@@ -5,7 +5,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntityGhoul.class)
 public abstract class EntityGhoulMixin extends EntityAnimalWatcher implements ICelestialType {
@@ -15,7 +18,7 @@ public abstract class EntityGhoulMixin extends EntityAnimalWatcher implements IC
 
     @Inject(method = "attackEntityAsMob", at = @At("RETURN"))
     public void attackEntityAsMob(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.HATE$getCelestialType() == ICelestialType.celestialType_Ghoul_Vampire) {
+        if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialGhoul.VAMPIRIC.id)) {
             EntityDamageResult result = cir.getReturnValue();
             if (result != null) {
                 if (((EntityLivingBase) target).isEntityBiologicallyAlive()) {

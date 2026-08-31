@@ -5,7 +5,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntitySquid.class)
 public abstract class EntitySquidMixin extends EntityWaterMob implements ICelestialType {
@@ -16,7 +19,7 @@ public abstract class EntitySquidMixin extends EntityWaterMob implements ICelest
     @Inject(method = "onCollideWithPlayer", at = @At("RETURN"))
     public void onCollideWithPlayer(EntityPlayer player, CallbackInfo ci) {
         if (!this.onServer() && this.getDistanceToEntity(player) < 2.0F) {
-            if (this.HATE$getCelestialType() == ICelestialType.celestialType_Squid_Glow) {
+            if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialSquid.GLOW.id)) {
                 player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 4));
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                 player.addPotionEffect(new PotionEffect(Potion.confusion.id, 40, 0));
@@ -27,7 +30,7 @@ public abstract class EntitySquidMixin extends EntityWaterMob implements ICelest
     @Inject(method = "collideWithEntity", at = @At("RETURN"))
     public void collideWithEntity(Entity entity, CallbackInfo ci) {
         if (this.onServer() && this.preysUpon(entity) && entity.isEntityLiving() && this.hasLineOfStrike(entity)) {
-            if (this.HATE$getCelestialType() == ICelestialType.celestialType_Squid_Glow) {
+            if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialSquid.GLOW.id)) {
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 4));
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.confusion.id, 40, 0));

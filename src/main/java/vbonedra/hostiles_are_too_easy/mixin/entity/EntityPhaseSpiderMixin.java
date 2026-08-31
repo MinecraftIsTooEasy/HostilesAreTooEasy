@@ -5,7 +5,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntityPhaseSpider.class)
 public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICelestialType {
@@ -15,7 +18,7 @@ public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICeles
 
     @Inject(method = "tryTeleportTo(DDD)Z", at = @At("RETURN"))
     private void tryTeleportTo(double pos_x, double pos_y, double pos_z, CallbackInfoReturnable<Boolean> cir) {
-        if (this.HATE$getCelestialType() == celestialType_Arachnid_Warp) {
+        if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialArachnid.WARP.id)) {
             if (cir.getReturnValue()) {
 
                 double searchRadius = 4.0D;

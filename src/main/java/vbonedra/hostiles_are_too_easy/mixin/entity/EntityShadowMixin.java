@@ -7,7 +7,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntityShadow.class)
 public abstract class EntityShadowMixin extends EntityMob implements ICelestialType {
@@ -19,7 +22,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.HATE$getCelestialType() == celestialType_Shadow_Spectral);
+            cir.setReturnValue(hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialShadow.SPECTRAL.id));
         }
     }
 
@@ -31,7 +34,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
         }
 
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType == ICelestialType.celestialType_Shadow_Gloom) {
+        if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.GLOOM.id)) {
             if (result.entityWasNegativelyAffected() && target instanceof EntityPlayer player) {
                 player.vision_dimming += target.getAsEntityLivingBase().getAmountAfterResistance(2.0F, 4);
             }
@@ -62,7 +65,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
     public void onLivingUpdate(CallbackInfo ci) {
         if (this.onServer()) {
             int celestialType = this.HATE$getCelestialType();
-            if (celestialType == ICelestialType.celestialType_Shadow_Gloom) {
+            if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.GLOOM.id)) {
                 int lightLevel = this.worldObj.getBlockLightValue(
                         MathHelper.floor_double(this.posX),
                         MathHelper.floor_double(this.posY),
@@ -77,7 +80,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speedModifier);
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(damageModifier);
             }
-            else if (celestialType == ICelestialType.celestialType_Shadow_Spectral) {
+            if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.SPECTRAL.id)) {
                 if (this.onServer() && this.getHealth() > 0.0F) {
                     int ticks_existed_with_offset = this.getTicksExistedWithOffset();
                     if ((this.getTarget() != null || this.fleeing) && ticks_existed_with_offset % 10 == 0 && this.rand.nextInt(3) == 0) {

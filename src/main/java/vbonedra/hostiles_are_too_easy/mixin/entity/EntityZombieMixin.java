@@ -7,12 +7,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 import java.util.UUID;
 
 import static vbonedra.hostiles_are_too_easy.HostilesAreTooEasyMod.MOD_ID;
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob implements ICelestialType {
@@ -29,7 +31,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
-        if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
+        if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PHASE.id)) {
             this.max_num_evasions = this.rand.nextInt(3 + difficulty) + 2;
             this.num_evasions = this.rand.nextInt(this.max_num_evasions);
         }
@@ -39,12 +41,12 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "onUpdate", at = @At("HEAD"))
     public void onUpdate(CallbackInfo ci) {
         if (this.onServer() && this.getHealth() > 0.0F) {
-            if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
+            if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PHASE.id)) {
                 if (this.num_evasions < this.max_num_evasions && this.getTicksExistedWithOffset() % 200 == 0) {
                     ++this.num_evasions;
                 }
             }
-            else if (this.HATE$getCelestialType() == celestialType_Zombie_Plague) {
+            else if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PLAGUE.id)) {
                 EntityLivingBase currentTarget = this.getTarget();
                 if (this.previousEntityToAttack != currentTarget) {
                     AttributeInstance speedAttribute = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
@@ -63,13 +65,13 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.HATE$getCelestialType() == celestialType_Zombie_Phase);
+            cir.setReturnValue(hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PHASE.id));
         }
     }
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
+        if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PHASE.id)) {
             boolean can_evade = !damage.isFallDamage() && !damage.isFireDamage() && !damage.isPoison();
 
             if (can_evade && this.num_evasions > 0) {
