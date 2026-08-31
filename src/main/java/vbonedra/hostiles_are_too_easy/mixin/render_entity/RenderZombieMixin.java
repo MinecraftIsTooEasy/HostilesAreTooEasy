@@ -52,6 +52,10 @@ public abstract class RenderZombieMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityZombie);
 
+
+        // TODO: add support for visuals of all types, right now PHASE PLAGUE zombie looks like PHASE zombie
+        //  this must be done by making TexturePacker only change and return texture data
+        //  then it must be save there with matching cache name
         if (hasCelestialType(celestialType, CelestialZombie.PHASE.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = phaseTexture + "_" + templateTexture;

@@ -69,10 +69,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     }
                 }
                 else if (entity instanceof EntityZombie) {
-                    if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
+                    if (true || this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
                         this.celestialType = CelestialZombie.PHASE.id;
                     }
-                    else if (this.rand.nextFloat() < difficulty * chanceLurkers) {
+                    if (true || this.rand.nextFloat() < difficulty * chanceLurkers) {
                         this.celestialType = CelestialZombie.PLAGUE.id;
                         this.celestialSubtype = (byte) this.rand.nextInt(256);
                     }
@@ -86,7 +86,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                     if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
                         this.celestialType = CelestialShadow.GLOOM.id;
                     }
-                    else if (this.rand.nextFloat() < difficulty * 0.1) {
+                    if (this.rand.nextFloat() < difficulty * 0.1) {
                         this.celestialType = CelestialShadow.SPECTRAL.id;
                     }
                 }
@@ -142,7 +142,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
         }
         else if (entity instanceof EntityShadow) {
             if (hasCelestialType(celestialType, CelestialShadow.GLOOM.id)) cir.setReturnValue(cir.getReturnValue() * 2);
-            else if (hasCelestialType(celestialType, CelestialShadow.SPECTRAL.id)) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialShadow.SPECTRAL.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntitySquid) {
             if (hasCelestialType(celestialType, CelestialSquid.GLOW.id)) cir.setReturnValue(cir.getReturnValue() * 2);
