@@ -29,7 +29,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(World world, CallbackInfo ci) {
         int difficulty = get_difficulty_level(this.getWorld());
-        if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
+        if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
             this.max_num_evasions = this.rand.nextInt(3 + difficulty) + 2;
             this.num_evasions = this.rand.nextInt(this.max_num_evasions);
         }
@@ -39,12 +39,12 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "onUpdate", at = @At("HEAD"))
     public void onUpdate(CallbackInfo ci) {
         if (this.onServer() && this.getHealth() > 0.0F) {
-            if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
+            if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
                 if (this.num_evasions < this.max_num_evasions && this.getTicksExistedWithOffset() % 200 == 0) {
                     ++this.num_evasions;
                 }
             }
-            else if (this.HATE$getCelestialType() == celestialTypeZombiePlague) {
+            else if (this.HATE$getCelestialType() == celestialType_Zombie_Plague) {
                 EntityLivingBase currentTarget = this.getTarget();
                 if (this.previousEntityToAttack != currentTarget) {
                     AttributeInstance speedAttribute = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
@@ -63,13 +63,13 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.HATE$getCelestialType() == celestialTypeZombiePhase);
+            cir.setReturnValue(this.HATE$getCelestialType() == celestialType_Zombie_Phase);
         }
     }
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     public void attackEntityFrom(Damage damage, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.HATE$getCelestialType() == celestialTypeZombiePhase) {
+        if (this.HATE$getCelestialType() == celestialType_Zombie_Phase) {
             boolean can_evade = !damage.isFallDamage() && !damage.isFireDamage() && !damage.isPoison();
 
             if (can_evade && this.num_evasions > 0) {

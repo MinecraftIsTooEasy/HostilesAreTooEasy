@@ -13,6 +13,7 @@ import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
 import java.util.List;
 
 import static vbonedra.hostiles_are_too_easy.util.DifficultyMode.get_difficulty_level;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements ICelestialType {
@@ -49,50 +50,55 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 double chanceLurkers = isLoaded && world.canBlockSeeTheSky(this.getBlockPosX(), this.getBlockPosY(), this.getBlockPosZ()) ? 0.05 : world.isOverworld() ? 0.1 : 0.2;
                 if (entity instanceof EntityPhaseSpider) {
                     if (this.rand.nextFloat() < difficulty * chanceLurkers * 0.5) {
-                        this.celestialType = celestialTypePhaseSpiderWarp;
+                        this.celestialType = CelestialArachnid.WARP.id;
                     }
                 }
                 else if (entity instanceof EntityCreeper) {
+//                    if (entity.getClass().getSimpleName().equals("EntityCreeper")) {
+//                        if (this.rand.nextFloat() < difficulty * 0.2) {
+//                            this.celestialType = CelestialCreeper_Fire;
+//                        }
+//                    }
                     if (this.rand.nextFloat() < difficulty * 0.2) {
-                        this.celestialType = celestialTypeCreeperMimic;
+                        this.celestialType = CelestialCreeper.MIMIC.id;
                     }
                 }
                 else if (entity instanceof EntitySkeleton) {
                     if (this.rand.nextFloat() < (difficulty - (world.isOverworld() ? 1 : 0)) * chanceLurkers) {
-                        this.celestialType = celestialTypeSkeletonWithered;
+                        this.celestialType = CelestialSkeleton.WITHERED.id;
                     }
                 }
                 else if (entity instanceof EntityZombie) {
                     if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
-                        this.celestialType = celestialTypeZombiePhase;
+                        this.celestialType = CelestialZombie.PHASE.id;
                     }
                     else if (this.rand.nextFloat() < difficulty * chanceLurkers) {
-                        this.celestialType = celestialTypeZombiePlague;
+                        this.celestialType = CelestialZombie.PLAGUE.id;
                         this.celestialSubtype = (byte) this.rand.nextInt(256);
                     }
                 }
                 else if (entity instanceof EntityGhoul) {
                     if (this.rand.nextFloat() < (difficulty + 1) * chanceLurkers) {
-                        this.celestialType = celestialTypeGhoulVampire;
+                        this.celestialType = CelestialGhoul.VAMPIRIC.id;
                     }
                 }
                 else if (entity instanceof EntityShadow) {
                     if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
-                        this.celestialType = celestialTypeShadowGloom;
+                        this.celestialType = CelestialShadow.GLOOM.id;
                     }
                     else if (this.rand.nextFloat() < difficulty * 0.1) {
-                        this.celestialType = celestialTypeShadowSpectral;
+                        this.celestialType = CelestialShadow.SPECTRAL.id;
                     }
                 }
                 else if (entity instanceof EntitySquid) {
                     if (this.rand.nextFloat() < (difficulty + 1) * 0.1) {
-                        this.celestialType = celestialTypeSquidGlow;
+                        this.celestialType = CelestialSquid.GLOW.id;
                     }
                 }
                 else if (entity instanceof EntityInvisibleStalker) {
                     if (entity.getClass().getSimpleName().equals("EntityInvisibleStalker")) {
                         if (this.rand.nextFloat() < difficulty * 0.05) {
-                            this.celestialType = celestialTypeInvisibleStalkerMirror;
+                            this.celestialType = CelestialInvisibleStalker.MIRROR.id;
                         }
                     }
                 }
@@ -108,7 +114,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 
         if (attribute == SharedMonsterAttributes.maxHealth) {
             if (entity instanceof EntitySkeleton) {
-                if (celestialType == celestialTypeSkeletonWithered) return value * 2.0D;
+                if (hasCelestialType(celestialType, CelestialSkeleton.WITHERED.id)) return value * 2.0D;
             }
         }
 
@@ -125,24 +131,24 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             if (celestialType != celestialTypeVanilla) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityZombie) {
-            if (celestialType == celestialTypeZombiePhase) cir.setReturnValue(cir.getReturnValue() * 2);
-            if (celestialType == celestialTypeZombiePlague) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialZombie.PHASE.id)) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialZombie.PLAGUE.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityCreeper) {
-            if (celestialType == celestialTypeCreeperMimic) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialCreeper.MIMIC.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityGhoul) {
-            if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialGhoul.VAMPIRIC.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityShadow) {
-            if (celestialType == celestialTypeShadowGloom) cir.setReturnValue(cir.getReturnValue() * 2);
-            else if (celestialType == celestialTypeShadowSpectral) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialShadow.GLOOM.id)) cir.setReturnValue(cir.getReturnValue() * 2);
+            else if (hasCelestialType(celestialType, CelestialShadow.SPECTRAL.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntitySquid) {
-            if (celestialType == celestialTypeSquidGlow) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialSquid.GLOW.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
         else if (entity instanceof EntityInvisibleStalker) {
-            if (celestialType == celestialTypeInvisibleStalkerMirror) cir.setReturnValue(cir.getReturnValue() * 2);
+            if (hasCelestialType(celestialType, CelestialInvisibleStalker.MIRROR.id)) cir.setReturnValue(cir.getReturnValue() * 2);
         }
 
     }
@@ -160,7 +166,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             }
         }
         if (entity instanceof EntityGhoul) {
-            if (celestialType == celestialTypeGhoulVampire) cir.setReturnValue(cir.getReturnValue() + 4);
+            if (hasCelestialType(celestialType, CelestialGhoul.VAMPIRIC.id)) cir.setReturnValue(cir.getReturnValue() + 4);
         }
         else if (entity instanceof EntitySilverfish) {
             if (celestialType > 0) {
@@ -195,7 +201,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
             Entity attacker = damage.getResponsibleEntity();
             if (attacker instanceof EntityZombie && attacker instanceof ICelestialType) {
                 int celestialType = ((ICelestialType) attacker).HATE$getCelestialType();
-                if (celestialType == celestialTypeZombiePlague) {
+                if (hasCelestialType(celestialType, CelestialZombie.PLAGUE.id)) {
                     EntityLivingBase victim = (EntityLivingBase) (Object) this;
                     victim.addPotionEffect(new PotionEffect(Potion.poison.id, 480, 0));
                 }
@@ -257,7 +263,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 }
             }
             if ((Object) this instanceof EntityInvisibleStalker) {
-                if (this.HATE$getCelestialType() == ICelestialType.celestialTypeInvisibleStalkerMirror) {
+                if (this.HATE$getCelestialType() == CelestialInvisibleStalker.MIRROR.id) {
                     for (int slot = 0; slot <= 4; slot++) {
                         this.setCurrentItemOrArmor(slot, null);
                     }

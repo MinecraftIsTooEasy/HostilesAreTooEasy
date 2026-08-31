@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.*;
 
 @Mixin(Entity.class)

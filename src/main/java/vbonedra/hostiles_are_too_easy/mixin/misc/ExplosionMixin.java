@@ -17,7 +17,7 @@ public abstract class ExplosionMixin {
 
     @Inject(method = "doExplosionA()V", at = @At("HEAD"))
     private void onDoExplosionA(CallbackInfo ci) {
-        if (this.exploder instanceof EntityCreeper && ((Entity) this.exploder).fire > 0) {
+        if (this.exploder instanceof EntityCreeper && this.exploder.fire > 0) {
             this.isFlaming = true;
         }
     }

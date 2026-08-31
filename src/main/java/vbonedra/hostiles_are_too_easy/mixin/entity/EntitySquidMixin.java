@@ -16,7 +16,7 @@ public abstract class EntitySquidMixin extends EntityWaterMob implements ICelest
     @Inject(method = "onCollideWithPlayer", at = @At("RETURN"))
     public void onCollideWithPlayer(EntityPlayer player, CallbackInfo ci) {
         if (!this.onServer() && this.getDistanceToEntity(player) < 2.0F) {
-            if (this.HATE$getCelestialType() == ICelestialType.celestialTypeSquidGlow) {
+            if (this.HATE$getCelestialType() == ICelestialType.celestialType_Squid_Glow) {
                 player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 4));
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                 player.addPotionEffect(new PotionEffect(Potion.confusion.id, 40, 0));
@@ -27,7 +27,7 @@ public abstract class EntitySquidMixin extends EntityWaterMob implements ICelest
     @Inject(method = "collideWithEntity", at = @At("RETURN"))
     public void collideWithEntity(Entity entity, CallbackInfo ci) {
         if (this.onServer() && this.preysUpon(entity) && entity.isEntityLiving() && this.hasLineOfStrike(entity)) {
-            if (this.HATE$getCelestialType() == ICelestialType.celestialTypeSquidGlow) {
+            if (this.HATE$getCelestialType() == ICelestialType.celestialType_Squid_Glow) {
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, 4));
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                 entity.getAsEntityLiving().addPotionEffect(new PotionEffect(Potion.confusion.id, 40, 0));

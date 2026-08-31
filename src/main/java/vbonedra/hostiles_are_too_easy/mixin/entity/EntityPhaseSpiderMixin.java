@@ -15,7 +15,7 @@ public abstract class EntityPhaseSpiderMixin extends EntityMob implements ICeles
 
     @Inject(method = "tryTeleportTo(DDD)Z", at = @At("RETURN"))
     private void tryTeleportTo(double pos_x, double pos_y, double pos_z, CallbackInfoReturnable<Boolean> cir) {
-        if (this.HATE$getCelestialType() == celestialTypePhaseSpiderWarp) {
+        if (this.HATE$getCelestialType() == celestialType_Arachnid_Warp) {
             if (cir.getReturnValue()) {
 
                 double searchRadius = 4.0D;

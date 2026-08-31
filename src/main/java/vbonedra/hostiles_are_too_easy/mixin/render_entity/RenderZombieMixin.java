@@ -15,12 +15,12 @@ import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialSubtypeCache;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeZombiePhase;
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeZombiePlague;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 
 @Mixin(RenderZombie.class)
@@ -52,7 +52,7 @@ public abstract class RenderZombieMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityZombie);
 
-        if (celestialType == celestialTypeZombiePhase) {
+        if (hasCelestialType(celestialType, CelestialZombie.PHASE.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = phaseTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {
@@ -67,7 +67,7 @@ public abstract class RenderZombieMixin {
 
             cir.setReturnValue(blendedCache.get(cacheKey));
         }
-        else if (celestialType == celestialTypeZombiePlague) {
+        else if (hasCelestialType(celestialType, CelestialZombie.PLAGUE.id)) {
             if (!CelestialSubtypeCache.clientCelestialSubtypeMap.containsKey(entityId)) {
                 if (!CelestialSubtypeCache.requestedEntities.contains(entityId) && par1EntityZombie.worldObj.isRemote) {
                     Network.sendToServer(new C2SRequestCelestialSubtype(entityId));

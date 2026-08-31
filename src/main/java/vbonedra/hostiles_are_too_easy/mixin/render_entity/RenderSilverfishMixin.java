@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Mixin(RenderSilverfish.class)
 public abstract class RenderSilverfishMixin {
-
+    // TODO: use celestialType as flag of using celestialSubype as block id
     @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
 
     @Unique

@@ -10,11 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
-import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderSquid.class)
 public abstract class RenderSquidMixin {
@@ -48,7 +50,7 @@ public abstract class RenderSquidMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(squid);
 
-        if (celestialType == ICelestialType.celestialTypeShadowGloom) {
+        if (hasCelestialType(celestialType, CelestialShadow.GLOOM.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = "squid_" + templateTexture;
 

@@ -9,11 +9,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypePhaseSpiderWarp;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 
 @Mixin(RenderArachnid.class)
@@ -28,7 +29,7 @@ public abstract class RenderArachnidMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityArachnid);
 
-        if (celestialType == celestialTypePhaseSpiderWarp) {
+        if (hasCelestialType(celestialType, CelestialTypeData.CelestialArachnid.WARP.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = warpTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {

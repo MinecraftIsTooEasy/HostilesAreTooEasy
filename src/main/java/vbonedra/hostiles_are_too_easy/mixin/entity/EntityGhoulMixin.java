@@ -15,7 +15,7 @@ public abstract class EntityGhoulMixin extends EntityAnimalWatcher implements IC
 
     @Inject(method = "attackEntityAsMob", at = @At("RETURN"))
     public void attackEntityAsMob(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
-        if (this.HATE$getCelestialType() == ICelestialType.celestialTypeGhoulVampire) {
+        if (this.HATE$getCelestialType() == ICelestialType.celestialType_Ghoul_Vampire) {
             EntityDamageResult result = cir.getReturnValue();
             if (result != null) {
                 if (((EntityLivingBase) target).isEntityBiologicallyAlive()) {

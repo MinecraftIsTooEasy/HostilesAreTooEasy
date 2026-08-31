@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Mixin(RenderIronGolem.class)
 public abstract class RenderIronGolemMixin {
-
+    // TODO: look into RenderSilverfishMixin
 
     @Unique
     private final Map<String, ResourceLocation> HATE$golemBlendedCache = new HashMap<>();

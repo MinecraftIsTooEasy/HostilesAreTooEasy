@@ -3,13 +3,14 @@ package vbonedra.hostiles_are_too_easy.network;
 import moddedmite.rustedironcore.network.Network;
 import net.minecraft.Entity;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialSubtypeCache;
-import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.celestialSubtypeVanilla;
 
 public class CelestialSubtypeGetter {
 
     public static int getCelestialSubtype(Entity entity) {
         if (entity == null || entity.worldObj == null) {
-            return ICelestialType.celestialSubtypeVanilla;
+            return celestialSubtypeVanilla;
         }
 
         int entityId = entity.entityId;
@@ -21,6 +22,6 @@ public class CelestialSubtypeGetter {
             Network.sendToServer(new C2SRequestCelestialSubtype(entityId));
             CelestialSubtypeCache.requestedEntities.add(entityId);
         }
-        return ICelestialType.celestialSubtypeVanilla;
+        return celestialSubtypeVanilla;
     }
 }

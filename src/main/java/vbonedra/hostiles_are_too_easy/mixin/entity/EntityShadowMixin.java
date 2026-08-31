@@ -19,7 +19,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
     @Inject(method = "isAIEnabled", at = @At("RETURN"), cancellable = true)
     protected void isAIEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() == false) {
-            cir.setReturnValue(this.HATE$getCelestialType() == celestialTypeShadowSpectral);
+            cir.setReturnValue(this.HATE$getCelestialType() == celestialType_Shadow_Spectral);
         }
     }
 
@@ -31,7 +31,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
         }
 
         int celestialType = this.HATE$getCelestialType();
-        if (celestialType == ICelestialType.celestialTypeShadowGloom) {
+        if (celestialType == ICelestialType.celestialType_Shadow_Gloom) {
             if (result.entityWasNegativelyAffected() && target instanceof EntityPlayer player) {
                 player.vision_dimming += target.getAsEntityLivingBase().getAmountAfterResistance(2.0F, 4);
             }
@@ -62,7 +62,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
     public void onLivingUpdate(CallbackInfo ci) {
         if (this.onServer()) {
             int celestialType = this.HATE$getCelestialType();
-            if (celestialType == ICelestialType.celestialTypeShadowGloom) {
+            if (celestialType == ICelestialType.celestialType_Shadow_Gloom) {
                 int lightLevel = this.worldObj.getBlockLightValue(
                         MathHelper.floor_double(this.posX),
                         MathHelper.floor_double(this.posY),
@@ -77,7 +77,7 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speedModifier);
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(damageModifier);
             }
-            else if (celestialType == ICelestialType.celestialTypeShadowSpectral) {
+            else if (celestialType == ICelestialType.celestialType_Shadow_Spectral) {
                 if (this.onServer() && this.getHealth() > 0.0F) {
                     int ticks_existed_with_offset = this.getTicksExistedWithOffset();
                     if ((this.getTarget() != null || this.fleeing) && ticks_existed_with_offset % 10 == 0 && this.rand.nextInt(3) == 0) {
@@ -99,10 +99,8 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
         }
     }
 
-
     @Unique
     public boolean tryTeleportTo(double pos_x, double pos_y, double pos_z) {
-        System.out.println("teleported");
         if (!this.isDead && !(this.getHealth() <= 0.0F)) {
             int x = MathHelper.floor_double(pos_x);
             int y = MathHelper.floor_double(pos_y);
@@ -113,6 +111,9 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
                     if (this.worldObj.isBlockSolid(x, y, z)) {
                         ++y;
                         if (!this.worldObj.isBlockSolid(x, y, z) && !this.worldObj.isLiquidBlock(x, y, z)) {
+                            if (this.worldObj.getBlockLightValue(x, y, z) >= 7) {
+                                return false;
+                            }
                             double delta_pos_x = pos_x - this.posX;
                             double delta_pos_y = pos_y - this.posY;
                             double delta_pos_z = pos_z - this.posZ;
@@ -145,4 +146,5 @@ public abstract class EntityShadowMixin extends EntityMob implements ICelestialT
             return false;
         }
     }
+
 }

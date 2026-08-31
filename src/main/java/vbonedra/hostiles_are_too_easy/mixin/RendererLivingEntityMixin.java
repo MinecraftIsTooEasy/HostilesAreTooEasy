@@ -7,11 +7,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.*;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RendererLivingEntity.class)
 public abstract class RendererLivingEntityMixin {
@@ -42,7 +43,7 @@ public abstract class RendererLivingEntityMixin {
             }
         }
         if (par1EntityLivingBase instanceof EntitySquid) {
-            if (celestialType == celestialTypeSquidGlow) {
+            if (hasCelestialType(celestialType, CelestialSquid.GLOW.id)) {
                 String cacheKey = "squid_glow";
                 if (!blendedGlowCache.containsKey(cacheKey)) {
                     ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
@@ -58,7 +59,7 @@ public abstract class RendererLivingEntityMixin {
             }
         }
         if (par1EntityLivingBase instanceof EntityGhoul) {
-            if (celestialType == celestialTypeGhoulVampire) {
+            if (hasCelestialType(celestialType, CelestialGhoul.VAMPIRIC.id)) {
                 String cacheKey = "ghoul_vampire_glow";
                 if (!blendedGlowCache.containsKey(cacheKey)) {
                     ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
@@ -74,7 +75,7 @@ public abstract class RendererLivingEntityMixin {
             }
         }
         if (par1EntityLivingBase instanceof EntityShadow) {
-            if (celestialType == celestialTypeShadowGloom) {
+            if (hasCelestialType(celestialType, CelestialShadow.GLOOM.id)) {
                 String cacheKey = "shadow_gloom_glow";
                 if (!blendedGlowCache.containsKey(cacheKey)) {
                     ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(

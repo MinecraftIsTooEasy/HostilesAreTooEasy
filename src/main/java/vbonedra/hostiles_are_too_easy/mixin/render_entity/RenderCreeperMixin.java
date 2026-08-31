@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeCreeperMimic;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderCreeper.class)
 public abstract class RenderCreeperMixin {
@@ -42,7 +43,7 @@ public abstract class RenderCreeperMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityCreeper);
 
-        if (celestialType == celestialTypeCreeperMimic) {
+        if (hasCelestialType(celestialType, CelestialTypeData.CelestialCreeper.MIMIC.id)) {
             int entityId = par1EntityCreeper.entityId;
 
             int blockX = MathHelper.floor_double(par1EntityCreeper.posX);

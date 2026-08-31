@@ -5,11 +5,13 @@ import net.minecraft.Entity;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.celestialTypeVanilla;
+
 public class CelestialTypeGetter {
 
     public static int getCelestialType(Entity entity) {
         if (entity == null || entity.worldObj == null) {
-            return ICelestialType.celestialTypeVanilla;
+            return celestialTypeVanilla;
         }
 
         int entityId = entity.entityId;
@@ -21,6 +23,6 @@ public class CelestialTypeGetter {
             Network.sendToServer(new C2SRequestCelestialType(entityId));
             CelestialTypeCache.requestedEntities.add(entityId);
         }
-        return ICelestialType.celestialTypeVanilla;
+        return celestialTypeVanilla;
     }
 }

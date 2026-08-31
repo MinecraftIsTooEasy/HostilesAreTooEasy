@@ -17,7 +17,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
 
     @Inject(method = "dropFewItems", at = @At("RETURN"))
     private void dropFewItemsEvolved(boolean recently_hit_by_player, DamageSource damage_source, CallbackInfo ci) {
-        if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+        if (this.HATE$getCelestialType() == celestialType_Skeleton_Withered) {
             int looting = damage_source.getLootingModifier();
             int num_drops = this.rand.nextInt(3 + looting) - 1;
             if (num_drops > 0 && !recently_hit_by_player) {
@@ -36,13 +36,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
     }
     @Inject(method = "isHarmedByFire", at = @At("RETURN"), cancellable = true)
     private void isHarmedByFireEvolved(CallbackInfoReturnable<Boolean> cir) {
-        if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+        if (this.HATE$getCelestialType() == celestialType_Skeleton_Withered) {
             cir.setReturnValue(false);
         }
     }
     @Inject(method = "isHarmedByLava", at = @At("RETURN"), cancellable = true)
     private void isHarmedByLavaEvolved(CallbackInfoReturnable<Boolean> cir) {
-        if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+        if (this.HATE$getCelestialType() == celestialType_Skeleton_Withered) {
             cir.setReturnValue(false);
         }
     }
@@ -50,14 +50,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ICelestia
     private void attackEntityAsMobEvolved(Entity target, CallbackInfoReturnable<EntityDamageResult> cir) {
         EntityDamageResult result = cir.getReturnValue();
         if (result != null && !result.entityWasDestroyed()) {
-            if (result.entityLostHealth() && this.HATE$getCelestialType() == celestialTypeSkeletonWithered && target instanceof EntityLivingBase) {
+            if (result.entityLostHealth() && this.HATE$getCelestialType() == celestialType_Skeleton_Withered && target instanceof EntityLivingBase) {
                 target.getAsEntityLivingBase().addPotionEffect(new PotionEffect(Potion.wither.id, 200));
             }
         }
     }
     @Inject(method = "attackEntityWithRangedAttack", at = @At(value = "RETURN"))
     private void attackEntityWithRangedAttackEvolved(EntityLivingBase target, float par2, CallbackInfo ci, @Local EntityArrow var3) {
-        if (this.HATE$getCelestialType() == celestialTypeSkeletonWithered) {
+        if (this.HATE$getCelestialType() == celestialType_Skeleton_Withered) {
             var3.setFire(100);
         }
     }

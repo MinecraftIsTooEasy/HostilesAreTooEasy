@@ -15,7 +15,7 @@ public abstract class EntityInvisibleStalkerMixin extends EntityLiving implement
 
     @Inject(method = "onLivingUpdate", at = @At("RETURN"))
     public void onLivingUpdate(CallbackInfo ci) {
-        if (this.HATE$getCelestialType() == ICelestialType.celestialTypeInvisibleStalkerMirror) {
+        if (this.HATE$getCelestialType() == ICelestialType.celestialType_InvisibleStalker_Mirror) {
             EntityLivingBase target = this.getTarget();
             if (target != null) {
                 for (int slot = 0; slot <= 4; slot++) {

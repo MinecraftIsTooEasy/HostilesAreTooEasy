@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType.celestialTypeSkeletonWithered;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderSkeleton.class)
 public abstract class RenderSkeletonMixin {
@@ -27,7 +28,7 @@ public abstract class RenderSkeletonMixin {
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntitySkeleton);
 
-        if (celestialType == celestialTypeSkeletonWithered) {
+        if (hasCelestialType(celestialType, CelestialTypeData.CelestialSkeleton.WITHERED.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = witheredTexture + "_" + templateTexture;
             if (!blendedCache.containsKey(cacheKey)) {
