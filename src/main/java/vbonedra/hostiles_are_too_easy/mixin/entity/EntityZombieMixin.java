@@ -46,7 +46,7 @@ public abstract class EntityZombieMixin extends EntityMob implements ICelestialT
                     ++this.num_evasions;
                 }
             }
-            else if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PLAGUE.id)) {
+            if (hasCelestialType(this.HATE$getCelestialType(), CelestialTypeData.CelestialZombie.PLAGUE.id)) {
                 EntityLivingBase currentTarget = this.getTarget();
                 if (this.previousEntityToAttack != currentTarget) {
                     AttributeInstance speedAttribute = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
