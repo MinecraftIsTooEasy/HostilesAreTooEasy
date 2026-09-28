@@ -13,8 +13,6 @@ public final class CelestialTypeData {
 
     // TODO: maybe add celestialTypeData which stores bit position as byte and prefix used, would remove hardcoding on getPrefix, though would make it harder to write celestialTypes
 
-    // TODO: use celestialSubtype instead of celestialType to store blockId
-
     // TODO: creepers could sense only nearby players, its too much when 5+ creepers follow player from very depth of caves to the surface caves
 
     // TODO: once Enderman attacked it never loses aggro
@@ -255,6 +253,9 @@ public final class CelestialTypeData {
 
     public static boolean hasCelestialType(int celestialType, byte celestialTypeTarget) {
         return (celestialType & (1 << celestialTypeTarget)) != 0;
+    }
+    public static boolean hasAnyCelestialType(int celestialType) {
+        return (celestialType & 1) != 0;
     }
     public static int addCelestialType(int celestialType, byte celestialTypeTarget) {
         return celestialType | (1 << celestialTypeTarget);

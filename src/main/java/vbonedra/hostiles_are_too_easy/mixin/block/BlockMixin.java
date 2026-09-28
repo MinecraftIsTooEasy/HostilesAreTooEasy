@@ -5,8 +5,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.SilverfishBlockType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.addCelestialType;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
@@ -41,7 +44,8 @@ public abstract class BlockMixin {
                         silverfish = new EntitySilverfish(world);
                     }
 
-                    ((ICelestialType) silverfish).HATE$setCelestialType(currentBlock.blockID);
+                    ((ICelestialType) silverfish).HATE$setCelestialType(addCelestialType(0, CelestialTypeData.CelestialSilverfish.BLOCKFISH.id));
+                    ((ICelestialType) silverfish).HATE$setCelestialSubtype(currentBlock.blockID);
 
                     silverfish.setLocationAndAngles(
                             (double) info.x + 0.5D,

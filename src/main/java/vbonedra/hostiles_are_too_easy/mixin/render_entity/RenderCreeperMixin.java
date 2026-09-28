@@ -10,36 +10,25 @@ import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.getBlockTexturePath;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderCreeper.class)
 public abstract class RenderCreeperMixin {
-
-    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
     @Unique private final Map<Integer, Integer> lastStoodBlockMap = new HashMap<>();
     @Unique private final Map<Integer, Integer> lastStoodMetadataMap = new HashMap<>();
 
-    @Unique
-    private String getBlockTexturePath(Block block, int metadata) {
-        if (block == null) return "textures/blocks/dirt.png";
-        try {
-            Icon blockIcon = block.getIcon(1, metadata);
-            if (blockIcon != null && blockIcon.getIconName() != null) {
-                return "textures/blocks/" + blockIcon.getIconName() + ".png";
-            }
-        } catch (Exception e) {
-            System.err.println("Creeper has hard time getting blockIcon: " + e);
-        }
-        return "textures/blocks/dirt.png";
-    }
-
 
     @Inject(method = "getCreeperTextures(Lnet/minecraft/EntityCreeper;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void getCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) {
+    private void getCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
         if (par1EntityCreeper.worldObj == null) return;
+        Minecraft mc = Minecraft.getMinecraft();
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityCreeper);
 
@@ -93,18 +82,22 @@ public abstract class RenderCreeperMixin {
             String templateTexture = cir.getReturnValue().getResourcePath();
             String cacheKey = blockId + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
 
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        getBlockTexturePath(block, metadata),
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                        getBlockTexturePath(block, metadata, "CelestialCreeper.MIMIC"),
                         templateTexture,
                         3.0F,
                         par1EntityCreeper.getClass() == EntityInfernalCreeper.class ? 0.0f : 1.0F,
-                        biomeTint
+                        biomeTint,
+                        false
                 );
-                blendedCache.put(cacheKey, finalBlendedTexture);
+
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
             }
 
-            cir.setReturnValue(blendedCache.get(cacheKey));
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
         }
     }
 }

@@ -55,7 +55,7 @@ public abstract class RenderSquidMixin {
             String cacheKey = "squid_" + templateTexture;
 
             if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.getEmptyTransparentTexture();
+                ResourceLocation finalBlendedTexture = TexturePacker.oneBlackTransparentPixelResourceLocation;
                 blendedCache.put(cacheKey, finalBlendedTexture);
             }
 

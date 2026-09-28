@@ -1,10 +1,6 @@
 package vbonedra.hostiles_are_too_easy.register;
 
-import net.minecraft.ResourceLocation;
-import vbonedra.hostiles_are_too_easy.HostilesAreTooEasyMod;
 import huix.glacier.api.entrypoint.IGameRegistry;
-import huix.glacier.api.registry.MinecraftRegistry;
-import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 
 import static vbonedra.hostiles_are_too_easy.util.AchievementExtend.registerAchievements;
 

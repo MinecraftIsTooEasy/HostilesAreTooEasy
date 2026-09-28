@@ -17,23 +17,27 @@ import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasAnyCelestialType;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
 
 
 @Mixin(RenderZombie.class)
 public abstract class RenderZombieMixin {
-
-    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
     @Unique String phaseTexture = "textures/entity/spider/phase_spider.png";
     @Unique String plagueTexture = "textures/items/spider_eye_fermented.png";
 
 
     @Inject(method = "func_110863_a(Lnet/minecraft/EntityZombie;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void func_110863_a(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir) {
+    private void func_110863_a(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
         if (par1EntityZombie.worldObj == null) return;
+        Minecraft mc = Minecraft.getMinecraft();
 
         int entityId = par1EntityZombie.entityId;
 
@@ -51,59 +55,67 @@ public abstract class RenderZombieMixin {
         }
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityZombie);
+        int celestialSubtype = CelestialSubtypeGetter.getCelestialSubtype(par1EntityZombie);
 
-
-        // TODO: add support for visuals of all types, right now PHASE PLAGUE zombie looks like PHASE zombie
-        //  this must be done by making TexturePacker only change and return texture data
-        //  then it must be save there with matching cache name
-        if (hasCelestialType(celestialType, CelestialZombie.PHASE.id)) {
+        if (hasAnyCelestialType(celestialType)) {
+            System.out.println("hasAnyCelestialType");
             String templateTexture = cir.getReturnValue().getResourcePath();
-            String cacheKey = phaseTexture + "_" + templateTexture;
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        phaseTexture,
-                        templateTexture,
-                        3.0F,
-                        0.0F
-                );
-                blendedCache.put(cacheKey, finalBlendedTexture);
-            }
+            String cacheKey = templateTexture;
 
-            cir.setReturnValue(blendedCache.get(cacheKey));
-        }
-        else if (hasCelestialType(celestialType, CelestialZombie.PLAGUE.id)) {
-            if (!CelestialSubtypeCache.clientCelestialSubtypeMap.containsKey(entityId)) {
-                if (!CelestialSubtypeCache.requestedEntities.contains(entityId) && par1EntityZombie.worldObj.isRemote) {
-                    Network.sendToServer(new C2SRequestCelestialSubtype(entityId));
-                    CelestialSubtypeCache.requestedEntities.add(entityId);
+            boolean phase = false;
+            if (hasCelestialType(celestialType, CelestialZombie.PHASE.id)) {
+                phase = true;
+                cacheKey += "_" + phaseTexture;
+            }
+            boolean plague = false;
+            if (hasCelestialType(celestialType, CelestialZombie.PLAGUE.id)) {
+                plague = true;
+                cacheKey += "_plague_" + (byte) (celestialSubtype & 0xFF);
+            }
+            System.out.println("types: " + phase + " " + plague);
+
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(templateTexture)).getInputStream());
+                if (phase) {
+                    bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                            ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(phaseTexture)).getInputStream()),
+                            bufferedImage,
+                            3.0F,
+                            0.0F,
+                            -1,
+                            false
+                    );
                 }
-                return;
+                if (plague) {
+                    if (!CelestialSubtypeCache.clientCelestialSubtypeMap.containsKey(entityId)) {
+                        if (!CelestialSubtypeCache.requestedEntities.contains(entityId) && par1EntityZombie.worldObj.isRemote) {
+                            Network.sendToServer(new C2SRequestCelestialSubtype(entityId));
+                            CelestialSubtypeCache.requestedEntities.add(entityId);
+                        }
+                        return;
+                    }
+                    Integer subtypeObject = CelestialSubtypeCache.clientCelestialSubtypeMap.get(entityId);
+                    if (subtypeObject == null) {
+                        return;
+                    }
+
+                    bufferedImage = TexturePacker.maskTemplateWithPixelSourceByPattern(
+                            ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(plagueTexture)).getInputStream()),
+                            bufferedImage,
+                            1.0F,
+                            1.0F,
+                            (byte) (celestialSubtype & 0xFF),
+                            0.15F
+                    );
+                }
+
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
+
             }
 
-            Integer subtypeObject = CelestialSubtypeCache.clientCelestialSubtypeMap.get(entityId);
-            if (subtypeObject == null) {
-                return;
-            }
-
-            int celestialSubtype = CelestialSubtypeGetter.getCelestialSubtype(par1EntityZombie);
-
-
-            String templateTexture = cir.getReturnValue().getResourcePath();
-            byte patternId = (byte) (celestialSubtype & 0xFF);
-            String cacheKey = "plague_" + patternId + "_" + templateTexture;
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByPattern(
-                        plagueTexture,
-                        templateTexture,
-                        1.0F,
-                        1.0F,
-                        patternId,
-                        0.15F
-                );
-                blendedCache.put(cacheKey, finalBlendedTexture);
-            }
-
-            cir.setReturnValue(blendedCache.get(cacheKey));
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
         }
     }
 }

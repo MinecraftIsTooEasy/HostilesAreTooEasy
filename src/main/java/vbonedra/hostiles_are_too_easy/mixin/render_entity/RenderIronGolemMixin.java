@@ -6,71 +6,53 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vbonedra.hostiles_are_too_easy.network.CelestialSubtypeGetter;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.getBlockTexturePath;
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
 
 @Mixin(RenderIronGolem.class)
 public abstract class RenderIronGolemMixin {
-    // TODO: look into RenderSilverfishMixin
-
-    @Unique
-    private final Map<String, ResourceLocation> HATE$golemBlendedCache = new HashMap<>();
-
-    @Unique
-    private String getBlockTexturePath(Block block, int metadata) {
-        if (block == null) return "textures/blocks/iron_block.png";
-        try {
-            Icon blockIcon = block.getIcon(1, metadata);
-            if (blockIcon != null && blockIcon.getIconName() != null) {
-                return "textures/blocks/" + blockIcon.getIconName() + ".png";
-            }
-        } catch (Exception e) {
-            System.err.println("IronGolem has hard time getting blockIcon: " + e);
-        }
-        return "textures/blocks/iron_block.png";
-    }
 
     @Inject(method = "getIronGolemTextures(Lnet/minecraft/EntityIronGolem;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void getCustomMetalGolemTextures(EntityIronGolem golem, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (golem.worldObj == null) return;
+    private void getCustomMetalGolemTextures(EntityIronGolem par1EntityIronGolem, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
+        if (par1EntityIronGolem.worldObj == null) return;
+        Minecraft mc = Minecraft.getMinecraft();
 
-        int celestialType = CelestialTypeGetter.getCelestialType(golem);
+        int celestialType = CelestialTypeGetter.getCelestialType(par1EntityIronGolem);
+        int celestialSubtype = CelestialSubtypeGetter.getCelestialSubtype(par1EntityIronGolem);
 
-        if (celestialType != 0) {
-            Block block = Block.getBlock(celestialType);
-            if (block == null) {
-                return;
-            }
 
+        if (hasCelestialType(celestialType, CelestialTypeData.CelestialIronGolem.METAL_GOLEM.id)) {
             int metadata = 0;
-            int blockX = MathHelper.floor_double(golem.posX);
-            int blockY = MathHelper.floor_double(golem.posY);
-            int blockZ = MathHelper.floor_double(golem.posZ);
-
             int biomeTint = -1;
-            int blockColor = block.colorMultiplier(golem.worldObj, blockX, blockY, blockZ);
-            if (blockColor != 0xFFFFFF) {
-                biomeTint = blockColor;
-            }
+            Block block = Block.blocksList[celestialSubtype];
 
             String templateTexture = cir.getReturnValue().getResourcePath();
-            String cacheKey = block.blockID + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
+            String cacheKey = celestialSubtype + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
 
-            if (!HATE$golemBlendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        getBlockTexturePath(block, metadata),
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSource(
+                        getBlockTexturePath(block, metadata, "CelestialIronGolem.METAL_GOLEM"),
                         templateTexture,
-                        3.0F,
-                        0.0F,
+                        4.0F,
+                        1.0f,
                         biomeTint
                 );
-                HATE$golemBlendedCache.put(cacheKey, finalBlendedTexture);
+
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
             }
 
-            cir.setReturnValue(HATE$golemBlendedCache.get(cacheKey));
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
         }
     }
 }

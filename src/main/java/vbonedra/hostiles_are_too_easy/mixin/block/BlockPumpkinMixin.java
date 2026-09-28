@@ -5,14 +5,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.IronGolemBlockType;
+
+import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.addCelestialType;
 
 @Mixin(BlockPumpkin.class)
 public abstract class BlockPumpkinMixin {
 
     @Inject(method = "onBlockAdded(Lnet/minecraft/World;III)V", at = @At("HEAD"), cancellable = true)
-    private void HATE$checkForCustomMetalGolems(World world, int x, int y, int z, CallbackInfo ci) {
+    private void onBlockAdded_spawnMetalGolem(World world, int x, int y, int z, CallbackInfo ci) {
         if (world.isWorldClient()) {
             return;
         }
@@ -53,7 +56,9 @@ public abstract class BlockPumpkinMixin {
             customGolem.setPlayerCreated(true);
             customGolem.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
 
-            ((ICelestialType) customGolem).HATE$setCelestialType(blockId);
+            ((ICelestialType) customGolem).HATE$setCelestialType(addCelestialType(0, CelestialTypeData.CelestialIronGolem.METAL_GOLEM.id));
+            ((ICelestialType) customGolem).HATE$setCelestialSubtype(blockId);
+
             customGolem.reapplyEntityAttributes();
 
             world.spawnEntityInWorld(customGolem);

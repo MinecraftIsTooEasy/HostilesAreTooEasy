@@ -60,7 +60,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
 //                        }
 //                    }
                     if (this.rand.nextFloat() < difficulty * 0.2) {
-                        this.celestialType = CelestialCreeper.MIMIC.id;
+                        this.celestialType = addCelestialType(this.celestialType, CelestialCreeper.MIMIC.id);
                     }
                 }
                 else if (entity instanceof EntitySkeleton) {
@@ -70,10 +70,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements ICelestial
                 }
                 else if (entity instanceof EntityZombie) {
                     if (true || this.rand.nextFloat() < (difficulty + 1) * chanceLurkers * 0.5) {
-                        this.celestialType = CelestialZombie.PHASE.id;
+                        this.celestialType = addCelestialType(this.celestialType, CelestialZombie.PHASE.id);
                     }
                     if (true || this.rand.nextFloat() < difficulty * chanceLurkers) {
-                        this.celestialType = CelestialZombie.PLAGUE.id;
+                        this.celestialType = addCelestialType(this.celestialType, CelestialZombie.PLAGUE.id);
                         this.celestialSubtype = (byte) this.rand.nextInt(256);
                     }
                 }

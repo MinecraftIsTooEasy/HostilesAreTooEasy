@@ -12,30 +12,23 @@ import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
-import vbonedra.hostiles_are_too_easy.util.celestial_type.ICelestialType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderShadow.class)
 public abstract class RenderShadowMixin {
-
-    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
-
     @Unique String gloomTexture = "textures/blocks/wool_colored_magenta.png";
     @Unique String spectralTexture = "textures/blocks/wool_colored_yellow.png";
 
     @Inject(method = "getEntityTexture(Lnet/minecraft/Entity;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void getEntityTexture(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (!(par1Entity instanceof EntityShadow shadow)) {
-            return;
-        }
-
-        if (shadow.worldObj == null) {
-            return;
-        }
+    private void getEntityTexture(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
+        if (!(par1Entity instanceof EntityShadow shadow)) return;
+        if (shadow.worldObj == null) return;
+        Minecraft mc = Minecraft.getMinecraft();
 
         int entityId = shadow.entityId;
 
@@ -57,31 +50,41 @@ public abstract class RenderShadowMixin {
 
         String templateTexture = cir.getReturnValue().getResourcePath();
         if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.GLOOM.id)) {
-            String cacheKey = gloomTexture + "_" + templateTexture;
+            String cacheKey = templateTexture + "_" + gloomTexture;
 
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
                         gloomTexture,
                         templateTexture,
                         1.0F,
-                        15.0F
+                        15.0F,
+                        -1,
+                        false
                 );
-                blendedCache.put(cacheKey, finalBlendedTexture);
-            }
-            cir.setReturnValue(blendedCache.get(cacheKey));
-        } else if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.SPECTRAL.id)) {
-            String cacheKey = spectralTexture + "_" + templateTexture;
 
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
+            }
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
+        } else if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.SPECTRAL.id)) {
+            String cacheKey = templateTexture + "_" + spectralTexture;
+
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
                         spectralTexture,
                         templateTexture,
                         1.0F,
-                        7.0F
+                        7.0F,
+                        -1,
+                        false
                 );
-                blendedCache.put(cacheKey, finalBlendedTexture);
+
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
             }
-            cir.setReturnValue(blendedCache.get(cacheKey));
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
         }
     }
 }

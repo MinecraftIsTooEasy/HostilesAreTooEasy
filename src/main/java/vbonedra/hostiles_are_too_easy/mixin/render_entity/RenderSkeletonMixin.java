@@ -10,37 +10,41 @@ import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
+import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
 
 @Mixin(RenderSkeleton.class)
 public abstract class RenderSkeletonMixin {
-
-    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
     @Unique String witheredTexture = "textures/entity/skeleton/wither_skeleton.png";
 
-
     @Inject(method = "func_110860_a(Lnet/minecraft/EntitySkeleton;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
-    private void func_110860_a(EntitySkeleton par1EntitySkeleton, CallbackInfoReturnable<ResourceLocation> cir) {
+    private void func_110860_a(EntitySkeleton par1EntitySkeleton, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
         if (par1EntitySkeleton.worldObj == null) return;
+        Minecraft mc = Minecraft.getMinecraft();
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntitySkeleton);
 
         if (hasCelestialType(celestialType, CelestialTypeData.CelestialSkeleton.WITHERED.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
-            String cacheKey = witheredTexture + "_" + templateTexture;
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.blendTextures(
-                        witheredTexture,
-                        templateTexture,
+            String cacheKey = templateTexture + "_" + witheredTexture + "_blendForegroundOverBackgroundWithFactor";
+
+            if (!cacheResourceLocation.containsKey(cacheKey)) {
+                BufferedImage bufferedImage = TexturePacker.blendForegroundOverBackgroundWithFactor(
+                        ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(templateTexture)).getInputStream()),
+                        ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(witheredTexture)).getInputStream()),
                         2, 1
                 );
-                blendedCache.put(cacheKey, finalBlendedTexture);
+
+                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+                cacheResourceLocation.put(cacheKey, dynamicLocation);
             }
 
-            cir.setReturnValue(blendedCache.get(cacheKey));
+            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
         }
     }
 }
