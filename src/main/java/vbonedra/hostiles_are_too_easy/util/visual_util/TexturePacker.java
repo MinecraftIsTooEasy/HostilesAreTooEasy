@@ -1,7 +1,6 @@
-package vbonedra.hostiles_are_too_easy.util;
+package vbonedra.hostiles_are_too_easy.util.visual_util;
 
 import net.minecraft.*;
-import org.spongepowered.asm.mixin.Unique;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,33 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static vbonedra.hostiles_are_too_easy.HostilesAreTooEasyMod.HATE_LOGGER;
+
 public class TexturePacker {
-    // cacheResourceLocation used to store ResourceLocation of DynamicTexture
     public static final Map<String, ResourceLocation> cacheResourceLocation = new HashMap<>();
-
-
-    // oneBlackTransparentPixel used to remove texture
-    public static String oneBlackTransparentPixelName = "oneBlackTransparentPixel";
-    public static BufferedImage oneBlackTransparentPixelTexture = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    public static DynamicTexture oneBlackTransparentPixelDynamicTexture = new DynamicTexture(oneBlackTransparentPixelTexture);
-    public static ResourceLocation oneBlackTransparentPixelResourceLocation = new ResourceLocation("oneBlackTransparentPixelName");
-
-    // needs bug test, might call minecraft when it isn't ready
-    private TexturePacker() {
-        oneBlackTransparentPixelTexture.setRGB(0, 0, 0x00FFFFFF);
-
-        // is it even required?
-        // TODO: maybe replace getDynamicTextureLocation with manual linking texture to location
-        Minecraft mc = Minecraft.getMinecraft();
-        oneBlackTransparentPixelResourceLocation = mc.getTextureManager().getDynamicTextureLocation(oneBlackTransparentPixelName, oneBlackTransparentPixelDynamicTexture);
-    }
-
-
-    // this must take texture data, change it and return
-    // each method must do its own thing, no combined functions
-    // then in any use case code must be changed to save texture data into dynamic texture and do whatever it did
-    // maybe prebake all textures at register and not runtime? some random and environment textures would still be made in runtime
-
+    public static final Map<String, BufferedImage> cacheBufferedImage = new HashMap<>();
 
     private static int getPixelSourcePixel(List<Double> templateBrightnesses, double currentTemplateBrightness, List<PixelSourcePixelData> pixelSourcePalette, boolean reverseBrightness) {
         int rankInTemplate = java.util.Collections.binarySearch(templateBrightnesses, currentTemplateBrightness);
@@ -365,6 +342,46 @@ public class TexturePacker {
             System.err.println(nameForError + " has hard time getting blockIcon / texture path: " + e);
         }
         return "textures/blocks/dirt.png";
+    }
+
+
+    public static void saveToCache(BufferedImage bufferedImage, String cacheKey) {
+        DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
+        ResourceLocation dynamicLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
+        cacheResourceLocation.put(cacheKey, dynamicLocation);
+    }
+
+
+
+    @FunctionalInterface
+    public interface TextureProcessor {
+        BufferedImage process(BufferedImage base) throws Exception;
+    }
+
+    public static ResourceLocation getOrCreateInMemoryTexture(String templateTexture, String cacheKeyFinal, TextureProcessor processor) {
+        if (cacheResourceLocation.containsKey(cacheKeyFinal)) {
+            return cacheResourceLocation.get(cacheKeyFinal);
+        }
+
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            BufferedImage baseImg = cacheBufferedImage.get(templateTexture);
+            if (baseImg == null) {
+                baseImg = ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(templateTexture)).getInputStream());
+                cacheBufferedImage.put(templateTexture, baseImg);
+            }
+
+            BufferedImage resultImg = processor.process(baseImg);
+
+            saveToCache(resultImg, cacheKeyFinal);
+
+            return cacheResourceLocation.get(cacheKeyFinal);
+
+        } catch (Exception e) {
+            HATE_LOGGER.error(e);;
+            return new ResourceLocation(templateTexture);
+        }
     }
 
 

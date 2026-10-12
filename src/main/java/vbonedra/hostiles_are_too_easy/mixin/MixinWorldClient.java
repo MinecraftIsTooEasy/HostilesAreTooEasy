@@ -12,7 +12,7 @@ import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
 public class MixinWorldClient {
 
     @Inject(method = "onEntityRemoved(Lnet/minecraft/Entity;)V", at = @At("HEAD"))
-    private void hostilesAreTooEasy$clearCelestialCacheOnRemove(Entity par1Entity, CallbackInfo ci) {
+    private void hostilesAreTooEasy_clearCelestialCacheOnRemove(Entity par1Entity, CallbackInfo ci) {
         if (par1Entity != null) {
             int entityId = par1Entity.entityId;
             CelestialTypeCache.clientCelestialTypeMap.remove(entityId);

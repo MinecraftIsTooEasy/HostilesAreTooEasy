@@ -7,16 +7,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
-import static vbonedra.hostiles_are_too_easy.util.TexturePacker.getBlockTexturePath;
+import static vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker.cacheResourceLocation;
+import static vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker.getBlockTexturePath;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderCreeper.class)
@@ -24,11 +25,9 @@ public abstract class RenderCreeperMixin {
     @Unique private final Map<Integer, Integer> lastStoodBlockMap = new HashMap<>();
     @Unique private final Map<Integer, Integer> lastStoodMetadataMap = new HashMap<>();
 
-
     @Inject(method = "getCreeperTextures(Lnet/minecraft/EntityCreeper;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getCreeperTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
         if (par1EntityCreeper.worldObj == null) return;
-        Minecraft mc = Minecraft.getMinecraft();
 
         int celestialType = CelestialTypeGetter.getCelestialType(par1EntityCreeper);
 
@@ -80,24 +79,47 @@ public abstract class RenderCreeperMixin {
             }
 
             String templateTexture = cir.getReturnValue().getResourcePath();
-            String cacheKey = blockId + "_" + metadata + "_" + biomeTint + "_" + templateTexture;
 
-            if (!cacheResourceLocation.containsKey(cacheKey)) {
-                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        getBlockTexturePath(block, metadata, "CelestialCreeper.MIMIC"),
-                        templateTexture,
-                        3.0F,
-                        par1EntityCreeper.getClass() == EntityInfernalCreeper.class ? 0.0f : 1.0F,
-                        biomeTint,
-                        false
-                );
+            String cacheKeyFinal = new StringBuilder()
+                    .append(blockId)
+                    .append("_")
+                    .append(metadata)
+                    .append("_")
+                    .append(biomeTint)
+                    .append("_")
+                    .append(templateTexture)
+                    .toString();
 
-                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
-                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
-                cacheResourceLocation.put(cacheKey, dynamicLocation);
+            if (cacheResourceLocation.containsKey(cacheKeyFinal)) {
+                cir.setReturnValue(cacheResourceLocation.get(cacheKeyFinal));
+                return;
             }
 
-            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
+            float offsetBrightness = par1EntityCreeper.getClass() == EntityInfernalCreeper.class ? 0.0F : 1.0F;
+            final int finalMetadata = metadata;
+            final int finalBiomeTint = biomeTint;
+
+            Minecraft mc = Minecraft.getMinecraft();
+            ResourceLocation dynamicResource = TexturePacker.getOrCreateInMemoryTexture(
+                    templateTexture,
+                    cacheKeyFinal,
+                    (baseImg) -> {
+                        String blockTexPath = getBlockTexturePath(block, finalMetadata, "CelestialCreeper.MIMIC");
+                        BufferedImage maskImg = ImageIO.read(mc.getResourceManager().getResource(new ResourceLocation(blockTexPath)).getInputStream());
+                        return TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                                maskImg,
+                                baseImg,
+                                3.0F,
+                                offsetBrightness,
+                                finalBiomeTint,
+                                false
+                        );
+                    }
+            );
+
+            if (dynamicResource != null) {
+                cir.setReturnValue(dynamicResource);
+            }
         }
     }
 }

@@ -158,11 +158,11 @@ public final class CelestialTypeData {
         CelestialEarthElemental(int id, String langKey) { this.id = (byte) id; this.langKey = langKey; }
     }
     public enum CelestialZombie {
-        PHASE(1, "entity.zombie.phase"), // Phase - dodges attacks
-        PLAGUE(2, "entity.zombie.plague"), // Plague - attacks apply strong poison
-        RIPPER(3, "entity.zombie.ripper"), // Ripper - lunges at target with increased damage when airborne
-        BRUTE(4, "entity.zombie.brute"), // Brute - when dies heals back 60% max health and loses 3% max health each second
-        PIGMAN(5, "entity.zombie.pigman"); // PigMan - attacks players without golden armor
+        PHASE(1, "entity.zombie.phase"), // Phase - dodges attacks; phase spider colored
+        PLAGUE(2, "entity.zombie.plague"), // Plague - attacks apply strong poison; has red pimples
+        RIPPER(3, "entity.zombie.ripper"), // Ripper - lunges at target with increased damage when airborne;
+        BRUTE(4, "entity.zombie.brute"), // Brute - when dies heals back 60% max health and loses 3% max health each second; Revenant in better armor
+        PIGLIN(5, "entity.zombie.piglin"); // Piglin - attacks players without golden armor; ZombiePig with fewer wounds
         public final byte id;
         public final String langKey;
         CelestialZombie(int id, String langKey) { this.id = (byte) id; this.langKey = langKey; }

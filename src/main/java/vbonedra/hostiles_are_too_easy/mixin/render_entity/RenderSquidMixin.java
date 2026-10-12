@@ -3,25 +3,21 @@ package vbonedra.hostiles_are_too_easy.mixin.render_entity;
 import moddedmite.rustedironcore.network.Network;
 import net.minecraft.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
-import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.visual_util.ResourcePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.*;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
-
-import java.util.HashMap;
-import java.util.Map;
+import vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker;
 
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
+import static vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker.cacheResourceLocation;
 
 @Mixin(RenderSquid.class)
 public abstract class RenderSquidMixin {
-
-    @Unique private final Map<String, ResourceLocation> blendedCache = new HashMap<>();
 
     @Inject(method = "getEntityTexture(Lnet/minecraft/Entity;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getEntityTexture(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) {
@@ -52,14 +48,19 @@ public abstract class RenderSquidMixin {
 
         if (hasCelestialType(celestialType, CelestialShadow.GLOOM.id)) {
             String templateTexture = cir.getReturnValue().getResourcePath();
-            String cacheKey = "squid_" + templateTexture;
 
-            if (!blendedCache.containsKey(cacheKey)) {
-                ResourceLocation finalBlendedTexture = TexturePacker.oneBlackTransparentPixelResourceLocation;
-                blendedCache.put(cacheKey, finalBlendedTexture);
+            String cacheKeyFinal = new StringBuilder("squid_")
+                    .append(templateTexture)
+                    .toString();
+
+            if (cacheResourceLocation.containsKey(cacheKeyFinal)) {
+                cir.setReturnValue(cacheResourceLocation.get(cacheKeyFinal));
+                return;
             }
 
-            cir.setReturnValue(blendedCache.get(cacheKey));
+            ResourceLocation finalBlendedTexture = ResourcePacker.oneBlackTransparentPixelResourceLocation;
+            cacheResourceLocation.put(cacheKeyFinal, finalBlendedTexture);
+            cir.setReturnValue(finalBlendedTexture);
         }
     }
 }

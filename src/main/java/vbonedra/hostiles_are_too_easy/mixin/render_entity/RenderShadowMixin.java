@@ -10,25 +10,25 @@ import moddedmite.rustedironcore.network.Network;
 import vbonedra.hostiles_are_too_easy.network.C2SRequestCelestialType;
 import vbonedra.hostiles_are_too_easy.network.CelestialTypeGetter;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeCache;
-import vbonedra.hostiles_are_too_easy.util.TexturePacker;
+import vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker;
 import vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import static vbonedra.hostiles_are_too_easy.util.TexturePacker.cacheResourceLocation;
+import static vbonedra.hostiles_are_too_easy.util.visual_util.TexturePacker.cacheResourceLocation;
 import static vbonedra.hostiles_are_too_easy.util.celestial_type.CelestialTypeData.hasCelestialType;
 
 @Mixin(RenderShadow.class)
 public abstract class RenderShadowMixin {
-    @Unique String gloomTexture = "textures/blocks/wool_colored_magenta.png";
-    @Unique String spectralTexture = "textures/blocks/wool_colored_yellow.png";
+    @Unique private static final ResourceLocation GLOOM_RL = new ResourceLocation("textures/blocks/wool_colored_magenta.png");
+    @Unique private static final ResourceLocation SPECTRAL_RL = new ResourceLocation("textures/blocks/wool_colored_yellow.png");
 
     @Inject(method = "getEntityTexture(Lnet/minecraft/Entity;)Lnet/minecraft/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getEntityTexture(Entity par1Entity, CallbackInfoReturnable<ResourceLocation> cir) throws IOException {
         if (!(par1Entity instanceof EntityShadow shadow)) return;
         if (shadow.worldObj == null) return;
-        Minecraft mc = Minecraft.getMinecraft();
 
         int entityId = shadow.entityId;
 
@@ -46,45 +46,69 @@ public abstract class RenderShadowMixin {
         }
 
         int celestialType = CelestialTypeGetter.getCelestialType(shadow);
-
-
         String templateTexture = cir.getReturnValue().getResourcePath();
+        Minecraft mc = Minecraft.getMinecraft();
+
         if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.GLOOM.id)) {
-            String cacheKey = templateTexture + "_" + gloomTexture;
+            String cacheKeyFinal = new StringBuilder(templateTexture)
+                    .append("_")
+                    .append(GLOOM_RL.getResourcePath())
+                    .toString();
 
-            if (!cacheResourceLocation.containsKey(cacheKey)) {
-                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        gloomTexture,
-                        templateTexture,
-                        1.0F,
-                        15.0F,
-                        -1,
-                        false
-                );
-
-                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
-                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
-                cacheResourceLocation.put(cacheKey, dynamicLocation);
+            if (cacheResourceLocation.containsKey(cacheKeyFinal)) {
+                cir.setReturnValue(cacheResourceLocation.get(cacheKeyFinal));
+                return;
             }
-            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
+
+            ResourceLocation dynamicResource = TexturePacker.getOrCreateInMemoryTexture(
+                    templateTexture,
+                    cacheKeyFinal,
+                    (baseImg) -> {
+                        BufferedImage maskImg = ImageIO.read(mc.getResourceManager().getResource(GLOOM_RL).getInputStream());
+                        return TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                                maskImg,
+                                baseImg,
+                                1.0F,
+                                15.0F,
+                                -1,
+                                false
+                        );
+                    }
+            );
+
+            if (dynamicResource != null) {
+                cir.setReturnValue(dynamicResource);
+            }
         } else if (hasCelestialType(celestialType, CelestialTypeData.CelestialShadow.SPECTRAL.id)) {
-            String cacheKey = templateTexture + "_" + spectralTexture;
+            String cacheKeyFinal = new StringBuilder(templateTexture)
+                    .append("_")
+                    .append(SPECTRAL_RL.getResourcePath())
+                    .toString();
 
-            if (!cacheResourceLocation.containsKey(cacheKey)) {
-                BufferedImage bufferedImage = TexturePacker.maskTemplateWithPixelSourceByBrightness(
-                        spectralTexture,
-                        templateTexture,
-                        1.0F,
-                        7.0F,
-                        -1,
-                        false
-                );
-
-                DynamicTexture dynamicTexture = new DynamicTexture(bufferedImage);
-                ResourceLocation dynamicLocation = mc.getTextureManager().getDynamicTextureLocation(cacheKey, dynamicTexture);
-                cacheResourceLocation.put(cacheKey, dynamicLocation);
+            if (cacheResourceLocation.containsKey(cacheKeyFinal)) {
+                cir.setReturnValue(cacheResourceLocation.get(cacheKeyFinal));
+                return;
             }
-            cir.setReturnValue(cacheResourceLocation.get(cacheKey));
+
+            ResourceLocation dynamicResource = TexturePacker.getOrCreateInMemoryTexture(
+                    templateTexture,
+                    cacheKeyFinal,
+                    (baseImg) -> {
+                        BufferedImage maskImg = ImageIO.read(mc.getResourceManager().getResource(SPECTRAL_RL).getInputStream());
+                        return TexturePacker.maskTemplateWithPixelSourceByBrightness(
+                                maskImg,
+                                baseImg,
+                                1.0F,
+                                7.0F,
+                                -1,
+                                false
+                        );
+                    }
+            );
+
+            if (dynamicResource != null) {
+                cir.setReturnValue(dynamicResource);
+            }
         }
     }
 }

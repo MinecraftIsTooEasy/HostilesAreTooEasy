@@ -21,6 +21,8 @@ public class HostilesAreTooEasyMod implements ModInitializer {
         HATEBackgroundNetwork.init();
         ModResourceManager.addResourcePackDomain(MOD_ID);
 
+
+
         HATEEventRIC.register();
     }
 }
