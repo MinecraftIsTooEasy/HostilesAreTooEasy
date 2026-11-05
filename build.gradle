@@ -51,6 +51,8 @@ dependencies {
     // To add mods for running client, use "localRuntime"
     implementation "com.github.MinecraftIsTooEasy:ManyLib:2.3.0"
     implementation "com.github.MinecraftIsTooEasy:ModMenu:10.1.1"
+
+    implementation files("${project.lib_dir}/AchievementLib-1.0.5.jar")
 }
 
 def fmlResolvedFile = configurations.fml.files.iterator().next()

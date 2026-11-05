@@ -29,7 +29,8 @@
     "fishmodloader": ">=3.4.0",
     "minecraft": "1.6.4-mite",
     "java": ">=17",
-    "rusted_iron_core": ">=1.3.5"
+    "rusted_iron_core": ">=1.3.5",
+    "achievement_lib": ">=1.0.5"
   },
   "suggests": {
     "another-mod": "*"

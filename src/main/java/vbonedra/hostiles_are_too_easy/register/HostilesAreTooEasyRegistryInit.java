@@ -5,16 +5,11 @@ import huix.glacier.api.entrypoint.IGameRegistry;
 import static vbonedra.hostiles_are_too_easy.util.AchievementExtend.registerAchievements;
 
 public class HostilesAreTooEasyRegistryInit implements IGameRegistry {
-	// Registrar instance, using this mod's modid as the namespace
-//	public static final MinecraftRegistry registry = new MinecraftRegistry(HostilesAreTooEasyMod.MOD_ID).initAutoItemRegister();
-
-    // Create an instance of the item
-	// public static Item EXAMPLE_ITEM;
     @Override
 	public void onGameRegistry() {
-		// Register items, bind texture and create localized key
-		// registry.registerItem(HostilesAreTooEasyMod.MOD_ID + ":example_item", "exampleItem", EXAMPLE_ITEM);
-
+        // TODO: add AchievementLib tab for achievements related to celestial types
+        //  for example achievement for killing celestial type of every mob with some descriptions on their mechanics,
+        //  so player would be able to know what exactly is happening. maybe it could be just short description though
         registerAchievements();
 	}
 }

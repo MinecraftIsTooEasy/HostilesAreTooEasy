@@ -12,7 +12,7 @@ import static vbonedra.hostiles_are_too_easy.util.AchievementExtend.killWither;
 
 @Mixin(GuiAchievements.class)
 public class GuiAchievementMixin {
-
+    // TODO: wont work with AchievementLib + its too hostile to just change positions like that
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init_modifyAchievementStates(CallbackInfo ci) {
         try {
@@ -37,3 +37,4 @@ public class GuiAchievementMixin {
         }
     }
 }
+

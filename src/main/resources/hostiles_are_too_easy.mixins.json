@@ -10,7 +10,6 @@
     "RendererLivingEntityMixin",
     "achievement.BlockSkullMixin",
     "achievement.GuiAchievementMixin",
-    "achievement.RenderItemMixin",
     "achievement.ServerConfigurationManagerMixin",
     "ai.EntityAIArrowAttackMixin",
     "ai.EntityAIAttackOnCollideMixin",
