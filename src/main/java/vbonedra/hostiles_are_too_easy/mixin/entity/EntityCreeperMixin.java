@@ -33,6 +33,7 @@ public abstract class EntityCreeperMixin extends Entity implements ICelestialTyp
         this.fuseTime = (int) (this.fuseTime * (1.0F - (difficulty * 0.08F)));
     }
 
+    // TODO: not the best way to do it, conflicts with many other mixins
     @Redirect(method = "onUpdate()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/World;createExplosion(Lnet/minecraft/Entity;DDDFFZ)Lnet/minecraft/Explosion;"))
     private Explosion onUpdate_creeperExplosion(
             World world,
