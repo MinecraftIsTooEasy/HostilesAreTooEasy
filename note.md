@@ -1,0 +1,1 @@
+TODO: look into NineChallenges HostileChampions, it's up to date + optimized + has better methods and better structure; overall its better
